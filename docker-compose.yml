@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   greenwichbooth:
     build: .
@@ -7,5 +5,22 @@ services:
     ports:
       - "9080:80"
     restart: unless-stopped
-    environment:
-      - NODE_ENV=production
+    depends_on:
+      - greenwichbooth-api
+    networks:
+      - booth
+
+  greenwichbooth-api:
+    build: ./api
+    container_name: greenwichbooth-api
+    restart: unless-stopped
+    volumes:
+      - booth_photos:/tmp/photos
+    networks:
+      - booth
+
+networks:
+  booth:
+
+volumes:
+  booth_photos:

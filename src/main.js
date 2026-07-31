@@ -1,522 +1,386 @@
 import QRCode from 'qrcode';
 import './styles.css';
 
-// Greenwich logo SVG — sư tử rampant + shield
-const LOGO_SVG = `
-<svg viewBox="0 0 120 160" xmlns="http://www.w3.org/2000/svg" width="80" height="106">
-  <!-- Shield background -->
-  <defs>
-    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
-      <feDropShadow dx="1" dy="2" stdDeviation="1" flood-opacity="0.3"/>
-    </filter>
-  </defs>
-  <path d="M 60 10 L 100 30 L 100 80 Q 60 130 60 140 Q 60 130 20 80 L 20 30 Z"
-        fill="#006b3f" stroke="#f7c948" stroke-width="2" filter="url(#shadow)"/>
+// ── Lion Captain mascot (cute cartoon, Greenwich Vietnam brand) ───────────────
+const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+  <path d="M32 58 Q16 82 24 112 L76 112 Q84 82 68 58 Z" fill="#FF6B1A"/>
+  <path d="M28 57 L72 57 L74 90 Q74 96 50 96 Q26 96 26 90 Z" fill="#002D72"/>
+  <rect x="36" y="66" width="28" height="18" rx="4" fill="#F7C948"/>
+  <text x="50" y="79" font-family="Arial" font-size="9" font-weight="900" fill="#002D72" text-anchor="middle">GV</text>
+  <ellipse cx="18" cy="72" rx="12" ry="7" fill="#FFB347" transform="rotate(-20 18 72)"/>
+  <ellipse cx="82" cy="65" rx="12" ry="7" fill="#FFB347" transform="rotate(35 82 65)"/>
+  <circle cx="50" cy="35" r="32" fill="#C96010"/>
+  <circle cx="24" cy="20" r="12" fill="#C96010"/>
+  <circle cx="76" cy="20" r="12" fill="#C96010"/>
+  <circle cx="50" cy="6" r="11" fill="#C96010"/>
+  <circle cx="50" cy="36" r="24" fill="#F59B30"/>
+  <ellipse cx="50" cy="38" rx="18" ry="17" fill="#FFB347"/>
+  <circle cx="24" cy="20" r="6" fill="#FFB347"/>
+  <circle cx="76" cy="20" r="6" fill="#FFB347"/>
+  <circle cx="38" cy="36" r="9" fill="white" stroke="#002D72" stroke-width="2.5"/>
+  <circle cx="62" cy="36" r="9" fill="white" stroke="#002D72" stroke-width="2.5"/>
+  <path d="M47 36 L53 36" stroke="#002D72" stroke-width="2" fill="none"/>
+  <path d="M29 33 L22 30" stroke="#002D72" stroke-width="2" fill="none"/>
+  <path d="M71 33 L78 30" stroke="#002D72" stroke-width="2" fill="none"/>
+  <circle cx="38" cy="36" r="5" fill="#1a1a40"/>
+  <circle cx="62" cy="36" r="5" fill="#1a1a40"/>
+  <circle cx="40" cy="34" r="2" fill="white"/>
+  <circle cx="64" cy="34" r="2" fill="white"/>
+  <ellipse cx="50" cy="46" rx="5" ry="4" fill="#C97020"/>
+  <path d="M40 51 Q50 59 60 51" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <line x1="10" y1="44" x2="35" y2="46" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+  <line x1="10" y1="49" x2="35" y2="49" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+  <line x1="65" y1="46" x2="90" y2="44" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+  <line x1="65" y1="49" x2="90" y2="49" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+</svg>`;
 
-  <!-- Lion head (simplified rampant pose) -->
-  <g transform="translate(60, 75) scale(0.8)">
-    <!-- Body -->
-    <ellipse cx="0" cy="0" rx="20" ry="28" fill="#f7c948"/>
-    <!-- Head -->
-    <circle cx="0" cy="-24" r="16" fill="#f7c948"/>
-    <!-- Mane -->
-    <circle cx="-14" cy="-20" r="9" fill="#f7c948"/>
-    <circle cx="14" cy="-20" r="9" fill="#f7c948"/>
-    <circle cx="-8" cy="-32" r="7" fill="#f7c948"/>
-    <circle cx="8" cy="-32" r="7" fill="#f7c948"/>
-    <!-- Eyes -->
-    <circle cx="-6" cy="-26" r="2.5" fill="#006b3f"/>
-    <circle cx="6" cy="-26" r="2.5" fill="#006b3f"/>
-    <!-- Mouth -->
-    <path d="M -4 -18 Q 0 -14 4 -18" stroke="#006b3f" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-    <!-- Front left leg (rampant) -->
-    <rect x="-18" y="20" width="6" height="20" fill="#f7c948" rx="3"/>
-    <!-- Front right leg (raised) -->
-    <rect x="12" y="8" width="6" height="28" fill="#f7c948" rx="3" transform="rotate(-25 15 8)"/>
-    <!-- Back legs -->
-    <rect x="-12" y="24" width="5" height="16" fill="#f7c948" rx="2"/>
-    <rect x="7" y="24" width="5" height="16" fill="#f7c948" rx="2"/>
-    <!-- Tail -->
-    <path d="M 20 0 Q 32 -8 28 -20" stroke="#f7c948" stroke-width="5" fill="none" stroke-linecap="round"/>
-  </g>
-
-  <!-- Text banner -->
-  <text x="60" y="155" font-family="Arial, sans-serif" font-size="10" font-weight="bold"
-        text-anchor="middle" fill="#f7c948" letter-spacing="1">GV</text>
-</svg>
-`.trim();
-
-const frames = [
-  // ─── Foundation: Core brand frames ───
-  {
-    id: 'brand-classic',
-    label: 'Classic Green',
-    accent: '#f7c948',
-    ink: '#004b2d',
-    title: 'GREENWICH',
-    subtitle: 'Vietnam 2026',
-    badge: 'Future Student',
-    logoPos: 'top-left'
-  },
-  {
-    id: 'brand-modern',
-    label: 'Modern Gold',
-    accent: '#f7c948',
-    ink: '#006b3f',
-    title: 'UK DEGREE',
-    subtitle: 'Vietnam Price',
-    badge: 'Global Vision',
-    logoPos: 'top-right'
-  },
-  {
-    id: 'tech-path',
-    label: 'Tech Path',
-    accent: '#b8ff5f',
-    ink: '#004b2d',
-    title: 'CODE YOUR',
-    subtitle: 'FUTURE',
-    badge: 'Tech Innovator',
-    logoPos: 'top-left'
-  },
-
-  // ─── Campaign: Event-specific frames ───
-  {
-    id: 'openday-2026',
-    label: 'Open Day 26',
-    accent: '#f7c948',
-    ink: '#051b13',
-    title: 'OPEN DAY',
-    subtitle: '2026',
-    badge: 'Join Us Now',
-    logoPos: 'top-right'
-  },
-  {
-    id: 'welcome-gv',
-    label: 'Welcome GV',
-    accent: '#ff6b35',
-    ink: '#004b2d',
-    title: 'WELCOME',
-    subtitle: 'TO GV',
-    badge: 'Booth Visit',
-    logoPos: 'top-left'
-  },
-  {
-    id: 'campus-vibe',
-    label: 'Campus Vibe',
-    accent: '#1d9bf0',
-    ink: '#006b3f',
-    title: 'CAMPUS',
-    subtitle: 'VIBE',
-    badge: 'Life Here',
-    logoPos: 'bottom-right'
-  },
-
-  // ─── Soft aesthetic: Gen Z friendly ───
-  {
-    id: 'dreamy-lime',
-    label: 'Dreamy Lime',
-    accent: '#b8ff5f',
-    ink: '#06271b',
-    title: 'DREAM BIG',
-    subtitle: 'at Greenwich',
-    badge: 'Believe',
-    logoPos: 'top-left'
-  },
-  {
-    id: 'sunset-gold',
-    label: 'Sunset Gold',
-    accent: '#ffa500',
-    ink: '#004b2d',
-    title: 'GOLDEN',
-    subtitle: 'FUTURE',
-    badge: 'Shine Bright',
-    logoPos: 'center'
-  },
-  {
-    id: 'midnight-cool',
-    label: 'Midnight Cool',
-    accent: '#00d9ff',
-    ink: '#0a1f1a',
-    title: 'FUTURE ME',
-    subtitle: 'STARTS HERE',
-    badge: 'Innovation',
-    logoPos: 'top-right'
-  },
-
-  // ─── Premium: High contrast ───
-  {
-    id: 'bold-contrast',
-    label: 'Bold Black',
-    accent: '#f7c948',
-    ink: '#000000',
-    title: 'GREENWICH',
-    subtitle: 'VIETNAM',
-    badge: 'Excellence',
-    logoPos: 'top-left'
-  },
-  {
-    id: 'emerald-luxe',
-    label: 'Emerald Luxe',
-    accent: '#f7c948',
-    ink: '#1a4d33',
-    title: 'YOUR JOURNEY',
-    subtitle: 'AWAITS',
-    badge: 'Premium',
-    logoPos: 'top-right'
-  },
-  {
-    id: 'neon-edge',
-    label: 'Neon Edge',
-    accent: '#00ff88',
-    ink: '#004b2d',
-    title: 'LEVEL UP',
-    subtitle: 'YOUR GAME',
-    badge: 'GenZ',
-    logoPos: 'bottom-left'
-  }
+// ── Frame designs ─────────────────────────────────────────────────────────────
+const FRAMES = [
+  { id: 'classic', label: 'Classic',    bg: '#006b3f', accent: '#F7C948', title: 'GREENWICH VIETNAM', sub: 'greenwich.edu.vn' },
+  { id: 'openday', label: 'Open Day',   bg: '#002D72', accent: '#F7C948', title: 'OPEN DAY 2026',     sub: 'Hà Nội · HCM'   },
+  { id: 'captain', label: '🦁 Captain', bg: '#1a1010', accent: '#F7C948', title: 'LION CAPTAIN',      sub: '#GreenwichVN'   },
 ];
 
-const filters = [
-  { id: 'clean', label: 'Clean', css: 'none', canvas: 'none' },
-  { id: 'film', label: 'Campus Film', css: 'contrast(1.08) saturate(1.2) sepia(0.08)', canvas: 'contrast(1.08) saturate(1.2) sepia(0.08)' },
-  { id: 'sunny', label: 'Golden Hour', css: 'brightness(1.08) saturate(1.25) sepia(0.16)', canvas: 'brightness(1.08) saturate(1.25) sepia(0.16)' },
-  { id: 'pop', label: 'Gen Z Pop', css: 'contrast(1.15) saturate(1.55)', canvas: 'contrast(1.15) saturate(1.55)' },
-  { id: 'mono', label: 'Scholar Mono', css: 'grayscale(1) contrast(1.14)', canvas: 'grayscale(1) contrast(1.14)' }
-];
-
-const stickers = [
-  { id: 'none', label: 'None', text: '', x: 0, y: 0 },
-  { id: 'g-ready', label: 'G-Ready', text: 'G-READY', x: 0.08, y: 0.18 },
-  { id: 'future', label: 'Future me', text: 'FUTURE ME', x: 0.58, y: 0.16 },
-  { id: 'campus', label: 'Campus vibe', text: 'CAMPUS VIBE', x: 0.09, y: 0.72 },
-  { id: 'dream', label: 'Dream big', text: 'DREAM BIG', x: 0.54, y: 0.72 }
-];
-
-const state = {
-  frame: frames[0],
-  filter: filters[0],
-  sticker: stickers[1],
-  photoUrl: '',
-  stream: null
+// ── App state ─────────────────────────────────────────────────────────────────
+const S = {
+  mode: 'ready',
+  frameIdx: 0,
+  interval: 3,
+  photos: [],
+  stream: null,
+  posterUrl: null,
 };
 
-const app = document.querySelector('#app');
+const q  = s => document.querySelector(s);
+const qa = s => [...document.querySelectorAll(s)];
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-app.innerHTML = `
-  <main class="shell">
-    <section class="stage">
-      <div class="brand-line">
-        <span>Greenwich Booth</span>
-        <small>Photo frame studio for future Greenwich Vietnam students</small>
+// ── Build HTML ────────────────────────────────────────────────────────────────
+q('#app').innerHTML = `
+<div class="app">
+  <header class="hdr">
+    <div class="hdr-brand">
+      <div class="hdr-lion">${LION}</div>
+      <span class="hdr-name">Greenwich Booth</span>
+    </div>
+    <span class="hdr-tag">Photo Studio</span>
+  </header>
+
+  <div class="main">
+    <div class="cam-col">
+      <div class="cam-box">
+        <video id="cam" autoplay muted playsinline></video>
+        <div class="frame-ov" id="fov"></div>
+
+        <div class="cnt-ov hidden" id="cov">
+          <div class="cnt-ring">
+            <div class="cnt-n" id="cnt-n">3</div>
+          </div>
+          <div class="cnt-lbl" id="cnt-lbl">Ảnh 1/4</div>
+          <div class="dot-strip">
+            <span class="dot" id="d0"></span>
+            <span class="dot" id="d1"></span>
+            <span class="dot" id="d2"></span>
+            <span class="dot" id="d3"></span>
+          </div>
+        </div>
+
+        <div class="cam-err hidden" id="cerr">
+          <div style="font-size:44px">📷</div>
+          <p>Không thể dùng camera.<br/>Kiểm tra quyền truy cập.</p>
+          <button id="retry-cam" class="btn-outline">Thử lại</button>
+        </div>
       </div>
+    </div>
 
-      <div class="booth" aria-label="Camera preview">
-        <video id="camera" autoplay muted playsinline></video>
-        <img id="uploaded" alt="" />
-        <div id="previewOverlay" class="overlay"></div>
-        <div id="cameraEmpty" class="camera-empty">
-          <strong>Start camera</strong>
-          <span>or upload a portrait to try Greenwich Vietnam frames.</span>
+    <div class="ctrl-col">
+      <div class="ctrl-sec">
+        <div class="ctrl-lbl">Chọn frame</div>
+        <div class="chips" id="chips">
+          ${FRAMES.map((f, i) => `
+            <button class="chip${i === 0 ? ' active' : ''}"
+                    style="--c:${f.bg};--a:${f.accent}"
+                    data-i="${i}">${f.label}</button>
+          `).join('')}
         </div>
       </div>
 
-      <div class="capture-row">
-        <button id="startCamera" class="primary">Start camera</button>
-        <label class="secondary">
-          Upload photo
-          <input id="photoInput" type="file" accept="image/*" />
-        </label>
-        <button id="capture" class="primary">Capture</button>
-      </div>
-    </section>
-
-    <aside class="controls" aria-label="Booth controls">
-      <div class="panel">
-        <h1>Pick your Greenwich look</h1>
-        <p>Choose a frame, add a playful mark, then download or share the PNG.</p>
+      <div class="ctrl-sec">
+        <div class="ctrl-lbl">Delay giữa ảnh: <strong id="ival-v">3</strong>s</div>
+        <input type="range" id="ival" min="2" max="6" value="3" step="1"/>
       </div>
 
-      <section class="panel">
-        <h2>Frames</h2>
-        <div id="frameOptions" class="option-grid"></div>
-      </section>
+      <button class="shoot-btn" id="shoot-btn">
+        <span class="s-icon">📷</span>
+        <span class="s-text">CHỤP NGAY</span>
+        <small class="s-hint">4 ảnh · delay <span id="ival-h">3</span>s</small>
+      </button>
+    </div>
+  </div>
+</div>
 
-      <section class="panel">
-        <h2>Filters</h2>
-        <div id="filterOptions" class="option-grid"></div>
-      </section>
+<div class="result-ov hidden" id="rov">
+  <div class="result-card">
+    <div class="result-title">🎉 Ảnh của bạn!</div>
+    <img class="poster-img" id="poster-img" alt="Your photo"/>
+    <div class="qr-blk hidden" id="qr-blk">
+      <img id="qr-img" alt="QR code"/>
+      <span>Quét để tải về điện thoại</span>
+    </div>
+    <div class="result-btns">
+      <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về</a>
+      <button id="retake-btn" class="btn-sec">↩ Chụp lại</button>
+    </div>
+  </div>
+</div>
 
-      <section class="panel">
-        <h2>Stickers</h2>
-        <div id="stickerOptions" class="option-grid"></div>
-      </section>
-
-      <section class="panel result-panel">
-        <h2>Your photo</h2>
-        <img id="result" alt="Captured Greenwich Booth photo" />
-        <div class="result-actions">
-          <a id="download" class="primary disabled" download="greenwichbooth.png">Download PNG</a>
-          <button id="share" class="secondary" disabled>Share</button>
-        </div>
-        <p class="fine-print">QR on the photo opens this booth page. Exact cross-device photo download needs hosted storage later.</p>
-      </section>
-    </aside>
-  </main>
-  <canvas id="canvas" width="1080" height="1350"></canvas>
+<div class="flash" id="flash"></div>
+<canvas id="cvs" width="1080" height="1080" style="display:none"></canvas>
 `;
 
-const camera = document.querySelector('#camera');
-const uploaded = document.querySelector('#uploaded');
-const cameraEmpty = document.querySelector('#cameraEmpty');
-const overlay = document.querySelector('#previewOverlay');
-const canvas = document.querySelector('#canvas');
-const ctx = canvas.getContext('2d');
-const result = document.querySelector('#result');
-const download = document.querySelector('#download');
-const share = document.querySelector('#share');
-
-function renderOptions() {
-  renderGroup('#frameOptions', frames, state.frame.id, (item) => {
-    state.frame = item;
-    updatePreview();
-  });
-  renderGroup('#filterOptions', filters, state.filter.id, (item) => {
-    state.filter = item;
-    updatePreview();
-  });
-  renderGroup('#stickerOptions', stickers, state.sticker.id, (item) => {
-    state.sticker = item;
-    updatePreview();
-  });
-}
-
-function renderGroup(selector, items, activeId, onSelect) {
-  const node = document.querySelector(selector);
-  node.innerHTML = '';
-  items.forEach((item) => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = `choice ${item.id === activeId ? 'active' : ''}`;
-    button.textContent = item.label;
-    button.addEventListener('click', () => {
-      onSelect(item);
-      renderOptions();
+// ── Camera ────────────────────────────────────────────────────────────────────
+async function startCam() {
+  try {
+    S.stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'user', width: { ideal: 1920 }, height: { ideal: 1080 } },
+      audio: false,
     });
-    node.appendChild(button);
-  });
+    const cam = q('#cam');
+    cam.srcObject = S.stream;
+    await new Promise(res => cam.addEventListener('loadedmetadata', res, { once: true }));
+    q('#cerr').classList.add('hidden');
+  } catch {
+    q('#cerr').classList.remove('hidden');
+  }
 }
 
+// ── Frame preview overlay on camera ──────────────────────────────────────────
 function updatePreview() {
-  camera.style.filter = state.filter.css;
-  uploaded.style.filter = state.filter.css;
-  const logoPos = state.frame.logoPos || 'top-left';
-  overlay.innerHTML = `
-    <div class="frame-border" style="--accent:${state.frame.accent};--ink:${state.frame.ink}">
-      <div class="top-ribbon">
-        <b>${state.frame.title}</b>
-        <span>${state.frame.subtitle}</span>
+  const f = FRAMES[S.frameIdx];
+  q('#fov').innerHTML = `
+    <div class="fp" style="--a:${f.accent};--bg2:${f.bg}">
+      <div class="fp-top">
+        <span class="fp-title">${f.title}</span>
+        <div class="fp-lion">${LION}</div>
       </div>
-      <div class="corner-badge">${state.frame.badge}</div>
-      <div class="logo-container logo-${logoPos}">
-        ${LOGO_SVG}
-      </div>
-      ${state.sticker.text ? `<div class="sticker" style="left:${state.sticker.x * 100}%;top:${state.sticker.y * 100}%">${state.sticker.text}</div>` : ''}
-      <div class="bottom-bar">
-        <span>#GreenwichVietnam</span>
-        <span>greenwich.edu.vn</span>
+      <div class="fp-bot">
+        <span>${f.sub}</span>
+        <span>#GreenwichVN</span>
       </div>
     </div>
   `;
 }
 
-async function startCamera() {
-  try {
-    state.stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1600 } },
-      audio: false
-    });
-    camera.srcObject = state.stream;
-    camera.hidden = false;
-    uploaded.hidden = true;
-    cameraEmpty.hidden = true;
-  } catch (error) {
-    cameraEmpty.innerHTML = '<strong>Camera blocked</strong><span>Upload a photo instead.</span>';
+// ── Shoot sequence ────────────────────────────────────────────────────────────
+async function shoot() {
+  if (S.mode === 'shooting') return;
+  if (!S.stream) {
+    await startCam();
+    await sleep(600);
   }
+  const cam = q('#cam');
+  if (!cam.srcObject || cam.videoWidth === 0) return;
+
+  S.mode = 'shooting';
+  S.photos = [];
+  q('#shoot-btn').disabled = true;
+  q('#cov').classList.remove('hidden');
+
+  for (let i = 0; i < 4; i++) {
+    for (let c = S.interval; c > 0; c--) {
+      q('#cnt-n').textContent = c;
+      q('#cnt-lbl').textContent = `Ảnh ${i + 1} / 4`;
+      q('#cnt-n').dataset.tick = '1';
+      await sleep(80);
+      delete q('#cnt-n').dataset.tick;
+      await sleep(920);
+    }
+
+    q('#cnt-n').textContent = '😊';
+    q('#cnt-lbl').textContent = 'Cười lên nào!';
+    await sleep(300);
+
+    S.photos.push(capFrame(cam));
+
+    const fl = q('#flash');
+    fl.style.opacity = '1';
+    setTimeout(() => { fl.style.opacity = '0'; }, 200);
+
+    q(`#d${i}`).classList.add('done');
+    if (i < 3) await sleep(400);
+  }
+
+  q('#cov').classList.add('hidden');
+  q('#shoot-btn').disabled = false;
+
+  await buildPoster();
+  showResult();
+  S.mode = 'done';
 }
 
-function loadUpload(file) {
-  if (!file) return;
-  uploaded.src = URL.createObjectURL(file);
-  uploaded.hidden = false;
-  camera.hidden = true;
-  cameraEmpty.hidden = true;
+function capFrame(cam) {
+  const vw = cam.videoWidth, vh = cam.videoHeight;
+  const sz = Math.min(vw, vh);
+  const c = document.createElement('canvas');
+  c.width = sz; c.height = sz;
+  const cx = c.getContext('2d');
+  cx.save();
+  cx.translate(sz, 0);
+  cx.scale(-1, 1); // mirror for selfie feel
+  cx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
+  cx.restore();
+  return c.toDataURL('image/jpeg', 0.9);
 }
 
-async function capturePhoto() {
-  const source = uploaded.hidden ? camera : uploaded;
-  if ((source === camera && !camera.srcObject) || (source === uploaded && !uploaded.src)) return;
+// ── Compose 1080×1080 poster ──────────────────────────────────────────────────
+async function buildPoster() {
+  const cvs = q('#cvs');
+  const ctx = cvs.getContext('2d');
+  const W = 1080, H = 1080;
+  const f = FRAMES[S.frameIdx];
+  const BAR = 108, GAP = 8;
 
-  const qrUrl = await QRCode.toDataURL(window.location.href, {
-    margin: 1,
-    width: 180,
-    color: { dark: '#053b2c', light: '#ffffff' }
-  });
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, W, H);
 
-  await drawPoster(source, qrUrl);
-  state.photoUrl = canvas.toDataURL('image/png');
-  result.src = state.photoUrl;
-  download.href = state.photoUrl;
-  download.classList.remove('disabled');
-  share.disabled = false;
-}
+  // 2×2 photo grid
+  const cw = (W - GAP * 3) / 2;
+  const ch = (H - BAR * 2 - GAP * 3) / 2;
+  const pos = [
+    [GAP,          BAR + GAP],
+    [GAP * 2 + cw, BAR + GAP],
+    [GAP,          BAR + GAP * 2 + ch],
+    [GAP * 2 + cw, BAR + GAP * 2 + ch],
+  ];
 
-async function drawPoster(source, qrUrl) {
-  const width = canvas.width;
-  const height = canvas.height;
-  ctx.clearRect(0, 0, width, height);
+  await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, ...pos[i], cw, ch)));
 
-  ctx.save();
-  ctx.filter = state.filter.canvas;
-  coverDraw(source, 0, 0, width, height);
-  ctx.restore();
+  // Bars
+  ctx.fillStyle = f.bg;
+  ctx.fillRect(0, 0, W, BAR);
+  ctx.fillRect(0, H - BAR, W, BAR);
 
-  drawFrame(width, height);
-  await drawLogo(width, height);
-  drawSticker(width, height);
-  await drawQr(qrUrl, width, height);
-}
+  // Top bar text
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = f.accent;
+  ctx.font = '900 52px "Arial Black", Arial, sans-serif';
+  ctx.fillText(f.title, 116, 18);
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '600 26px Arial, sans-serif';
+  ctx.fillText(f.sub, 118, 70);
 
-function coverDraw(source, x, y, width, height) {
-  const sourceWidth = source.videoWidth || source.naturalWidth;
-  const sourceHeight = source.videoHeight || source.naturalHeight;
-  const scale = Math.max(width / sourceWidth, height / sourceHeight);
-  const drawWidth = sourceWidth * scale;
-  const drawHeight = sourceHeight * scale;
-  ctx.drawImage(source, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
-}
-
-function drawFrame(width, height) {
-  const { accent, ink, title, subtitle, badge } = state.frame;
-  ctx.lineWidth = 42;
-  ctx.strokeStyle = accent;
-  ctx.strokeRect(21, 21, width - 42, height - 42);
-
-  ctx.fillStyle = ink;
-  ctx.fillRect(0, 0, width, 164);
-  ctx.fillRect(0, height - 146, width, 146);
-
-  ctx.fillStyle = accent;
-  ctx.font = '900 58px Arial';
-  ctx.fillText(title, 56, 78);
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '700 34px Arial';
-  ctx.fillText(subtitle, 58, 128);
-
-  ctx.fillStyle = accent;
-  roundedRect(width - 356, 54, 296, 68, 34);
-  ctx.fill();
-  ctx.fillStyle = ink;
-  ctx.font = '900 30px Arial';
-  ctx.fillText(badge.toUpperCase(), width - 326, 98);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.font = '800 34px Arial';
-  ctx.fillText('#GreenwichVietnam', 58, height - 58);
+  // Bottom bar text
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.font = '700 28px Arial, sans-serif';
+  ctx.fillText('#GreenwichVietnam', 20, H - BAR / 2);
   ctx.textAlign = 'right';
-  ctx.fillText('greenwich.edu.vn', width - 58, height - 58);
+  ctx.fillText('greenwich.edu.vn', W - 140, H - BAR / 2);
   ctx.textAlign = 'left';
+
+  // Lion mascot top-left
+  await drawSvg(ctx, LION, 8, 6, 98, 96);
+
+  // QR in bottom-right
+  const qrDataUrl = await QRCode.toDataURL(window.location.href, {
+    margin: 1, width: 120,
+    color: { dark: f.bg, light: '#ffffff' },
+  });
+  await drawImg(ctx, qrDataUrl, W - 128, H - BAR + (BAR - 92) / 2, 92, 92);
 }
 
-function drawSticker(width, height) {
-  if (!state.sticker.text) return;
-  const x = state.sticker.x * width;
-  const y = state.sticker.y * height;
-  ctx.save();
-  ctx.rotate(-0.09);
-  ctx.fillStyle = '#ffffff';
-  roundedRect(x, y, 280, 76, 24);
-  ctx.fill();
-  ctx.strokeStyle = state.frame.accent;
-  ctx.lineWidth = 8;
-  ctx.stroke();
-  ctx.fillStyle = state.frame.ink;
-  ctx.font = '900 32px Arial';
-  ctx.fillText(state.sticker.text, x + 28, y + 49);
-  ctx.restore();
-}
-
-async function drawLogo(width, height) {
-  const logoPos = state.frame.logoPos || 'top-left';
-  const logoSize = 90;
-  const padding = 24;
-
-  let x = padding, y = padding;
-
-  if (logoPos === 'top-right') x = width - logoSize - padding;
-  else if (logoPos === 'center') x = (width - logoSize) / 2, y = (height - logoSize) / 2 - 60;
-  else if (logoPos === 'bottom-left') y = height - logoSize - padding;
-  else if (logoPos === 'bottom-right') x = width - logoSize - padding, y = height - logoSize - padding;
-
-  const svgBlob = new Blob([LOGO_SVG], { type: 'image/svg+xml' });
-  const url = URL.createObjectURL(svgBlob);
-
-  return new Promise((resolve) => {
+function drawPhoto(ctx, url, x, y, w, h) {
+  return new Promise(res => {
     const img = new Image();
     img.onload = () => {
-      ctx.drawImage(img, x, y, logoSize, logoSize);
-      URL.revokeObjectURL(url);
-      resolve();
+      const scale = Math.max(w / img.width, h / img.height);
+      const dw = img.width * scale, dh = img.height * scale;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+      ctx.restore();
+      res();
     };
     img.src = url;
   });
 }
 
-function drawQr(qrUrl, width, height) {
-  const image = new Image();
-  const ready = new Promise((resolve) => {
-    image.onload = resolve;
-  });
-  image.src = qrUrl;
-  return ready.then(() => {
-    ctx.fillStyle = '#ffffff';
-    roundedRect(width - 246, height - 354, 174, 212, 20);
-    ctx.fill();
-    ctx.drawImage(image, width - 224, height - 334, 130, 130);
-    ctx.fillStyle = '#053b2c';
-    ctx.font = '800 18px Arial';
-    ctx.fillText('SCAN BOOTH', width - 218, height - 178);
+function drawImg(ctx, url, x, y, w, h) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload = () => { ctx.drawImage(img, x, y, w, h); res(); };
+    img.src = url;
   });
 }
 
-function roundedRect(x, y, width, height, radius) {
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.arcTo(x + width, y, x + width, y + height, radius);
-  ctx.arcTo(x + width, y + height, x, y + height, radius);
-  ctx.arcTo(x, y + height, x, y, radius);
-  ctx.arcTo(x, y, x + width, y, radius);
-  ctx.closePath();
+function drawSvg(ctx, svg, x, y, w, h) {
+  const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
+  return drawImg(ctx, url, x, y, w, h).then(() => URL.revokeObjectURL(url));
 }
 
-async function sharePhoto() {
-  if (!state.photoUrl || !navigator.share) return;
-  const blob = await (await fetch(state.photoUrl)).blob();
-  const file = new File([blob], 'greenwichbooth.png', { type: 'image/png' });
-  if (navigator.canShare?.({ files: [file] })) {
-    await navigator.share({
-      title: 'Greenwich Booth',
-      text: 'My Greenwich Vietnam booth photo',
-      files: [file]
+// ── Result & QR ───────────────────────────────────────────────────────────────
+function showResult() {
+  S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.92);
+  q('#poster-img').src = S.posterUrl;
+  q('#dl-link').href = S.posterUrl;
+  q('#rov').classList.remove('hidden');
+
+  uploadPoster(S.posterUrl).then(dlUrl => {
+    if (!dlUrl) return;
+    QRCode.toDataURL(dlUrl, {
+      margin: 1, width: 160,
+      color: { dark: '#006b3f', light: '#fff' },
+    }).then(qrDataUrl => {
+      q('#qr-img').src = qrDataUrl;
+      q('#qr-blk').classList.remove('hidden');
     });
-  }
+  });
 }
 
-document.querySelector('#startCamera').addEventListener('click', startCamera);
-document.querySelector('#capture').addEventListener('click', capturePhoto);
-document.querySelector('#photoInput').addEventListener('change', (event) => loadUpload(event.target.files[0]));
-share.addEventListener('click', sharePhoto);
+async function uploadPoster(dataUrl) {
+  try {
+    const res = await fetch('/upload', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ image: dataUrl }),
+    });
+    if (!res.ok) return null;
+    const { url } = await res.json();
+    return `${window.location.origin}${url}`;
+  } catch { return null; }
+}
 
-camera.hidden = true;
-uploaded.hidden = true;
-renderOptions();
+function retake() {
+  S.mode = 'ready';
+  S.photos = [];
+  S.posterUrl = null;
+  q('#rov').classList.add('hidden');
+  q('#qr-blk').classList.add('hidden');
+  qa('.dot').forEach(d => d.classList.remove('done'));
+}
+
+// ── Events ────────────────────────────────────────────────────────────────────
+q('#shoot-btn').addEventListener('click', shoot);
+q('#retry-cam').addEventListener('click', startCam);
+q('#retake-btn').addEventListener('click', retake);
+
+q('#chips').addEventListener('click', e => {
+  const chip = e.target.closest('.chip');
+  if (!chip) return;
+  S.frameIdx = +chip.dataset.i;
+  qa('.chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  updatePreview();
+});
+
+q('#ival').addEventListener('input', e => {
+  S.interval = +e.target.value;
+  q('#ival-v').textContent = S.interval;
+  q('#ival-h').textContent = S.interval;
+});
+
+// ── Init ──────────────────────────────────────────────────────────────────────
 updatePreview();
+startCam();
