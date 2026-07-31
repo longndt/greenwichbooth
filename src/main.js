@@ -248,7 +248,7 @@ q('#app').innerHTML = `
     <!-- Controls -->
     <div class="ctrl-col">
       <div class="tab-bar" id="tab-bar">
-        <button class="tab active" data-tab="frame">🖼 Khung</button>
+        <button class="tab active" data-tab="frame">🖼 Anh</button>
         <button class="tab" data-tab="filter">🎨 Lọc</button>
         <button class="tab" data-tab="sticker">✨ Sticker</button>
       </div>
