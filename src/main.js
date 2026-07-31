@@ -605,12 +605,12 @@ function showResult() {
   q('#poster-img').src = S.posterUrl;
   q('#dl-link').href   = S.posterUrl;
   q('#qr-img').src     = '';
-  q('#qr-wrap').classList.add('qr-loading');
+  q('.qr-wrap').classList.add('qr-loading');
   q('#qr-title').textContent = 'Đang tạo link...';
   q('#rov').classList.remove('hidden');
 
   uploadPoster(S.posterUrl).then(dlUrl => {
-    q('#qr-wrap').classList.remove('qr-loading');
+    q('.qr-wrap').classList.remove('qr-loading');
     if (!dlUrl) {
       q('#qr-title').textContent = 'Không tạo được link';
       return;
