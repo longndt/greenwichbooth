@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  greenwichbooth:
+    build: .
+    container_name: greenwichbooth
+    ports:
+      - "9080:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
