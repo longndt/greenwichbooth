@@ -376,7 +376,11 @@ async function shoot() {
   q('#cov').classList.add('hidden');
   q('.ctrl-col').classList.remove('shooting');
   q('#shoot-btn').disabled = false;
-  await buildPoster();
+  try {
+    await buildPoster();
+  } catch (err) {
+    console.error('buildPoster failed:', err);
+  }
   showResult();
   S.mode = 'done';
 }
@@ -384,17 +388,24 @@ async function shoot() {
 function capFrame(cam) {
   const vw = cam.videoWidth, vh = cam.videoHeight;
   const sz = Math.min(vw, vh);
-  const c  = document.createElement('canvas');
-  c.width = sz; c.height = sz;
-  const cx = c.getContext('2d');
-  cx.save();
+
+  // Step 1: capture raw mirrored frame
+  const raw = document.createElement('canvas');
+  raw.width = sz; raw.height = sz;
+  const rx = raw.getContext('2d');
+  rx.translate(sz, 0); rx.scale(-1, 1);
+  rx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
+
+  // Step 2: apply CSS filter via a separate canvas (avoids video-taint risk)
   const fCss = FILTERS[S.filterIdx].css;
-  if (fCss !== 'none') cx.filter = fCss;
-  cx.translate(sz, 0);
-  cx.scale(-1, 1); // mirror for selfie
-  cx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
-  cx.restore();
-  return c.toDataURL('image/jpeg', 0.9);
+  if (fCss === 'none') return raw.toDataURL('image/jpeg', 0.9);
+
+  const out = document.createElement('canvas');
+  out.width = sz; out.height = sz;
+  const ox = out.getContext('2d');
+  ox.filter = fCss;
+  ox.drawImage(raw, 0, 0);
+  return out.toDataURL('image/jpeg', 0.9);
 }
 
 // ── Poster composition (1080×1440) — 4-panel vertical stack ─────────────────────
@@ -553,7 +564,7 @@ function drawBorder(ctx, f, W, H) {
 }
 
 function drawPhoto(ctx, url, x, y, w, h) {
-  return new Promise(res => {
+  return new Promise((res, rej) => {
     const img = new Image();
     img.onload = () => {
       const scale = Math.max(w / img.width, h / img.height);
@@ -564,14 +575,16 @@ function drawPhoto(ctx, url, x, y, w, h) {
       ctx.restore();
       res();
     };
+    img.onerror = rej;
     img.src = url;
   });
 }
 
 function drawImg(ctx, url, x, y, w, h) {
-  return new Promise(res => {
+  return new Promise((res, rej) => {
     const img = new Image();
     img.onload = () => { ctx.drawImage(img, x, y, w, h); res(); };
+    img.onerror = rej;
     img.src = url;
   });
 }
