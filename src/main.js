@@ -233,8 +233,8 @@ q('#app').innerHTML = `
       </div>
       <div class="dl-info">
         <div class="qr-hint">
-          <strong>📱 Quét để tải về</strong>
-          <span>điện thoại · không cần app</span>
+          <strong id="qr-title">Đang tạo link...</strong>
+          <span>Sắp xong, chờ chút</span>
         </div>
         <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về máy</a>
       </div>
@@ -395,27 +395,16 @@ async function buildPoster() {
   ctx.font = '500 24px Arial, sans-serif';
   ctx.fillText(f.sub, titleX, 68);
 
-  // Bottom-bar: text
-  const btmY      = H - BAR;
-  const btmCol    = f.light ? (f.textColor || '#1a1a1a') : 'rgba(255,255,255,0.82)';
+  // Bottom-bar: text only (QR encode link tải về — chỉ hiện trên màn hình result)
+  const btmY   = H - BAR;
+  const btmCol = f.light ? (f.textColor || '#1a1a1a') : 'rgba(255,255,255,0.82)';
   ctx.fillStyle = btmCol;
   ctx.font = '700 26px Arial, sans-serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText('#GreenwichVietnam', 22, btmY + BAR / 2);
+  ctx.fillText('greenwich.edu.vn', 22, btmY + BAR / 2);
   ctx.textAlign = 'right';
-  ctx.fillText('greenwich.edu.vn', W - 138, btmY + BAR / 2);
+  ctx.fillText('#GreenwichVietnam', W - 22, btmY + BAR / 2);
   ctx.textAlign = 'left';
-
-  // Bottom-bar: QR code
-  const qrDark = f.light ? f.accent : f.bg;
-  const qrDataUrl = await QRCode.toDataURL(window.location.href, {
-    margin: 1, width: 120,
-    color: { dark: qrDark, light: '#ffffff' },
-  });
-  // White box behind QR for contrast
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(W - 124, btmY + (BAR - 94) / 2, 90, 90);
-  await drawImg(ctx, qrDataUrl, W - 122, btmY + (BAR - 90) / 2, 86, 86);
 }
 
 function drawBar(ctx, f, x, y, w, h) {
@@ -497,18 +486,22 @@ function showResult() {
   S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.92);
   q('#poster-img').src = S.posterUrl;
   q('#dl-link').href   = S.posterUrl;
+  q('#qr-img').src     = '';
+  q('#qr-wrap').classList.add('qr-loading');
+  q('#qr-title').textContent = 'Đang tạo link...';
   q('#rov').classList.remove('hidden');
 
-  // Show QR immediately (points to booth) while upload is in progress
-  const qrOpts = { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } };
-  QRCode.toDataURL(window.location.href, qrOpts)
-    .then(qr => { q('#qr-img').src = qr; });
-
-  // Replace QR with direct download URL once upload completes
   uploadPoster(S.posterUrl).then(dlUrl => {
-    if (!dlUrl) return;
-    QRCode.toDataURL(dlUrl, qrOpts)
-      .then(qr => { q('#qr-img').src = qr; });
+    q('#qr-wrap').classList.remove('qr-loading');
+    if (!dlUrl) {
+      q('#qr-title').textContent = 'Không tạo được link';
+      return;
+    }
+    QRCode.toDataURL(dlUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
+      .then(qr => {
+        q('#qr-img').src = qr;
+        q('#qr-title').textContent = '📱 Quét để tải về';
+      });
   });
 }
 
