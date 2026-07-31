@@ -200,16 +200,32 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
-      <div class="ctrl-sec">
-        <div class="ctrl-lbl">Khung ảnh</div>
-        <div class="frame-grid" id="frame-grid">
-          ${FRAMES.map((f, i) => makeFcard(f, i)).join('')}
+      <div class="tab-bar" id="tab-bar">
+        <button class="tab active" data-tab="frame">🖼 Khung</button>
+        <button class="tab" data-tab="filter">🎨 Lọc</button>
+        <button class="tab" data-tab="sticker">✨ Sticker</button>
+      </div>
+
+      <div class="tab-pane" id="tab-frame">
+        <div class="ctrl-sec">
+          <div class="frame-grid" id="frame-grid">
+            ${FRAMES.map((f, i) => makeFcard(f, i)).join('')}
+          </div>
+        </div>
+        <div class="ctrl-sec ctrl-sec--slim">
+          <div class="ctrl-lbl">Thời gian: <strong id="ival-v">2</strong>s</div>
+          <input type="range" id="ival" min="2" max="6" value="2" step="1"/>
         </div>
       </div>
 
-      <div class="ctrl-sec ctrl-sec--slim">
-        <div class="ctrl-lbl">Thời gian: <strong id="ival-v">2</strong>s</div>
-        <input type="range" id="ival" min="2" max="6" value="2" step="1"/>
+      <div class="tab-pane hidden" id="tab-filter">
+        <div class="ctrl-lbl" style="padding:0 2px 4px">Bộ lọc màu</div>
+        <div id="filter-grid" class="filter-grid"></div>
+      </div>
+
+      <div class="tab-pane hidden" id="tab-sticker">
+        <div class="ctrl-lbl" style="padding:0 2px 4px">Sticker</div>
+        <div id="sticker-grid" class="sticker-grid"></div>
       </div>
 
       <div class="photo-grid" id="photo-grid">
@@ -572,6 +588,16 @@ function retake() {
   qa('.pv').forEach(p => { p.src = ''; });
   q('.ctrl-col').classList.remove('shooting');
 }
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+q('#tab-bar').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  qa('.tab').forEach(t => t.classList.remove('active'));
+  qa('.tab-pane').forEach(p => p.classList.add('hidden'));
+  tab.classList.add('active');
+  q(`#tab-${tab.dataset.tab}`).classList.remove('hidden');
+});
 
 // ── Events ────────────────────────────────────────────────────────────────────
 q('#shoot-btn').addEventListener('click', shoot);

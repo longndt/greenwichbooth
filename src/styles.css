@@ -241,9 +241,65 @@ html, body {
 .ctrl-col {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 12px 12px 12px 0;
+  gap: 8px;
+  padding: 10px 10px 10px 0;
 }
+
+/* ── Tab bar ─────────────────────────────────────────────── */
+.tab-bar {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  flex-shrink: 0;
+}
+
+.tab {
+  padding: 7px 4px;
+  border-radius: 8px;
+  border: none;
+  background: none;
+  color: var(--dim);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s;
+  white-space: nowrap;
+}
+
+.tab:hover { color: var(--text); background: rgba(255,255,255,0.06); }
+
+.tab.active {
+  background: linear-gradient(135deg, var(--green), #009955);
+  color: white;
+  box-shadow: 0 2px 12px rgba(0,107,63,0.45);
+}
+
+/* ── Tab panes ───────────────────────────────────────────── */
+.tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+.tab-pane::-webkit-scrollbar { display: none; }
+.tab-pane.hidden { display: none; }
+
+/* placeholder grids populated by step 2/3 */
+.filter-grid, .sticker-grid {
+  display: grid;
+  gap: 6px;
+}
+.filter-grid  { grid-template-columns: repeat(3, 1fr); }
+.sticker-grid { grid-template-columns: repeat(4, 1fr); }
 
 .ctrl-sec { display: flex; flex-direction: column; gap: 8px; }
 .ctrl-sec--slim { gap: 6px; }
@@ -263,7 +319,7 @@ html, body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 6px;
-  max-height: 296px;
+  max-height: 360px;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.15) transparent;
@@ -596,7 +652,8 @@ input[type="range"] {
   min-height: 0;
 }
 
-.ctrl-col.shooting .ctrl-sec,
+.ctrl-col.shooting .tab-bar,
+.ctrl-col.shooting .tab-pane,
 .ctrl-col.shooting .shoot-btn { display: none; }
 .ctrl-col.shooting .photo-grid { display: grid; }
 
