@@ -227,19 +227,19 @@ q('#app').innerHTML = `
   <div class="result-card">
     <p class="result-title">🎉 Xong rồi!</p>
     <img class="poster-img" id="poster-img" alt="Your photo"/>
-    <div class="qr-blk hidden" id="qr-blk">
-      <div class="qr-box">
-        <img id="qr-img" alt="QR code"/>
+    <div class="dl-row">
+      <div class="qr-wrap">
+        <img id="qr-img" alt="QR"/>
       </div>
-      <div class="qr-info">
-        <strong>Quét để tải về</strong>
-        <span>điện thoại · không cần app</span>
+      <div class="dl-info">
+        <div class="qr-hint">
+          <strong>📱 Quét để tải về</strong>
+          <span>điện thoại · không cần app</span>
+        </div>
+        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về máy</a>
       </div>
     </div>
-    <div class="result-btns">
-      <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về</a>
-      <button id="retake-btn" class="btn-sec">↩ Chụp lại</button>
-    </div>
+    <button id="retake-btn" class="btn-sec btn-full">↩ Chụp lại</button>
   </div>
 </div>
 
@@ -499,10 +499,16 @@ function showResult() {
   q('#dl-link').href   = S.posterUrl;
   q('#rov').classList.remove('hidden');
 
+  // Show QR immediately (points to booth) while upload is in progress
+  const qrOpts = { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } };
+  QRCode.toDataURL(window.location.href, qrOpts)
+    .then(qr => { q('#qr-img').src = qr; });
+
+  // Replace QR with direct download URL once upload completes
   uploadPoster(S.posterUrl).then(dlUrl => {
     if (!dlUrl) return;
-    QRCode.toDataURL(dlUrl, { margin: 1, width: 160, color: { dark: '#006b3f', light: '#fff' } })
-      .then(qr => { q('#qr-img').src = qr; q('#qr-blk').classList.remove('hidden'); });
+    QRCode.toDataURL(dlUrl, qrOpts)
+      .then(qr => { q('#qr-img').src = qr; });
   });
 }
 
@@ -522,7 +528,7 @@ async function uploadPoster(dataUrl) {
 function retake() {
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
-  q('#qr-blk').classList.add('hidden');
+  q('#qr-img').src = '';
   qa('.dot').forEach(d => d.classList.remove('done'));
   qa('.pv').forEach(p => { p.src = ''; p.classList.remove('filled'); });
   q('.ctrl-col').classList.remove('shooting');
