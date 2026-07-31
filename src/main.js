@@ -334,7 +334,7 @@ function updatePreview() {
 
 // ── Shoot sequence ────────────────────────────────────────────────────────────
 async function shoot() {
-  if (S.mode === 'shooting') return;
+  if (S.mode !== 'ready') return;
   if (!S.stream) { await startCam(); await sleep(600); }
   const cam = q('#cam');
   if (!cam.srcObject || cam.videoWidth === 0) return;
@@ -376,13 +376,13 @@ async function shoot() {
   q('#cov').classList.add('hidden');
   q('.ctrl-col').classList.remove('shooting');
   q('#shoot-btn').disabled = false;
+  S.mode = 'done';
   try {
-    await buildPoster();
+    await Promise.race([buildPoster(), sleep(10000)]);
   } catch (err) {
     console.error('buildPoster failed:', err);
   }
   showResult();
-  S.mode = 'done';
 }
 
 function capFrame(cam) {
@@ -567,13 +567,15 @@ function drawPhoto(ctx, url, x, y, w, h) {
   return new Promise((res, rej) => {
     const img = new Image();
     img.onload = () => {
-      const scale = Math.max(w / img.width, h / img.height);
-      const dw = img.width * scale, dh = img.height * scale;
-      ctx.save();
-      ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
-      ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
-      ctx.restore();
-      res();
+      try {
+        const scale = Math.max(w / img.width, h / img.height);
+        const dw = img.width * scale, dh = img.height * scale;
+        ctx.save();
+        ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
+        ctx.restore();
+        res();
+      } catch (e) { rej(e); }
     };
     img.onerror = rej;
     img.src = url;
@@ -583,7 +585,10 @@ function drawPhoto(ctx, url, x, y, w, h) {
 function drawImg(ctx, url, x, y, w, h) {
   return new Promise((res, rej) => {
     const img = new Image();
-    img.onload = () => { ctx.drawImage(img, x, y, w, h); res(); };
+    img.onload = () => {
+      try { ctx.drawImage(img, x, y, w, h); res(); }
+      catch (e) { rej(e); }
+    };
     img.onerror = rej;
     img.src = url;
   });
