@@ -601,33 +601,63 @@ input[type="range"] {
 .ctrl-col.shooting .shoot-btn { display: none; }
 .ctrl-col.shooting .photo-grid { display: grid; }
 
-/* slot wrapper — grid item, fills 1fr row */
+/* ── Photo slot — 2×2 grid item ─────────────────────────── */
 .pv-slot {
   position: relative;
   overflow: hidden;
-  border-radius: 8px;
-  border: 2px dashed rgba(255,255,255,0.15);
-  background: rgba(255,255,255,0.04);
+  border-radius: 10px;
+  border: 1.5px dashed rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.03);
   min-height: 0;
+  transition: border-color 0.25s, box-shadow 0.25s;
 }
 
-.pv-num {
+/* camera icon placeholder for empty slot */
+.pv-slot::before {
+  content: '📷';
   position: absolute;
-  inset: 0;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 22px;
+  opacity: 0.18;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.pv-slot.filled::before { opacity: 0; }
+
+/* green glow when filled */
+.pv-slot.filled {
+  border-style: solid;
+  border-color: var(--emerald);
+  box-shadow: 0 0 14px rgba(45,215,122,0.22), inset 0 0 0 1px rgba(45,215,122,0.1);
+}
+
+/* number badge — bottom-left corner */
+.pv-badge {
+  position: absolute;
+  bottom: 5px; left: 5px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.52);
+  color: rgba(255,255,255,0.55);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Unbounded', sans-serif;
-  font-size: 28px;
-  font-weight: 900;
-  color: rgba(255,255,255,0.1);
   pointer-events: none;
+  transition: background 0.25s, color 0.25s;
+  z-index: 2;
 }
 
-.pv-slot.filled { border-style: solid; border-color: var(--emerald); }
-.pv-slot.filled .pv-num { display: none; }
+.pv-slot.filled .pv-badge {
+  background: var(--emerald);
+  color: #05200e;
+}
 
-/* photo img — fills the slot */
+/* photo img */
 .pv {
   width: 100%;
   height: 100%;
@@ -639,12 +669,12 @@ input[type="range"] {
 
 .pv-slot.filled .pv {
   opacity: 1;
-  animation: pv-pop 0.38s cubic-bezier(0.34,1.56,0.64,1);
+  animation: pv-pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
 }
 
 @keyframes pv-pop {
-  from { transform: scale(0.8); }
-  to   { transform: scale(1); }
+  from { transform: scale(0.82); opacity: 0.6; }
+  to   { transform: scale(1);    opacity: 1; }
 }
 
 @media (max-width: 680px) {
@@ -655,7 +685,8 @@ input[type="range"] {
     gap: 5px;
   }
   .ctrl-col.shooting .photo-grid .pv-slot { flex: 1; }
-  .pv-num { font-size: 18px; }
+  .pv-slot::before { font-size: 16px; }
+  .pv-badge { width: 16px; height: 16px; font-size: 9px; }
 }
 
 /* ── Short landscape ─────────────────────────────────────── */

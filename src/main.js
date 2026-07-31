@@ -207,10 +207,10 @@ q('#app').innerHTML = `
       </div>
 
       <div class="photo-grid" id="photo-grid">
-        <div class="pv-slot" id="pvs0"><span class="pv-num">1</span><img class="pv" id="pv0" alt=""/></div>
-        <div class="pv-slot" id="pvs1"><span class="pv-num">2</span><img class="pv" id="pv1" alt=""/></div>
-        <div class="pv-slot" id="pvs2"><span class="pv-num">3</span><img class="pv" id="pv2" alt=""/></div>
-        <div class="pv-slot" id="pvs3"><span class="pv-num">4</span><img class="pv" id="pv3" alt=""/></div>
+        <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt=""/><span class="pv-badge">1</span></div>
+        <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt=""/><span class="pv-badge">2</span></div>
+        <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt=""/><span class="pv-badge">3</span></div>
+        <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt=""/><span class="pv-badge">4</span></div>
       </div>
 
       <button class="shoot-btn" id="shoot-btn">
