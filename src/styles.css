@@ -76,7 +76,7 @@ html, body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: 1fr 276px;
+  grid-template-columns: 7fr 3fr;
 }
 
 /* ── Camera column ───────────────────────────────────────── */
@@ -242,7 +242,7 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  padding: 10px 10px 10px 0;
+  padding: 10px 14px 10px 8px;
 }
 
 /* ── Tab bar ─────────────────────────────────────────────── */
