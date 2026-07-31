@@ -376,6 +376,29 @@ async function buildPoster() {
   ];
   await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], W - GAP * 2, ph)));
 
+  // Dashed border around each photo
+  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 5]);
+  for (let i = 0; i < 4; i++) {
+    const [px, py] = pos[i];
+    ctx.strokeRect(px + 3, py + 3, W - GAP * 2 - 6, ph - 6);
+  }
+  ctx.setLineDash([]);
+
+  // Dot-row separators between photos
+  ctx.fillStyle = f.accent + 'CC';
+  for (let i = 1; i < 4; i++) {
+    const sepY = Math.round(pos[i][1] - GAP / 2);
+    const numDots = Math.floor((W - GAP * 10) / 12);
+    const step = (W - GAP * 10) / numDots;
+    for (let d = 0; d <= numDots; d++) {
+      ctx.beginPath();
+      ctx.arc(GAP * 5 + d * step, sepY, 2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
   // Bars
   drawBar(ctx, f, 0, 0, W, BAR);
   drawBar(ctx, f, 0, H - BAR, W, BAR);
@@ -383,32 +406,49 @@ async function buildPoster() {
   // Outer border
   drawBorder(ctx, f, W, H);
 
+  // Decorative dot border (inside main border) for special frames
+  if (f.borderDouble || f.id === 'burgundy') {
+    const margin = (f.borderW || 6) + 12;
+    const step = 16, r = 2;
+    ctx.fillStyle = f.accent + '88';
+    for (let x = margin; x <= W - margin; x += step) {
+      ctx.beginPath(); ctx.arc(x, margin, r, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, H - margin, r, 0, Math.PI * 2); ctx.fill();
+    }
+    for (let y = margin + step; y < H - margin; y += step) {
+      ctx.beginPath(); ctx.arc(margin, y, r, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W - margin, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+
   // Top-bar: Lion mascot + text
   await drawSvg(ctx, LION, 12, (BAR - 100) / 2, 100, 100);
 
   const titleX    = 130;
   const titleCol  = f.textColor || '#FFFFFF';
   const subCol    = f.subColor  || 'rgba(255,255,255,0.72)';
-  const titleSize = 48;
+  const titleSize = f.title.length > 20 ? 38 : 48;
 
   ctx.textBaseline = 'top';
   ctx.fillStyle = titleCol;
   ctx.font = `900 ${titleSize}px "Arial Black", Arial, sans-serif`;
-  ctx.fillText(f.title, titleX, 20);
+  ctx.fillText(f.title, titleX, 18);
 
   ctx.fillStyle = subCol;
-  ctx.font = '600 28px Arial, sans-serif';
-  ctx.fillText(f.sub, titleX, 80);
+  ctx.font = '600 26px Arial, sans-serif';
+  ctx.fillText(f.sub, titleX, 78);
 
-  // Bottom-bar: text
+  // Bottom-bar: centered branding
   const btmY   = H - BAR;
   const btmCol = f.light ? (f.textColor || '#1a1a1a') : titleCol;
-  ctx.fillStyle = btmCol;
-  ctx.font = '700 28px Arial, sans-serif';
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('GREENWICH.EDU.VN', 22, btmY + BAR / 2);
-  ctx.textAlign = 'right';
-  ctx.fillText('#GREENWICHVN', W - 22, btmY + BAR / 2);
+  ctx.fillStyle = btmCol;
+  ctx.font = '900 32px "Arial Black", Arial, sans-serif';
+  ctx.fillText('GREENWICH VIETNAM', W / 2, btmY + BAR * 0.36);
+  ctx.fillStyle = subCol;
+  ctx.font = '500 20px Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, btmY + BAR * 0.72);
   ctx.textAlign = 'left';
 }
 

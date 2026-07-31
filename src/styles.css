@@ -291,7 +291,7 @@ html, body {
 
 .fcard-thumb {
   width: 100%;
-  aspect-ratio: 5/4;
+  aspect-ratio: 3/4;
   border-radius: 7px;
   border: 2px solid rgba(255,255,255,0.12);
   overflow: hidden;
@@ -309,14 +309,13 @@ html, body {
 
 .fct-mid {
   flex: 1;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2px;
   padding: 2px;
 }
 
-.fct-mid span { border-radius: 2px; }
+.fct-mid span { border-radius: 2px; flex: 1; }
 
 .fct-bot { height: 9px; flex-shrink: 0; }
 
@@ -437,7 +436,7 @@ input[type="range"] {
   width: 100%;
   border-radius: 10px;
   display: block;
-  max-height: 44dvh;
+  max-height: 55dvh;
   object-fit: contain;
   background: #000;
   border: 1px solid rgba(255,255,255,0.08);
