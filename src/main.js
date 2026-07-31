@@ -132,11 +132,25 @@ const FILTERS = [
   { id: 'vintage', label: 'Vintage',     css: 'sepia(0.55) saturate(0.85) brightness(0.94) contrast(1.08)' },
 ];
 
+// ── 9 stickers (1 = none + 8 emoji) — drawn on top-bar right of poster ────────
+const STICKERS = [
+  { id: 'none',    label: 'Không',   icon: '' },
+  { id: 'sparkle', label: 'Vui ✨',  icon: '✨' },
+  { id: 'sakura',  label: 'Hoa 🌸',  icon: '🌸' },
+  { id: 'star',    label: 'Sao ⭐',  icon: '⭐' },
+  { id: 'fire',    label: 'Hot 🔥',  icon: '🔥' },
+  { id: 'heart',   label: 'Tim 💜',  icon: '💜' },
+  { id: 'ribbon',  label: 'Nơ 🎀',   icon: '🎀' },
+  { id: 'moon',    label: 'Đêm 🌙',  icon: '🌙' },
+  { id: 'party',   label: 'Party 🎉', icon: '🎉' },
+];
+
 // ── State ─────────────────────────────────────────────────────────────────────
 const S = {
   mode: 'ready',
   frameIdx: 0,
   filterIdx: 0,
+  stickerIdx: 0,
   interval: 2,
   photos: [],
   stream: null,
@@ -188,6 +202,7 @@ q('#app').innerHTML = `
       <div class="cam-box">
         <video id="cam" autoplay muted playsinline></video>
         <div class="frame-ov" id="fov"></div>
+        <div class="sticker-ov hidden" id="sov"></div>
 
         <div class="cnt-ov hidden" id="cov">
           <div class="cnt-num-wrap">
@@ -480,6 +495,16 @@ async function buildPoster() {
   ctx.font = '500 20px Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, btmY + BAR * 0.72);
   ctx.textAlign = 'left';
+
+  // Sticker — top-bar right side (doesn't cover faces)
+  if (S.stickerIdx > 0) {
+    ctx.font = '78px serif';
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'right';
+    ctx.fillText(STICKERS[S.stickerIdx].icon, W - 14, BAR / 2);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+  }
 }
 
 function drawBar(ctx, f, x, y, w, h) {
@@ -603,6 +628,22 @@ function retake() {
   q('.ctrl-col').classList.remove('shooting');
 }
 
+// ── Sticker button HTML ───────────────────────────────────────────────────────
+function makeStkr(s, i) {
+  return `
+    <button class="stkr${i === 0 ? ' active' : ''}" data-si="${i}" title="${s.label}">
+      <div class="stkr-icon">${i === 0 ? '✕' : s.icon}</div>
+      <span class="stkr-lbl">${s.label}</span>
+    </button>`;
+}
+
+function updateStickerOv() {
+  const sov = q('#sov');
+  if (S.stickerIdx === 0) { sov.classList.add('hidden'); return; }
+  sov.textContent = STICKERS[S.stickerIdx].icon;
+  sov.classList.remove('hidden');
+}
+
 // ── Filter swatch card HTML ───────────────────────────────────────────────────
 // Uses a fixed colorful gradient then applies the CSS filter — shows real effect
 const SWATCH_BASE = 'linear-gradient(135deg,#f4a,#ffd,#4cf)';
@@ -650,6 +691,15 @@ q('#ival').addEventListener('input', e => {
   q('#ival-h').textContent = S.interval;
 });
 
+q('#sticker-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.stkr');
+  if (!btn) return;
+  S.stickerIdx = +btn.dataset.si;
+  qa('.stkr').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateStickerOv();
+});
+
 q('#filter-grid').addEventListener('click', e => {
   const btn = e.target.closest('.flt');
   if (!btn) return;
@@ -660,6 +710,7 @@ q('#filter-grid').addEventListener('click', e => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-q('#filter-grid').innerHTML = FILTERS.map((f, i) => makeFlt(f, i)).join('');
+q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
+q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
 updatePreview();
 startCam();
