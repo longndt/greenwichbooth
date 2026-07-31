@@ -42,6 +42,12 @@ const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
 // pattern     → 'dots' | 'lines' subtle overlay on bars
 const FRAMES = [
   {
+    id: 'burgundy', label: 'Burgundy Luxe',  emoji: '🎬',
+    bg: '#5A1C24',  bgEnd: '#3B1118',        accent: '#E8E8E8',
+    title: 'GREENWICH',           sub: 'VIETNAM',
+    borderW: 7,
+  },
+  {
     id: 'classic',  label: 'Classic',        emoji: '🌿',
     bg: '#006b3f',  accent: '#FFCB2F',
     title: 'GREENWICH VIETNAM',   sub: 'greenwich.edu.vn',
@@ -244,7 +250,7 @@ q('#app').innerHTML = `
 </div>
 
 <div class="flash" id="flash"></div>
-<canvas id="cvs" width="1080" height="1080" style="display:none"></canvas>
+<canvas id="cvs" width="1080" height="1440" style="display:none"></canvas>
 `;
 
 // ── Camera ────────────────────────────────────────────────────────────────────
@@ -346,29 +352,29 @@ function capFrame(cam) {
   return c.toDataURL('image/jpeg', 0.9);
 }
 
-// ── Poster composition (1080×1080) ────────────────────────────────────────────
+// ── Poster composition (1080×1440) — 4-panel vertical stack ─────────────────────
 async function buildPoster() {
   await document.fonts.ready;
 
   const cvs = q('#cvs');
+  cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1080, BAR = 112, GAP = 8;
+  const W = 1080, H = 1440, BAR = 120, GAP = 12;
   const f = FRAMES[S.frameIdx];
 
   // Base fill
-  ctx.fillStyle = '#0a0a0a';
+  ctx.fillStyle = f.bg;
   ctx.fillRect(0, 0, W, H);
 
-  // 2×2 photo grid
-  const cw = (W - GAP * 3) / 2;
-  const ch = (H - BAR * 2 - GAP * 3) / 2;
+  // 1×4 photo grid (vertical stack)
+  const ph = (H - BAR * 2 - GAP * 5) / 4;
   const pos = [
-    [GAP,          BAR + GAP],
-    [GAP * 2 + cw, BAR + GAP],
-    [GAP,          BAR + GAP * 2 + ch],
-    [GAP * 2 + cw, BAR + GAP * 2 + ch],
+    [GAP, BAR + GAP],
+    [GAP, BAR + GAP * 2 + ph],
+    [GAP, BAR + GAP * 3 + ph * 2],
+    [GAP, BAR + GAP * 4 + ph * 3],
   ];
-  await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, ...pos[i], cw, ch)));
+  await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], W - GAP * 2, ph)));
 
   // Bars
   drawBar(ctx, f, 0, 0, W, BAR);
@@ -377,33 +383,32 @@ async function buildPoster() {
   // Outer border
   drawBorder(ctx, f, W, H);
 
-  // Top-bar: Lion mascot
-  await drawSvg(ctx, LION, 10, (BAR - 92) / 2, 90, 92);
+  // Top-bar: Lion mascot + text
+  await drawSvg(ctx, LION, 12, (BAR - 100) / 2, 100, 100);
 
-  // Top-bar: text
-  const titleX    = 114;
+  const titleX    = 130;
   const titleCol  = f.textColor || '#FFFFFF';
-  const subCol    = f.subColor  || 'rgba(255,255,255,0.65)';
-  const titleSize = f.title.length > 20 ? 40 : f.title.length > 14 ? 46 : 52;
+  const subCol    = f.subColor  || 'rgba(255,255,255,0.72)';
+  const titleSize = 48;
 
   ctx.textBaseline = 'top';
-  ctx.fillStyle = f.accent;
+  ctx.fillStyle = titleCol;
   ctx.font = `900 ${titleSize}px "Arial Black", Arial, sans-serif`;
-  ctx.fillText(f.title, titleX, 14);
+  ctx.fillText(f.title, titleX, 20);
 
   ctx.fillStyle = subCol;
-  ctx.font = '500 24px Arial, sans-serif';
-  ctx.fillText(f.sub, titleX, 68);
+  ctx.font = '600 28px Arial, sans-serif';
+  ctx.fillText(f.sub, titleX, 80);
 
-  // Bottom-bar: text only (QR encode link tải về — chỉ hiện trên màn hình result)
+  // Bottom-bar: text
   const btmY   = H - BAR;
-  const btmCol = f.light ? (f.textColor || '#1a1a1a') : 'rgba(255,255,255,0.82)';
+  const btmCol = f.light ? (f.textColor || '#1a1a1a') : titleCol;
   ctx.fillStyle = btmCol;
-  ctx.font = '700 26px Arial, sans-serif';
+  ctx.font = '700 28px Arial, sans-serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText('greenwich.edu.vn', 22, btmY + BAR / 2);
+  ctx.fillText('GREENWICH.EDU.VN', 22, btmY + BAR / 2);
   ctx.textAlign = 'right';
-  ctx.fillText('#GreenwichVietnam', W - 22, btmY + BAR / 2);
+  ctx.fillText('#GREENWICHVN', W - 22, btmY + BAR / 2);
   ctx.textAlign = 'left';
 }
 
