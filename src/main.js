@@ -42,6 +42,26 @@ const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
 // pattern     → 'dots' | 'lines' subtle overlay on bars
 const FRAMES = [
   {
+    id: 'studio-prime', label: '✨ Studio Prime', emoji: '💎',
+    bg: '#3D1B2F',  bgEnd: '#1A0F1F',        accent: '#D4AF37',
+    title: 'GREENWICH STUDIO',    sub: 'Memories Captured',
+    borderW: 8,     borderDouble: true,      decorStyle: 'diamonds',
+    photoLocation: 'Hà Nội Campus',
+  },
+  {
+    id: 'film-strip', label: '🎞️ Film Strip',   emoji: '🎥',
+    bg: '#1A1A1A',  accent: '#FFD700',
+    title: 'GREENWICH MOMENTS',   sub: 'Frame by Frame',
+    borderW: 6,     decorStyle: 'filmstrip',
+    photoLocation: 'Photo Booth',
+  },
+  {
+    id: 'modern-chic', label: '🎀 Modern Chic',  emoji: '✨',
+    bg: '#2C3E50',  bgEnd: '#1A252F',        accent: '#E8698A',
+    title: 'GREENWICH VIBES',     sub: 'Picture Perfect',
+    decorStyle: 'squares',        photoLocation: 'Campus Studio',
+  },
+  {
     id: 'burgundy', label: 'Burgundy Luxe',  emoji: '🎬',
     bg: '#5A1C24',  bgEnd: '#3B1118',        accent: '#E8E8E8',
     title: 'GREENWICH',           sub: 'VIETNAM',
@@ -504,8 +524,19 @@ async function buildPoster() {
   ctx.fillText('GREENWICH VIETNAM', W / 2, btmY + BAR * 0.36);
   ctx.fillStyle = subCol;
   ctx.font = '500 20px Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, btmY + BAR * 0.72);
+  if (f.photoLocation) {
+    ctx.fillText(f.photoLocation, W / 2, btmY + BAR * 0.65);
+    ctx.font = '400 14px Arial, sans-serif';
+    ctx.fillText('greenwich.edu.vn', W / 2, btmY + BAR * 0.85);
+  } else {
+    ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, btmY + BAR * 0.72);
+  }
   ctx.textAlign = 'left';
+
+  // Decorative elements
+  if (f.decorStyle) {
+    drawDecorations(ctx, f, W, H);
+  }
 
   // Sticker — top-bar right side (doesn't cover faces)
   if (S.stickerIdx > 0) {
@@ -516,6 +547,50 @@ async function buildPoster() {
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
   }
+}
+
+function drawDecorations(ctx, f, W, H) {
+  if (f.decorStyle === 'diamonds') {
+    // Diamond pattern along borders
+    const sz = 20, sp = 28;
+    ctx.fillStyle = f.accent + '44';
+    for (let x = 30; x < W - 30; x += sp) {
+      drawDiamond(ctx, x, 20, sz);
+      drawDiamond(ctx, x, H - 20, sz);
+    }
+    for (let y = 50; y < H - 50; y += sp) {
+      drawDiamond(ctx, 20, y, sz);
+      drawDiamond(ctx, W - 20, y, sz);
+    }
+  } else if (f.decorStyle === 'filmstrip') {
+    // Film strip holes along left & right edges
+    const r = 10, sp = 50;
+    ctx.fillStyle = '#1a1a1a';
+    for (let y = 60; y < H - 60; y += sp) {
+      ctx.beginPath(); ctx.arc(22, y, r, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(W - 22, y, r, 0, Math.PI * 2); ctx.fill();
+    }
+  } else if (f.decorStyle === 'squares') {
+    // Square grid pattern inside border
+    const sz = 18, sp = 32;
+    ctx.strokeStyle = f.accent + '33';
+    ctx.lineWidth = 1.5;
+    for (let x = 25; x < W - 25; x += sp) {
+      for (let y = 25; y < H - 25; y += sp) {
+        ctx.strokeRect(x, y, sz, sz);
+      }
+    }
+  }
+}
+
+function drawDiamond(ctx, cx, cy, sz) {
+  ctx.beginPath();
+  ctx.moveTo(cx, cy - sz);
+  ctx.lineTo(cx + sz, cy);
+  ctx.lineTo(cx, cy + sz);
+  ctx.lineTo(cx - sz, cy);
+  ctx.closePath();
+  ctx.fill();
 }
 
 function drawBar(ctx, f, x, y, w, h) {
