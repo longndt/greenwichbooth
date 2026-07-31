@@ -119,7 +119,7 @@ const FRAMES = [
 const S = {
   mode: 'ready',
   frameIdx: 0,
-  interval: 3,
+  interval: 2,
   photos: [],
   stream: null,
   posterUrl: null,
@@ -161,7 +161,7 @@ q('#app').innerHTML = `
       <div class="hdr-lion">${LION}</div>
       <span class="hdr-name">Greenwich Booth</span>
     </div>
-    <span class="hdr-tag">📸 Photo Studio</span>
+    <span class="hdr-tag">📸 Studio ảnh</span>
   </header>
 
   <div class="main">
@@ -195,15 +195,15 @@ q('#app').innerHTML = `
     <!-- Controls -->
     <div class="ctrl-col">
       <div class="ctrl-sec">
-        <div class="ctrl-lbl">Frame</div>
+        <div class="ctrl-lbl">Khung ảnh</div>
         <div class="frame-grid" id="frame-grid">
           ${FRAMES.map((f, i) => makeFcard(f, i)).join('')}
         </div>
       </div>
 
       <div class="ctrl-sec ctrl-sec--slim">
-        <div class="ctrl-lbl">Delay: <strong id="ival-v">3</strong>s</div>
-        <input type="range" id="ival" min="2" max="6" value="3" step="1"/>
+        <div class="ctrl-lbl">Thời gian: <strong id="ival-v">2</strong>s</div>
+        <input type="range" id="ival" min="2" max="6" value="2" step="1"/>
       </div>
 
       <div class="photo-grid" id="photo-grid">
@@ -216,7 +216,7 @@ q('#app').innerHTML = `
       <button class="shoot-btn" id="shoot-btn">
         <span class="s-icon">📷</span>
         <span class="s-text">CHỤP NGAY</span>
-        <small class="s-hint">4 ảnh · <span id="ival-h">3</span>s mỗi ảnh</small>
+        <small class="s-hint">4 ảnh · <span id="ival-h">2</span>s mỗi ảnh</small>
       </button>
     </div>
   </div>
