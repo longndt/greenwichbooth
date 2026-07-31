@@ -625,14 +625,14 @@ function showResult() {
 
 async function uploadPoster(dataUrl) {
   try {
-    const res = await fetch('/upload', {
+    const res = await fetch('/api/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: dataUrl }),
     });
     if (!res.ok) return null;
     const { url } = await res.json();
-    return `${window.location.origin}${url}`;
+    return url;
   } catch { return null; }
 }
 
