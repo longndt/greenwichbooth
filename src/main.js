@@ -1,7 +1,7 @@
 import QRCode from 'qrcode';
 import './styles.css';
 
-// ── Lion Captain mascot (cute cartoon, Greenwich Vietnam brand) ───────────────
+// ── Lion Captain mascot SVG ───────────────────────────────────────────────────
 const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <path d="M32 58 Q16 82 24 112 L76 112 Q84 82 68 58 Z" fill="#FF6B1A"/>
   <path d="M28 57 L72 57 L74 90 Q74 96 50 96 Q26 96 26 90 Z" fill="#002D72"/>
@@ -12,7 +12,7 @@ const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <circle cx="50" cy="35" r="32" fill="#C96010"/>
   <circle cx="24" cy="20" r="12" fill="#C96010"/>
   <circle cx="76" cy="20" r="12" fill="#C96010"/>
-  <circle cx="50" cy="6" r="11" fill="#C96010"/>
+  <circle cx="50" cy="6"  r="11" fill="#C96010"/>
   <circle cx="50" cy="36" r="24" fill="#F59B30"/>
   <ellipse cx="50" cy="38" rx="18" ry="17" fill="#FFB347"/>
   <circle cx="24" cy="20" r="6" fill="#FFB347"/>
@@ -34,14 +34,88 @@ const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <line x1="65" y1="49" x2="90" y2="49" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
 </svg>`;
 
-// ── Frame designs ─────────────────────────────────────────────────────────────
+// ── 12 frame templates ────────────────────────────────────────────────────────
+// light:true  → bars are light-colored, text must be dark
+// bgEnd       → gradient bar (bg → bgEnd)
+// borderDash  → [dash, gap] for dashed border
+// borderDouble→ thin inner border inside the main border
+// pattern     → 'dots' | 'lines' subtle overlay on bars
 const FRAMES = [
-  { id: 'classic', label: 'Classic',    bg: '#006b3f', accent: '#F7C948', title: 'GREENWICH VIETNAM', sub: 'greenwich.edu.vn' },
-  { id: 'openday', label: 'Open Day',   bg: '#002D72', accent: '#F7C948', title: 'OPEN DAY 2026',     sub: 'Hà Nội · HCM'   },
-  { id: 'captain', label: '🦁 Captain', bg: '#1a1010', accent: '#F7C948', title: 'LION CAPTAIN',      sub: '#GreenwichVN'   },
+  {
+    id: 'classic',  label: 'Classic',        emoji: '🌿',
+    bg: '#006b3f',  accent: '#FFCB2F',
+    title: 'GREENWICH VIETNAM',   sub: 'greenwich.edu.vn',
+  },
+  {
+    id: 'navy',     label: 'Navy Royal',     emoji: '🎓',
+    bg: '#001B5E',  bgEnd: '#002D72',        accent: '#FFCB2F',
+    title: 'UNIVERSITY OF GREENWICH',        sub: 'UK Degree · Vietnam',
+  },
+  {
+    id: 'captain',  label: 'Lion Captain',   emoji: '🦁',
+    bg: '#1A0800',  bgEnd: '#2D1500',        accent: '#FF7A2E',
+    title: 'LION CAPTAIN',        sub: '#GreenwichVN',
+    borderDouble: true,
+  },
+  {
+    id: 'neon',     label: 'Neon Night',     emoji: '⚡',
+    bg: '#040D06',  accent: '#2DD77A',
+    title: 'GREENWICH BOOTH',     sub: 'Photo Studio',
+    pattern: 'dots',
+  },
+  {
+    id: 'sakura',   label: 'Sakura',         emoji: '🌸',
+    bg: '#FCE4EC',  accent: '#E8698A',
+    textColor: '#7B1B3A',         subColor: '#AD4060',
+    title: 'GREENWICH VIETNAM',   sub: 'Kỷ niệm đáng nhớ',
+    light: true,    borderW: 5,
+  },
+  {
+    id: 'emerald',  label: 'Emerald Luxe',   emoji: '💎',
+    bg: '#003820',  bgEnd: '#006b3f',        accent: '#FFCB2F',
+    title: 'GREENWICH VIETNAM',   sub: 'Excellence · Innovation',
+    pattern: 'lines', borderDouble: true,
+  },
+  {
+    id: 'retro',    label: 'Retro Film',     emoji: '📽️',
+    bg: '#2B1D0E',  bgEnd: '#1E1208',        accent: '#C9963A',
+    title: 'GREENWICH MEMORIES',  sub: '♦ Khoảnh khắc sinh viên ♦',
+    borderDash: [14, 8], borderW: 5,
+  },
+  {
+    id: 'black',    label: 'Bold Black',     emoji: '🖤',
+    bg: '#080808',  accent: '#FFCB2F',
+    title: 'GREENWICH',           sub: 'VIETNAM',
+    borderW: 8,     borderDouble: true,
+  },
+  {
+    id: 'sunset',   label: 'Sunset',         emoji: '🌅',
+    bg: '#7C1D06',  bgEnd: '#C2410C',        accent: '#FCD34D',
+    title: 'GREENWICH VIBES',     sub: 'Campus Life',
+  },
+  {
+    id: 'mint',     label: 'Mint Fresh',     emoji: '🍃',
+    bg: '#D1FAE5',  accent: '#059669',
+    textColor: '#064E3B',         subColor: '#047857',
+    title: 'GREENWICH VIETNAM',   sub: 'greenwich.edu.vn',
+    light: true,    borderW: 4,
+  },
+  {
+    id: 'purple',   label: 'Purple Dream',   emoji: '💜',
+    bg: '#1A0B35',  bgEnd: '#2D1A52',        accent: '#A78BFA',
+    title: 'GREENWICH MOMENTS',   sub: 'Dream · Learn · Grow',
+    pattern: 'dots',
+  },
+  {
+    id: 'white',    label: 'Clean White',    emoji: '🤍',
+    bg: '#F9FAFB',  accent: '#006b3f',
+    textColor: '#003D24',         subColor: '#006b3f',
+    title: 'GREENWICH VIETNAM',   sub: 'greenwich.edu.vn',
+    light: true,    borderW: 4,
+  },
 ];
 
-// ── App state ─────────────────────────────────────────────────────────────────
+// ── State ─────────────────────────────────────────────────────────────────────
 const S = {
   mode: 'ready',
   frameIdx: 0,
@@ -55,7 +129,31 @@ const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
-// ── Build HTML ────────────────────────────────────────────────────────────────
+// ── Frame card thumbnail HTML ─────────────────────────────────────────────────
+function makeFcard(f, i) {
+  const midBg  = f.light ? 'rgba(0,0,0,0.06)' : '#0f1e14';
+  const spanBg = f.light ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.18)';
+  const topBg  = f.bgEnd
+    ? `linear-gradient(90deg,${f.bg},${f.bgEnd})`
+    : f.bg;
+  return `
+    <button class="fcard${i === 0 ? ' active' : ''}" data-i="${i}"
+            style="--facc:${f.accent}" title="${f.label}">
+      <div class="fcard-thumb">
+        <div class="fct-top" style="background:${topBg}"></div>
+        <div class="fct-mid" style="background:${midBg}">
+          <span style="background:${spanBg}"></span>
+          <span style="background:${spanBg}"></span>
+          <span style="background:${spanBg}"></span>
+          <span style="background:${spanBg}"></span>
+        </div>
+        <div class="fct-bot" style="background:${f.bg}"></div>
+      </div>
+      <span class="fcard-lbl">${f.emoji} ${f.label}</span>
+    </button>`;
+}
+
+// ── Mount HTML ────────────────────────────────────────────────────────────────
 q('#app').innerHTML = `
 <div class="app">
   <header class="hdr">
@@ -63,20 +161,21 @@ q('#app').innerHTML = `
       <div class="hdr-lion">${LION}</div>
       <span class="hdr-name">Greenwich Booth</span>
     </div>
-    <span class="hdr-tag">Photo Studio</span>
+    <span class="hdr-tag">📸 Photo Studio</span>
   </header>
 
   <div class="main">
+    <!-- Camera -->
     <div class="cam-col">
       <div class="cam-box">
         <video id="cam" autoplay muted playsinline></video>
         <div class="frame-ov" id="fov"></div>
 
         <div class="cnt-ov hidden" id="cov">
-          <div class="cnt-ring">
+          <div class="cnt-num-wrap">
             <div class="cnt-n" id="cnt-n">3</div>
           </div>
-          <div class="cnt-lbl" id="cnt-lbl">Ảnh 1/4</div>
+          <div class="cnt-lbl" id="cnt-lbl">Ảnh 1 / 4</div>
           <div class="dot-strip">
             <span class="dot" id="d0"></span>
             <span class="dot" id="d1"></span>
@@ -86,46 +185,49 @@ q('#app').innerHTML = `
         </div>
 
         <div class="cam-err hidden" id="cerr">
-          <div style="font-size:44px">📷</div>
+          <span class="cam-err-icon">📷</span>
           <p>Không thể dùng camera.<br/>Kiểm tra quyền truy cập.</p>
           <button id="retry-cam" class="btn-outline">Thử lại</button>
         </div>
       </div>
     </div>
 
+    <!-- Controls -->
     <div class="ctrl-col">
       <div class="ctrl-sec">
-        <div class="ctrl-lbl">Chọn frame</div>
-        <div class="chips" id="chips">
-          ${FRAMES.map((f, i) => `
-            <button class="chip${i === 0 ? ' active' : ''}"
-                    style="--c:${f.bg};--a:${f.accent}"
-                    data-i="${i}">${f.label}</button>
-          `).join('')}
+        <div class="ctrl-lbl">Frame</div>
+        <div class="frame-grid" id="frame-grid">
+          ${FRAMES.map((f, i) => makeFcard(f, i)).join('')}
         </div>
       </div>
 
-      <div class="ctrl-sec">
-        <div class="ctrl-lbl">Delay giữa ảnh: <strong id="ival-v">3</strong>s</div>
+      <div class="ctrl-sec ctrl-sec--slim">
+        <div class="ctrl-lbl">Delay: <strong id="ival-v">3</strong>s</div>
         <input type="range" id="ival" min="2" max="6" value="3" step="1"/>
       </div>
 
       <button class="shoot-btn" id="shoot-btn">
         <span class="s-icon">📷</span>
         <span class="s-text">CHỤP NGAY</span>
-        <small class="s-hint">4 ảnh · delay <span id="ival-h">3</span>s</small>
+        <small class="s-hint">4 ảnh · <span id="ival-h">3</span>s mỗi ảnh</small>
       </button>
     </div>
   </div>
 </div>
 
+<!-- Result overlay -->
 <div class="result-ov hidden" id="rov">
   <div class="result-card">
-    <div class="result-title">🎉 Ảnh của bạn!</div>
+    <p class="result-title">🎉 Xong rồi!</p>
     <img class="poster-img" id="poster-img" alt="Your photo"/>
     <div class="qr-blk hidden" id="qr-blk">
-      <img id="qr-img" alt="QR code"/>
-      <span>Quét để tải về điện thoại</span>
+      <div class="qr-box">
+        <img id="qr-img" alt="QR code"/>
+      </div>
+      <div class="qr-info">
+        <strong>Quét để tải về</strong>
+        <span>điện thoại · không cần app</span>
+      </div>
     </div>
     <div class="result-btns">
       <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về</a>
@@ -154,30 +256,30 @@ async function startCam() {
   }
 }
 
-// ── Frame preview overlay on camera ──────────────────────────────────────────
+// ── Frame preview on camera ───────────────────────────────────────────────────
 function updatePreview() {
   const f = FRAMES[S.frameIdx];
+  const topBg    = f.bgEnd ? `linear-gradient(90deg,${f.bg},${f.bgEnd})` : f.bg;
+  const titleCol = f.textColor || '#ffffff';
+  const subCol   = f.subColor  || 'rgba(255,255,255,0.72)';
+
   q('#fov').innerHTML = `
-    <div class="fp" style="--a:${f.accent};--bg2:${f.bg}">
-      <div class="fp-top">
-        <span class="fp-title">${f.title}</span>
+    <div class="fp" style="--acc:${f.accent}">
+      <div class="fp-top" style="background:${topBg}">
+        <span class="fp-title" style="color:${titleCol}">${f.title}</span>
         <div class="fp-lion">${LION}</div>
       </div>
-      <div class="fp-bot">
-        <span>${f.sub}</span>
-        <span>#GreenwichVN</span>
+      <div class="fp-bot" style="background:${f.bg}">
+        <span style="color:${subCol}">${f.sub}</span>
+        <span style="color:${subCol}">#GreenwichVN</span>
       </div>
-    </div>
-  `;
+    </div>`;
 }
 
 // ── Shoot sequence ────────────────────────────────────────────────────────────
 async function shoot() {
   if (S.mode === 'shooting') return;
-  if (!S.stream) {
-    await startCam();
-    await sleep(600);
-  }
+  if (!S.stream) { await startCam(); await sleep(600); }
   const cam = q('#cam');
   if (!cam.srcObject || cam.videoWidth === 0) return;
 
@@ -195,24 +297,22 @@ async function shoot() {
       delete q('#cnt-n').dataset.tick;
       await sleep(920);
     }
-
     q('#cnt-n').textContent = '😊';
     q('#cnt-lbl').textContent = 'Cười lên nào!';
-    await sleep(300);
+    await sleep(280);
 
     S.photos.push(capFrame(cam));
 
     const fl = q('#flash');
     fl.style.opacity = '1';
-    setTimeout(() => { fl.style.opacity = '0'; }, 200);
+    setTimeout(() => { fl.style.opacity = '0'; }, 240);
 
     q(`#d${i}`).classList.add('done');
-    if (i < 3) await sleep(400);
+    if (i < 3) await sleep(380);
   }
 
   q('#cov').classList.add('hidden');
   q('#shoot-btn').disabled = false;
-
   await buildPoster();
   showResult();
   S.mode = 'done';
@@ -221,26 +321,28 @@ async function shoot() {
 function capFrame(cam) {
   const vw = cam.videoWidth, vh = cam.videoHeight;
   const sz = Math.min(vw, vh);
-  const c = document.createElement('canvas');
+  const c  = document.createElement('canvas');
   c.width = sz; c.height = sz;
   const cx = c.getContext('2d');
   cx.save();
   cx.translate(sz, 0);
-  cx.scale(-1, 1); // mirror for selfie feel
+  cx.scale(-1, 1); // mirror for selfie
   cx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
   cx.restore();
   return c.toDataURL('image/jpeg', 0.9);
 }
 
-// ── Compose 1080×1080 poster ──────────────────────────────────────────────────
+// ── Poster composition (1080×1080) ────────────────────────────────────────────
 async function buildPoster() {
+  await document.fonts.ready;
+
   const cvs = q('#cvs');
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1080;
+  const W = 1080, H = 1080, BAR = 112, GAP = 8;
   const f = FRAMES[S.frameIdx];
-  const BAR = 108, GAP = 8;
 
-  ctx.fillStyle = '#111';
+  // Base fill
+  ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, W, H);
 
   // 2×2 photo grid
@@ -252,41 +354,99 @@ async function buildPoster() {
     [GAP,          BAR + GAP * 2 + ch],
     [GAP * 2 + cw, BAR + GAP * 2 + ch],
   ];
-
   await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, ...pos[i], cw, ch)));
 
   // Bars
-  ctx.fillStyle = f.bg;
-  ctx.fillRect(0, 0, W, BAR);
-  ctx.fillRect(0, H - BAR, W, BAR);
+  drawBar(ctx, f, 0, 0, W, BAR);
+  drawBar(ctx, f, 0, H - BAR, W, BAR);
 
-  // Top bar text
+  // Outer border
+  drawBorder(ctx, f, W, H);
+
+  // Top-bar: Lion mascot
+  await drawSvg(ctx, LION, 10, (BAR - 92) / 2, 90, 92);
+
+  // Top-bar: text
+  const titleX    = 114;
+  const titleCol  = f.textColor || '#FFFFFF';
+  const subCol    = f.subColor  || 'rgba(255,255,255,0.65)';
+  const titleSize = f.title.length > 20 ? 40 : f.title.length > 14 ? 46 : 52;
+
   ctx.textBaseline = 'top';
   ctx.fillStyle = f.accent;
-  ctx.font = '900 52px "Arial Black", Arial, sans-serif';
-  ctx.fillText(f.title, 116, 18);
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.font = '600 26px Arial, sans-serif';
-  ctx.fillText(f.sub, 118, 70);
+  ctx.font = `900 ${titleSize}px "Arial Black", Arial, sans-serif`;
+  ctx.fillText(f.title, titleX, 14);
 
-  // Bottom bar text
+  ctx.fillStyle = subCol;
+  ctx.font = '500 24px Arial, sans-serif';
+  ctx.fillText(f.sub, titleX, 68);
+
+  // Bottom-bar: text
+  const btmY      = H - BAR;
+  const btmCol    = f.light ? (f.textColor || '#1a1a1a') : 'rgba(255,255,255,0.82)';
+  ctx.fillStyle = btmCol;
+  ctx.font = '700 26px Arial, sans-serif';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = 'rgba(255,255,255,0.8)';
-  ctx.font = '700 28px Arial, sans-serif';
-  ctx.fillText('#GreenwichVietnam', 20, H - BAR / 2);
+  ctx.fillText('#GreenwichVietnam', 22, btmY + BAR / 2);
   ctx.textAlign = 'right';
-  ctx.fillText('greenwich.edu.vn', W - 140, H - BAR / 2);
+  ctx.fillText('greenwich.edu.vn', W - 138, btmY + BAR / 2);
   ctx.textAlign = 'left';
 
-  // Lion mascot top-left
-  await drawSvg(ctx, LION, 8, 6, 98, 96);
-
-  // QR in bottom-right
+  // Bottom-bar: QR code
+  const qrDark = f.light ? f.accent : f.bg;
   const qrDataUrl = await QRCode.toDataURL(window.location.href, {
     margin: 1, width: 120,
-    color: { dark: f.bg, light: '#ffffff' },
+    color: { dark: qrDark, light: '#ffffff' },
   });
-  await drawImg(ctx, qrDataUrl, W - 128, H - BAR + (BAR - 92) / 2, 92, 92);
+  // White box behind QR for contrast
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(W - 124, btmY + (BAR - 94) / 2, 90, 90);
+  await drawImg(ctx, qrDataUrl, W - 122, btmY + (BAR - 90) / 2, 86, 86);
+}
+
+function drawBar(ctx, f, x, y, w, h) {
+  if (f.bgEnd) {
+    const g = ctx.createLinearGradient(x, y, x + w, y + h);
+    g.addColorStop(0, f.bg);
+    g.addColorStop(1, f.bgEnd);
+    ctx.fillStyle = g;
+  } else {
+    ctx.fillStyle = f.bg;
+  }
+  ctx.fillRect(x, y, w, h);
+
+  if (f.pattern === 'dots') {
+    ctx.fillStyle = 'rgba(255,255,255,0.055)';
+    for (let px = 0; px < w; px += 24) {
+      for (let py = y + 4; py < y + h - 4; py += 20) {
+        ctx.beginPath();
+        ctx.arc(x + px, py, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (f.pattern === 'lines') {
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([]);
+    for (let px = x; px < x + w; px += 28) {
+      ctx.beginPath(); ctx.moveTo(px, y); ctx.lineTo(px, y + h); ctx.stroke();
+    }
+  }
+}
+
+function drawBorder(ctx, f, W, H) {
+  const bw   = f.borderW || 6;
+  const half = bw / 2;
+  ctx.strokeStyle = f.accent;
+  ctx.lineWidth   = bw;
+  ctx.setLineDash(f.borderDash || []);
+  ctx.strokeRect(half, half, W - bw, H - bw);
+  ctx.setLineDash([]);
+  if (f.borderDouble) {
+    const off = bw + 5;
+    ctx.lineWidth = 2;
+    ctx.strokeRect(off, off, W - off * 2, H - off * 2);
+  }
 }
 
 function drawPhoto(ctx, url, x, y, w, h) {
@@ -296,9 +456,7 @@ function drawPhoto(ctx, url, x, y, w, h) {
       const scale = Math.max(w / img.width, h / img.height);
       const dw = img.width * scale, dh = img.height * scale;
       ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, w, h);
-      ctx.clip();
+      ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
       ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
       ctx.restore();
       res();
@@ -320,22 +478,17 @@ function drawSvg(ctx, svg, x, y, w, h) {
   return drawImg(ctx, url, x, y, w, h).then(() => URL.revokeObjectURL(url));
 }
 
-// ── Result & QR ───────────────────────────────────────────────────────────────
+// ── Result screen ─────────────────────────────────────────────────────────────
 function showResult() {
   S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.92);
   q('#poster-img').src = S.posterUrl;
-  q('#dl-link').href = S.posterUrl;
+  q('#dl-link').href   = S.posterUrl;
   q('#rov').classList.remove('hidden');
 
   uploadPoster(S.posterUrl).then(dlUrl => {
     if (!dlUrl) return;
-    QRCode.toDataURL(dlUrl, {
-      margin: 1, width: 160,
-      color: { dark: '#006b3f', light: '#fff' },
-    }).then(qrDataUrl => {
-      q('#qr-img').src = qrDataUrl;
-      q('#qr-blk').classList.remove('hidden');
-    });
+    QRCode.toDataURL(dlUrl, { margin: 1, width: 160, color: { dark: '#006b3f', light: '#fff' } })
+      .then(qr => { q('#qr-img').src = qr; q('#qr-blk').classList.remove('hidden'); });
   });
 }
 
@@ -353,9 +506,7 @@ async function uploadPoster(dataUrl) {
 }
 
 function retake() {
-  S.mode = 'ready';
-  S.photos = [];
-  S.posterUrl = null;
+  S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-blk').classList.add('hidden');
   qa('.dot').forEach(d => d.classList.remove('done'));
@@ -366,12 +517,12 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 
-q('#chips').addEventListener('click', e => {
-  const chip = e.target.closest('.chip');
-  if (!chip) return;
-  S.frameIdx = +chip.dataset.i;
-  qa('.chip').forEach(c => c.classList.remove('active'));
-  chip.classList.add('active');
+q('#frame-grid').addEventListener('click', e => {
+  const card = e.target.closest('.fcard');
+  if (!card) return;
+  S.frameIdx = +card.dataset.i;
+  qa('.fcard').forEach(c => c.classList.remove('active'));
+  card.classList.add('active');
   updatePreview();
 });
 
