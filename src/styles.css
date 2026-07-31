@@ -691,66 +691,13 @@ input[type="range"] {
   transition: opacity 0.24s;
 }
 
-/* ── Mobile portrait ─────────────────────────────────────── */
-@media (max-width: 680px) {
-  .main {
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr auto;
-  }
-
-  .cam-col { padding: 10px 10px 0; }
-
-  .ctrl-col {
-    flex-direction: column;
-    padding: 10px;
-    gap: 8px;
-    border-top: 1px solid var(--border);
-    background: rgba(0,0,0,0.3);
-  }
-
-  .frame-grid {
-    display: flex;
-    overflow-x: auto;
-    max-height: none;
-    gap: 7px;
-    padding-bottom: 2px;
-    scrollbar-width: none;
-  }
-
-  .frame-grid::-webkit-scrollbar { display: none; }
-
-  .fcard { width: 68px; flex-shrink: 0; }
-
-  .ctrl-sec--slim {
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .ctrl-sec--slim .ctrl-lbl { white-space: nowrap; }
-  .ctrl-sec--slim input { flex: 1; }
-
-  .shoot-btn {
-    margin-top: 0;
-    flex-direction: row;
-    gap: 8px;
-    width: 100%;
-    padding: 13px 18px;
-    justify-content: center;
-    border-radius: 10px;
-  }
-
-  .s-text { font-size: 15px; }
-  .s-hint { display: none; }
-  .hdr-tag { display: none; }
-}
 
 /* ── Photo preview grid (during shooting) ───────────────── */
 .photo-grid {
   display: none;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 5px;
+  gap: 8px;
   flex: 1;
   min-height: 0;
 }
@@ -765,8 +712,8 @@ input[type="range"] {
   position: relative;
   overflow: hidden;
   border-radius: 10px;
-  border: 1.5px dashed rgba(255,255,255,0.14);
-  background: rgba(255,255,255,0.03);
+  border: 1.5px dashed rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.07);
   min-height: 0;
   transition: border-color 0.25s, box-shadow 0.25s;
 }
@@ -836,17 +783,6 @@ input[type="range"] {
   to   { transform: scale(1);    opacity: 1; }
 }
 
-@media (max-width: 680px) {
-  .ctrl-col.shooting .photo-grid {
-    display: flex;
-    flex: 0 0 auto;
-    height: 72px;
-    gap: 5px;
-  }
-  .ctrl-col.shooting .photo-grid .pv-slot { flex: 1; }
-  .pv-slot::before { font-size: 16px; }
-  .pv-badge { width: 16px; height: 16px; font-size: 9px; }
-}
 
 /* ── Short landscape ─────────────────────────────────────── */
 @media (max-height: 600px) and (min-width: 681px) {
