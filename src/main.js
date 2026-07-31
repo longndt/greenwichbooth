@@ -121,10 +121,22 @@ const FRAMES = [
   },
 ];
 
+// ── 6 color filters ───────────────────────────────────────────────────────────
+// css applied to <video> live + ctx.filter on capFrame canvas
+const FILTERS = [
+  { id: 'normal',  label: 'Bình thường', css: 'none' },
+  { id: 'vivid',   label: 'Sống động',   css: 'saturate(1.9) contrast(1.15)' },
+  { id: 'warm',    label: 'Ấm áp',       css: 'sepia(0.45) saturate(1.4) brightness(1.06)' },
+  { id: 'cool',    label: 'Lạnh',        css: 'hue-rotate(195deg) saturate(1.25) brightness(1.08)' },
+  { id: 'bw',      label: 'Đen Trắng',   css: 'grayscale(1) contrast(1.1)' },
+  { id: 'vintage', label: 'Vintage',     css: 'sepia(0.55) saturate(0.85) brightness(0.94) contrast(1.08)' },
+];
+
 // ── State ─────────────────────────────────────────────────────────────────────
 const S = {
   mode: 'ready',
   frameIdx: 0,
+  filterIdx: 0,
   interval: 2,
   photos: [],
   stream: null,
@@ -361,6 +373,8 @@ function capFrame(cam) {
   c.width = sz; c.height = sz;
   const cx = c.getContext('2d');
   cx.save();
+  const fCss = FILTERS[S.filterIdx].css;
+  if (fCss !== 'none') cx.filter = fCss;
   cx.translate(sz, 0);
   cx.scale(-1, 1); // mirror for selfie
   cx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
@@ -589,6 +603,23 @@ function retake() {
   q('.ctrl-col').classList.remove('shooting');
 }
 
+// ── Filter swatch card HTML ───────────────────────────────────────────────────
+// Uses a fixed colorful gradient then applies the CSS filter — shows real effect
+const SWATCH_BASE = 'linear-gradient(135deg,#f4a,#ffd,#4cf)';
+function makeFlt(f, i) {
+  const previewFilter = f.css === 'none' ? '' : `filter:${f.css}`;
+  return `
+    <button class="flt${i === 0 ? ' active' : ''}" data-fi="${i}">
+      <div class="flt-prev" style="background:${SWATCH_BASE};${previewFilter}"></div>
+      <span class="flt-lbl">${f.label}</span>
+    </button>`;
+}
+
+function applyFilter() {
+  const css = FILTERS[S.filterIdx].css;
+  q('#cam').style.filter = css === 'none' ? '' : css;
+}
+
 // ── Tab switching ─────────────────────────────────────────────────────────────
 q('#tab-bar').addEventListener('click', e => {
   const tab = e.target.closest('.tab');
@@ -619,6 +650,16 @@ q('#ival').addEventListener('input', e => {
   q('#ival-h').textContent = S.interval;
 });
 
+q('#filter-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.flt');
+  if (!btn) return;
+  S.filterIdx = +btn.dataset.fi;
+  qa('.flt').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────────
+q('#filter-grid').innerHTML = FILTERS.map((f, i) => makeFlt(f, i)).join('');
 updatePreview();
 startCam();
