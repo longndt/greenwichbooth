@@ -428,51 +428,52 @@ function capFrame(cam) {
   return out.toDataURL('image/jpeg', 0.9);
 }
 
-// ── Poster composition (1080×1440) — 4-panel vertical stack ─────────────────────
+// ── Poster composition (1080×1440) — 2×2 square grid ────────────────────────────
 async function buildPoster() {
   await document.fonts.ready;
 
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1440, BAR = 120, GAP = 12;
+  const W = 1080, H = 1440, BAR = 140, HPAD = 20, VPAD = 30, GAP = 20;
   const f = FRAMES[S.frameIdx];
+
+  // Square photo size: 2 columns fit exactly
+  const PH = Math.floor((W - 2 * HPAD - GAP) / 2); // 510px
+
+  // 2×2 grid: [x, y] for each photo slot
+  const pos = [
+    [HPAD,            BAR + VPAD],
+    [HPAD + PH + GAP, BAR + VPAD],
+    [HPAD,            BAR + VPAD + PH + GAP],
+    [HPAD + PH + GAP, BAR + VPAD + PH + GAP],
+  ];
 
   // Base fill
   ctx.fillStyle = f.bg;
   ctx.fillRect(0, 0, W, H);
 
-  // 1×4 photo grid (vertical stack)
-  const ph = (H - BAR * 2 - GAP * 5) / 4;
-  const pos = [
-    [GAP, BAR + GAP],
-    [GAP, BAR + GAP * 2 + ph],
-    [GAP, BAR + GAP * 3 + ph * 2],
-    [GAP, BAR + GAP * 4 + ph * 3],
-  ];
-  await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], W - GAP * 2, ph)));
+  // Draw 4 square photos
+  await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], PH, PH)));
 
   // Dashed border around each photo
   ctx.strokeStyle = 'rgba(255,255,255,0.35)';
   ctx.lineWidth = 2;
   ctx.setLineDash([6, 5]);
-  for (let i = 0; i < 4; i++) {
-    const [px, py] = pos[i];
-    ctx.strokeRect(px + 3, py + 3, W - GAP * 2 - 6, ph - 6);
-  }
+  for (const [px, py] of pos) ctx.strokeRect(px + 3, py + 3, PH - 6, PH - 6);
   ctx.setLineDash([]);
 
-  // Dot-row separators between photos
+  // Cross separators: horizontal dots + vertical dots
+  const sepX = Math.round(HPAD + PH + GAP / 2);
+  const sepY = Math.round(BAR + VPAD + PH + GAP / 2);
   ctx.fillStyle = f.accent + 'CC';
-  for (let i = 1; i < 4; i++) {
-    const sepY = Math.round(pos[i][1] - GAP / 2);
-    const numDots = Math.floor((W - GAP * 10) / 12);
-    const step = (W - GAP * 10) / numDots;
-    for (let d = 0; d <= numDots; d++) {
-      ctx.beginPath();
-      ctx.arc(GAP * 5 + d * step, sepY, 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
+  // horizontal row
+  for (let x = HPAD; x <= W - HPAD; x += 12) {
+    ctx.beginPath(); ctx.arc(x, sepY, 2.5, 0, Math.PI * 2); ctx.fill();
+  }
+  // vertical column
+  for (let y = BAR + VPAD; y <= BAR + VPAD + PH * 2 + GAP; y += 12) {
+    ctx.beginPath(); ctx.arc(sepX, y, 2.5, 0, Math.PI * 2); ctx.fill();
   }
 
   // Bars
@@ -482,7 +483,7 @@ async function buildPoster() {
   // Outer border
   drawBorder(ctx, f, W, H);
 
-  // Decorative dot border (inside main border) for special frames
+  // Decorative dot border inside main border (for borderDouble/burgundy frames)
   if (f.borderDouble || f.id === 'burgundy') {
     const margin = (f.borderW || 6) + 12;
     const step = 16, r = 2;
@@ -498,21 +499,21 @@ async function buildPoster() {
   }
 
   // Top-bar: Lion mascot + text
-  await drawSvg(ctx, LION, 12, (BAR - 100) / 2, 100, 100);
+  await drawSvg(ctx, LION, 14, (BAR - 110) / 2, 110, 110);
 
-  const titleX    = 130;
+  const titleX    = 142;
   const titleCol  = f.textColor || '#FFFFFF';
   const subCol    = f.subColor  || 'rgba(255,255,255,0.72)';
-  const titleSize = f.title.length > 20 ? 38 : 48;
+  const titleSize = f.title.length > 20 ? 40 : 50;
 
   ctx.textBaseline = 'top';
   ctx.fillStyle = titleCol;
   ctx.font = `900 ${titleSize}px "Arial Black", Arial, sans-serif`;
-  ctx.fillText(f.title, titleX, 18);
+  ctx.fillText(f.title, titleX, 22);
 
   ctx.fillStyle = subCol;
-  ctx.font = '600 26px Arial, sans-serif';
-  ctx.fillText(f.sub, titleX, 78);
+  ctx.font = '600 28px Arial, sans-serif';
+  ctx.fillText(f.sub, titleX, 88);
 
   // Bottom-bar: centered branding
   const btmY   = H - BAR;
