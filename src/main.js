@@ -206,6 +206,13 @@ q('#app').innerHTML = `
         <input type="range" id="ival" min="2" max="6" value="3" step="1"/>
       </div>
 
+      <div class="photo-grid" id="photo-grid">
+        <img class="pv" id="pv0" alt=""/>
+        <img class="pv" id="pv1" alt=""/>
+        <img class="pv" id="pv2" alt=""/>
+        <img class="pv" id="pv3" alt=""/>
+      </div>
+
       <button class="shoot-btn" id="shoot-btn">
         <span class="s-icon">📷</span>
         <span class="s-text">CHỤP NGAY</span>
@@ -285,6 +292,8 @@ async function shoot() {
 
   S.mode = 'shooting';
   S.photos = [];
+  qa('.pv').forEach(p => { p.src = ''; p.classList.remove('filled'); });
+  q('.ctrl-col').classList.add('shooting');
   q('#shoot-btn').disabled = true;
   q('#cov').classList.remove('hidden');
 
@@ -307,11 +316,16 @@ async function shoot() {
     fl.style.opacity = '1';
     setTimeout(() => { fl.style.opacity = '0'; }, 240);
 
+    const pv = q(`#pv${i}`);
+    pv.src = S.photos[i];
+    pv.classList.add('filled');
+
     q(`#d${i}`).classList.add('done');
     if (i < 3) await sleep(380);
   }
 
   q('#cov').classList.add('hidden');
+  q('.ctrl-col').classList.remove('shooting');
   q('#shoot-btn').disabled = false;
   await buildPoster();
   showResult();
@@ -510,6 +524,8 @@ function retake() {
   q('#rov').classList.add('hidden');
   q('#qr-blk').classList.add('hidden');
   qa('.dot').forEach(d => d.classList.remove('done'));
+  qa('.pv').forEach(p => { p.src = ''; p.classList.remove('filled'); });
+  q('.ctrl-col').classList.remove('shooting');
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────

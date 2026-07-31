@@ -581,6 +581,57 @@ input[type="range"] {
   .hdr-tag { display: none; }
 }
 
+/* ── Photo preview grid (during shooting) ───────────────── */
+.photo-grid {
+  display: none;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 5px;
+  flex: 1;
+  min-height: 0;
+}
+
+.ctrl-col.shooting .ctrl-sec,
+.ctrl-col.shooting .shoot-btn { display: none; }
+.ctrl-col.shooting .photo-grid { display: grid; }
+
+.pv {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px dashed rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.04);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.pv.filled {
+  opacity: 1;
+  border-style: solid;
+  border-color: var(--emerald);
+  animation: pv-pop 0.38s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+@keyframes pv-pop {
+  from { transform: scale(0.8); }
+  to   { transform: scale(1); }
+}
+
+@media (max-width: 680px) {
+  .ctrl-col.shooting .photo-grid {
+    display: flex;
+    flex: 0 0 auto;
+    height: 70px;
+    gap: 5px;
+  }
+  .ctrl-col.shooting .photo-grid .pv {
+    flex: 1;
+    width: auto;
+    aspect-ratio: 1;
+  }
+}
+
 /* ── Short landscape ─────────────────────────────────────── */
 @media (max-height: 600px) and (min-width: 681px) {
   .hdr { height: 42px; }
