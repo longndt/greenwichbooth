@@ -207,10 +207,10 @@ q('#app').innerHTML = `
       </div>
 
       <div class="photo-grid" id="photo-grid">
-        <img class="pv" id="pv0" alt=""/>
-        <img class="pv" id="pv1" alt=""/>
-        <img class="pv" id="pv2" alt=""/>
-        <img class="pv" id="pv3" alt=""/>
+        <div class="pv-slot" id="pvs0"><span class="pv-num">1</span><img class="pv" id="pv0" alt=""/></div>
+        <div class="pv-slot" id="pvs1"><span class="pv-num">2</span><img class="pv" id="pv1" alt=""/></div>
+        <div class="pv-slot" id="pvs2"><span class="pv-num">3</span><img class="pv" id="pv2" alt=""/></div>
+        <div class="pv-slot" id="pvs3"><span class="pv-num">4</span><img class="pv" id="pv3" alt=""/></div>
       </div>
 
       <button class="shoot-btn" id="shoot-btn">
@@ -292,7 +292,8 @@ async function shoot() {
 
   S.mode = 'shooting';
   S.photos = [];
-  qa('.pv').forEach(p => { p.src = ''; p.classList.remove('filled'); });
+  qa('.pv-slot').forEach(s => s.classList.remove('filled'));
+  qa('.pv').forEach(p => { p.src = ''; });
   q('.ctrl-col').classList.add('shooting');
   q('#shoot-btn').disabled = true;
   q('#cov').classList.remove('hidden');
@@ -316,9 +317,8 @@ async function shoot() {
     fl.style.opacity = '1';
     setTimeout(() => { fl.style.opacity = '0'; }, 240);
 
-    const pv = q(`#pv${i}`);
-    pv.src = S.photos[i];
-    pv.classList.add('filled');
+    q(`#pv${i}`).src = S.photos[i];
+    q(`#pvs${i}`).classList.add('filled');
 
     q(`#d${i}`).classList.add('done');
     if (i < 3) await sleep(380);
@@ -523,7 +523,8 @@ function retake() {
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
   qa('.dot').forEach(d => d.classList.remove('done'));
-  qa('.pv').forEach(p => { p.src = ''; p.classList.remove('filled'); });
+  qa('.pv-slot').forEach(s => s.classList.remove('filled'));
+  qa('.pv').forEach(p => { p.src = ''; });
   q('.ctrl-col').classList.remove('shooting');
 }
 

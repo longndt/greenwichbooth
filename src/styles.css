@@ -601,21 +601,44 @@ input[type="range"] {
 .ctrl-col.shooting .shoot-btn { display: none; }
 .ctrl-col.shooting .photo-grid { display: grid; }
 
-.pv {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
+/* slot wrapper — grid item, fills 1fr row */
+.pv-slot {
+  position: relative;
+  overflow: hidden;
   border-radius: 8px;
   border: 2px dashed rgba(255,255,255,0.15);
   background: rgba(255,255,255,0.04);
+  min-height: 0;
+}
+
+.pv-num {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  color: rgba(255,255,255,0.1);
+  pointer-events: none;
+}
+
+.pv-slot.filled { border-style: solid; border-color: var(--emerald); }
+.pv-slot.filled .pv-num { display: none; }
+
+/* photo img — fills the slot */
+.pv {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
-.pv.filled {
+.pv-slot.filled .pv {
   opacity: 1;
-  border-style: solid;
-  border-color: var(--emerald);
   animation: pv-pop 0.38s cubic-bezier(0.34,1.56,0.64,1);
 }
 
@@ -628,14 +651,11 @@ input[type="range"] {
   .ctrl-col.shooting .photo-grid {
     display: flex;
     flex: 0 0 auto;
-    height: 70px;
+    height: 72px;
     gap: 5px;
   }
-  .ctrl-col.shooting .photo-grid .pv {
-    flex: 1;
-    width: auto;
-    aspect-ratio: 1;
-  }
+  .ctrl-col.shooting .photo-grid .pv-slot { flex: 1; }
+  .pv-num { font-size: 18px; }
 }
 
 /* ── Short landscape ─────────────────────────────────────── */
