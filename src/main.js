@@ -695,7 +695,7 @@ function showResult() {
       return;
     }
     // Wrap image URL in display page with download button
-    const displayUrl = `/api/display?url=${encodeURIComponent(dlUrl)}`;
+    const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
     QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
       .then(qr => {
         q('#qr-img').src = qr;
