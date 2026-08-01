@@ -313,17 +313,10 @@ q('#app').innerHTML = `
 <!-- Result overlay -->
 <div class="result-ov hidden" id="rov">
   <div class="result-card">
-    <p class="result-title">🎉 Xong rồi!</p>
     <img class="poster-img" id="poster-img" alt="Bộ poster 4 ảnh được ghép lại"/>
     <div class="dl-row">
-      <div class="qr-wrap">
-        <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
-      </div>
+      <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
       <div class="dl-info">
-        <div class="qr-hint">
-          <strong id="qr-title">Đang tạo link...</strong>
-          <span id="qr-sub">Sắp xong, chờ chút</span>
-        </div>
         <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải poster về máy">⬇ Tải về máy</a>
       </div>
     </div>
