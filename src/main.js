@@ -888,11 +888,19 @@ function updateAccOv() {
 const SWATCH_BASE = 'linear-gradient(135deg,#f4a,#ffd,#4cf)';
 function makeFlt(f, i) {
   const previewFilter = f.css === 'none' ? '' : `filter:${f.css}`;
+  const isHidden = i > 3 ? 'hidden' : ''; // Hide filters 4-8 initially
   return `
-    <button class="flt${i === 0 ? ' active' : ''}" data-fi="${i}">
+    <button class="flt${i === 0 ? ' active' : ''}${isHidden ? ' filter-hidden' : ''}" data-fi="${i}" ${isHidden ? 'style="display:none"' : ''}>
       <div class="flt-prev" style="background:${SWATCH_BASE};${previewFilter}"></div>
       <span class="flt-lbl">${f.label}</span>
     </button>`;
+}
+
+function makeFilterGrid() {
+  const heroFilters = FILTERS.slice(0, 4).map((f, i) => makeFlt(f, i)).join('');
+  const toggleBtn = `<button class="flt-toggle" id="filter-toggle">+ Xem thêm</button>`;
+  const hiddenFilters = FILTERS.slice(4).map((f, i) => makeFlt(f, i + 4)).join('');
+  return `${heroFilters}${toggleBtn}<div id="filter-hidden" class="filter-hidden-group" style="display:none">${hiddenFilters}</div>`;
 }
 
 function applyFilter() {
@@ -970,8 +978,22 @@ window.addEventListener('orientationchange', () => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
+q('#filter-grid').innerHTML  = makeFilterGrid();
 q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
 q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
+
+// Filter grid toggle
+q('#filter-toggle').addEventListener('click', () => {
+  const hidden = q('#filter-hidden');
+  const toggle = q('#filter-toggle');
+  if (hidden.style.display === 'none') {
+    hidden.style.display = '';
+    toggle.textContent = '- Ẩn bớt';
+  } else {
+    hidden.style.display = 'none';
+    toggle.textContent = '+ Xem thêm';
+  }
+});
+
 startCam();
 if (import.meta.env.DEV) window.__t = { S, buildPoster, ACCESSORIES, STICKERS, FILTERS };

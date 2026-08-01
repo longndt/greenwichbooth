@@ -295,15 +295,15 @@ html, body {
 /* ── Filter swatches ─────────────────────────────────────── */
 .filter-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 7px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
 }
 
 .flt {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: var(--space-xs);
   cursor: pointer;
   background: none;
   border: none;
@@ -316,14 +316,52 @@ html, body {
 .flt-prev {
   width: 100%;
   aspect-ratio: 1;
-  border-radius: 8px;
-  border: 2px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
   transition: border-color 0.18s, box-shadow 0.18s;
 }
 
 .flt.active .flt-prev {
-  border-color: var(--gold);
-  box-shadow: 0 0 14px rgba(255,203,47,0.45);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 20px rgba(255,203,47,0.4);
+}
+
+.flt-lbl {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.flt.active .flt-lbl { color: var(--text); }
+
+/* Filter toggle button */
+.flt-toggle {
+  grid-column: 1 / -1;
+  padding: var(--space-sm) var(--space-xs);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.flt-toggle:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.24);
+  color: var(--text);
+}
+
+.filter-hidden-group {
+  grid-column: 1 / -1;
+  display: contents;
 }
 
 .flt-lbl {
