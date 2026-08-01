@@ -379,9 +379,9 @@ async function shoot() {
       q('#cnt-n').textContent = c;
       q('#cnt-lbl').textContent = `Ảnh ${i + 1} / 4`;
       q('#cnt-n').dataset.tick = '1';
-      await sleep(80);
+      await sleep(900);
       delete q('#cnt-n').dataset.tick;
-      await sleep(920);
+      await sleep(80);
     }
     q('#cnt-n').textContent = '😊';
     q('#cnt-lbl').textContent = '';
@@ -398,7 +398,7 @@ async function shoot() {
   }
 
   q('#cov').classList.add('hidden');
-  q('.ctrl-col').classList.remove('shooting');
+  q('#photo-grid').classList.add('visible');
   q('#shoot-btn').disabled = false;
   q('#proc-sub').textContent = 'Đang tạo poster...';
   q('#proc-ov').classList.remove('hidden');
@@ -610,7 +610,7 @@ function retake() {
   qa('.dot').forEach(d => d.classList.remove('done'));
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
-  q('.ctrl-col').classList.remove('shooting');
+  q('#photo-grid').classList.remove('visible');
 }
 
 // ── Events ────────────────────────────────────────────────────────────────────
