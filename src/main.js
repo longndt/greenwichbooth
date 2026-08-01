@@ -44,12 +44,241 @@ const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <line x1="65" y1="49" x2="90" y2="49" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
 </svg>`;
 
-// ── 12 frame templates ────────────────────────────────────────────────────────
-// light:true  → bars are light-colored, text must be dark
-// bgEnd       → gradient bar (bg → bgEnd)
-// borderDash  → [dash, gap] for dashed border
-// borderDouble→ thin inner border inside the main border
-// pattern     → 'dots' | 'lines' subtle overlay on bars
+// ── 5 poster base themes — background + bar color applied to whole poster ─────
+const POSTER_THEMES = [
+  { bg: '#0B1912', barBg: '#0D2318', accent: '#FFCB2F', textCol: '#F0F5F2' },
+  { bg: '#080808', barBg: '#111111', accent: '#FFCB2F', textCol: '#F0F5F2' },
+  { bg: '#0B1220', barBg: '#0E1A2E', accent: '#FFCB2F', textCol: '#F0F5F2' },
+  { bg: '#1A0800', barBg: '#220F00', accent: '#FF7A2E', textCol: '#F0F5F2' },
+  { bg: '#100B1A', barBg: '#170E24', accent: '#A78BFA', textCol: '#F0F5F2' },
+];
+
+// ── 20 per-photo mini-frame styles ───────────────────────────────────────────
+// Each photo slot (510×510) gets one randomly chosen frame drawn around it.
+// border.dash → [dash, gap] for dashed stroke
+// inner       → second border drawn inset from the main border
+// corner      → decorative marks at each corner
+// glow        → shadow blur painted behind the border
+const PHOTO_FRAMES = [
+  // 01 — Greenwich Classic: thick green border + gold L-bracket corners
+  {
+    id: 'gw-classic',
+    border: { color: '#006b3f', width: 8 },
+    inner:  { color: '#FFCB2F', width: 2, offset: 12 },
+    corner: { style: 'bracket', size: 28, color: '#FFCB2F', lw: 3 },
+  },
+  // 02 — Gold Bold: thick gold border + subtle inner
+  {
+    id: 'gold-bold',
+    border: { color: '#FFCB2F', width: 10 },
+    inner:  { color: '#7a5000', width: 1, offset: 13 },
+  },
+  // 03 — Navy Cross: navy border + gold cross corner marks
+  {
+    id: 'navy-cross',
+    border: { color: '#001B5E', width: 7 },
+    corner: { style: 'cross', size: 20, color: '#FFCB2F', lw: 3 },
+  },
+  // 04 — Crimson Glow: burgundy border with warm red glow
+  {
+    id: 'crimson-glow',
+    border: { color: '#8B1A1A', width: 6 },
+    glow:   { color: '#FF3030', blur: 14 },
+  },
+  // 05 — Ghost Slim: ultra-thin translucent border — barely there
+  {
+    id: 'ghost-slim',
+    border: { color: 'rgba(255,255,255,0.55)', width: 2 },
+  },
+  // 06 — Double Emerald: green outer + white inner double border
+  {
+    id: 'double-emerald',
+    border: { color: '#006b3f', width: 8 },
+    inner:  { color: '#F0F5F2', width: 2, offset: 12 },
+  },
+  // 07 — Diamond Corner: dark border + gold diamond ornaments at corners
+  {
+    id: 'diamond-corner',
+    border: { color: '#1a1a1a', width: 6 },
+    inner:  { color: 'rgba(255,255,255,0.12)', width: 1, offset: 9 },
+    corner: { style: 'diamond', size: 13, color: '#FFCB2F', lw: 1 },
+  },
+  // 08 — Film Bracket: dashed dark brown border + amber L-brackets (film-strip vibe)
+  {
+    id: 'film-bracket',
+    border: { color: '#2B1D0E', width: 6, dash: [10, 6] },
+    corner: { style: 'bracket', size: 24, color: '#C9963A', lw: 3 },
+  },
+  // 09 — Neon Emerald: thin neon green border with strong glow
+  {
+    id: 'neon-emerald',
+    border: { color: '#2DD77A', width: 3 },
+    glow:   { color: '#2DD77A', blur: 18 },
+  },
+  // 10 — Gold Dashed: classic dashed gold border — photo strip aesthetic
+  {
+    id: 'gold-dashed',
+    border: { color: '#FFCB2F', width: 5, dash: [14, 7] },
+  },
+  // 11 — Bold Black: heavy black border + white inner + gold circle corners
+  {
+    id: 'bold-black',
+    border: { color: '#080808', width: 12 },
+    inner:  { color: '#F0F5F2', width: 2, offset: 15 },
+    corner: { style: 'circle', size: 8, color: '#FFCB2F', lw: 1 },
+  },
+  // 12 — Rose: soft pink border + circle corner dots
+  {
+    id: 'rose',
+    border: { color: '#E8698A', width: 6 },
+    inner:  { color: '#FCE4EC', width: 1, offset: 9 },
+    corner: { style: 'circle', size: 7, color: '#E8698A', lw: 1 },
+  },
+  // 13 — Copper Ornate: amber border + cross corners + warm glow
+  {
+    id: 'copper-ornate',
+    border: { color: '#C9963A', width: 7 },
+    corner: { style: 'cross', size: 18, color: '#7a5800', lw: 2.5 },
+    glow:   { color: '#C9963A', blur: 8 },
+  },
+  // 14 — Arctic: light blue border + L-bracket corners
+  {
+    id: 'arctic',
+    border: { color: '#7DD3FC', width: 4 },
+    corner: { style: 'bracket', size: 20, color: '#BAE6FD', lw: 2 },
+  },
+  // 15 — Purple Mist: purple border + soft glow + inner line
+  {
+    id: 'purple-mist',
+    border: { color: '#A78BFA', width: 5 },
+    inner:  { color: 'rgba(167,139,250,0.3)', width: 1, offset: 8 },
+    glow:   { color: '#7C3AED', blur: 16 },
+  },
+  // 16 — Retro Film: sepia dashed border + dot cluster corners
+  {
+    id: 'retro-film',
+    border: { color: '#8B7355', width: 5, dash: [8, 5] },
+    corner: { style: 'cluster', size: 5, color: '#C9963A', lw: 1 },
+  },
+  // 17 — Midnight: near-black outer + faint gold inner + subtle bracket corners
+  {
+    id: 'midnight',
+    border: { color: '#0a0a0a', width: 10 },
+    inner:  { color: 'rgba(255,203,47,0.25)', width: 1, offset: 13 },
+    corner: { style: 'bracket', size: 22, color: 'rgba(255,203,47,0.5)', lw: 2 },
+  },
+  // 18 — Emerald Dot: deep green border + neon inner + cluster dots at corners
+  {
+    id: 'emerald-dot',
+    border: { color: '#003820', width: 8 },
+    inner:  { color: '#2DD77A', width: 1.5, offset: 12 },
+    corner: { style: 'cluster', size: 5, color: '#2DD77A', lw: 1 },
+  },
+  // 19 — Tuxedo: white outer + gold hairline inner — formal & sharp
+  {
+    id: 'tuxedo',
+    border: { color: '#F0F5F2', width: 3 },
+    inner:  { color: '#FFCB2F', width: 2, offset: 7 },
+  },
+  // 20 — Sakura: soft pink border + circle corners + petal glow
+  {
+    id: 'sakura',
+    border: { color: '#F9A8D4', width: 5 },
+    corner: { style: 'circle', size: 9, color: '#F472B6', lw: 1 },
+    glow:   { color: '#F9A8D4', blur: 12 },
+  },
+];
+
+// Pick N unique frames randomly (no duplicates within same poster)
+function pickFrames(n) {
+  const pool = [...PHOTO_FRAMES].sort(() => Math.random() - 0.5);
+  return Array.from({ length: n }, (_, i) => pool[i % pool.length]);
+}
+
+// Draw a per-photo mini-frame around one slot
+function drawPhotoFrame(ctx, frame, x, y, w, h) {
+  ctx.save();
+
+  if (frame.glow) {
+    ctx.shadowColor = frame.glow.color;
+    ctx.shadowBlur  = frame.glow.blur;
+  }
+
+  // Outer border
+  const bw   = frame.border.width;
+  const half = bw / 2;
+  ctx.strokeStyle = frame.border.color;
+  ctx.lineWidth   = bw;
+  ctx.setLineDash(frame.border.dash || []);
+  ctx.strokeRect(x + half, y + half, w - bw, h - bw);
+  ctx.setLineDash([]);
+  ctx.shadowBlur  = 0;
+  ctx.shadowColor = 'transparent';
+
+  // Inner border
+  if (frame.inner) {
+    const off = frame.inner.offset;
+    ctx.strokeStyle = frame.inner.color;
+    ctx.lineWidth   = frame.inner.width;
+    ctx.strokeRect(x + off, y + off, w - off * 2, h - off * 2);
+  }
+
+  // Corner decorations
+  if (frame.corner) {
+    const c  = frame.corner;
+    const cs = c.size;
+    // [corner_x, corner_y, dir_x, dir_y]
+    const corners = [
+      [x,     y,     1,  1],
+      [x + w, y,    -1,  1],
+      [x,     y + h, 1, -1],
+      [x + w, y + h,-1, -1],
+    ];
+    ctx.strokeStyle = c.color;
+    ctx.fillStyle   = c.color;
+    ctx.lineWidth   = c.lw || 2;
+    ctx.setLineDash([]);
+
+    corners.forEach(([cx, cy, dx, dy]) => {
+      if (c.style === 'bracket') {
+        ctx.beginPath();
+        ctx.moveTo(cx + dx * cs, cy);
+        ctx.lineTo(cx, cy);
+        ctx.lineTo(cx, cy + dy * cs);
+        ctx.stroke();
+      } else if (c.style === 'cross') {
+        const h2 = cs / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx - h2, cy); ctx.lineTo(cx + h2, cy);
+        ctx.moveTo(cx, cy - h2); ctx.lineTo(cx, cy + h2);
+        ctx.stroke();
+      } else if (c.style === 'diamond') {
+        ctx.beginPath();
+        ctx.moveTo(cx,      cy - cs);
+        ctx.lineTo(cx + cs, cy);
+        ctx.lineTo(cx,      cy + cs);
+        ctx.lineTo(cx - cs, cy);
+        ctx.closePath();
+        ctx.fill();
+      } else if (c.style === 'circle') {
+        ctx.beginPath();
+        ctx.arc(cx, cy, cs, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (c.style === 'cluster') {
+        [[dx * cs * 2, 0], [0, dy * cs * 2], [dx * cs * 1.3, dy * cs * 1.3]]
+          .forEach(([ox, oy]) => {
+            ctx.beginPath();
+            ctx.arc(cx + ox, cy + oy, cs, 0, Math.PI * 2);
+            ctx.fill();
+          });
+      }
+    });
+  }
+
+  ctx.restore();
+}
+
+// ── Legacy FRAMES kept for reference (will be removed in step 3) ──────────────
 const FRAMES = [
   {
     id: 'fotolab', label: '🖼️ Fotolab Classic', emoji: '📸',
