@@ -858,6 +858,11 @@ q('#filter-grid').addEventListener('click', e => {
   applyFilter();
 });
 
+// ── Mobile orientation ───────────────────────────────────────────────────────
+window.addEventListener('orientationchange', () => {
+  if (S.mode === 'ready') startCam();
+});
+
 // ── Init ──────────────────────────────────────────────────────────────────────
 q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
 q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
