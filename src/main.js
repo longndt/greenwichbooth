@@ -13,19 +13,30 @@ async function loadFaceApi() {
       document.head.appendChild(s);
     });
   }
-  if (!window.faceapi) throw new Error('face-api not loaded');
-  await Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-    faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models'),
-  ]);
+  if (!window.faceapi) throw new Error('face-api script not loaded');
+  try {
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri('/models/'),
+      faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models/'),
+    ]);
+    console.log('✓ Face AI models loaded');
+  } catch (err) {
+    console.error('✗ Face AI model load failed:', err);
+    throw err;
+  }
 }
 
 async function detectFaceInImage(imgEl) {
   if (!S.faceAiEnabled || !window.faceapi) return null;
   try {
     const detection = await faceapi.detectSingleFace(imgEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(true);
-    return detection?.detection?.box || null;
-  } catch { return null; }
+    if (detection?.detection?.box) return detection.detection.box;
+    console.warn('Face detection: no face found in image');
+    return null;
+  } catch (err) {
+    console.error('Face detection error:', err);
+    return null;
+  }
 }
 
 // ── Lion Captain mascot SVG ───────────────────────────────────────────────────
