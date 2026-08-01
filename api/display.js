@@ -2,8 +2,21 @@ export default async function handler(req, res) {
   const { url } = req.query;
   if (!url) return res.status(400).send('Missing url parameter');
 
-  // Extract filename from blob URL for download
-  const filename = url.split('/').pop().split('?')[0] || 'poster.jpg';
+  // Validate scheme — block javascript:/data: injection (XSS via img src / inline JS).
+  let parsed;
+  try { parsed = new URL(url); } catch { return res.status(400).send('Invalid url'); }
+  if (parsed.protocol !== 'https:') return res.status(400).send('Only https urls are allowed');
+
+  // Filename from the validated URL's pathname (excludes query/fragment, so `//` or
+  // `/` inside the query string cannot poison the extraction). Sanitise for safety.
+  const filename = (parsed.pathname.split('/').pop() || 'poster.jpg').replace(/[^\w.\-]/g, '_') || 'poster.jpg';
+
+  // Escape untrusted url/filename for HTML attribute context.
+  const esc = (s) => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  const imgSrc = esc(url);
+  const fname = esc(filename);
 
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.send(`
@@ -100,42 +113,16 @@ export default async function handler(req, res) {
 <body>
   <div class="container">
     <h1>📸 Greenwich Booth Poster</h1>
-    <img src="${url}" alt="Poster" />
+    <img src="${imgSrc}" alt="Poster" />
     <div class="btn-group">
-      <button id="dl-btn" class="btn btn-download" onclick="downloadPoster('${url}', '${filename}')">
-        ⬇️ Tải về máy
-      </button>
-      <button class="btn btn-back" onclick="window.history.back()">
-        ← Quay lại
-      </button>
+      <a href="/api/download?url=${encodeURIComponent(url)}" download class="btn btn-download">⬇️ Tải về máy</a>
+      <button id="back-btn" class="btn btn-back">← Quay lại</button>
     </div>
   </div>
 
   <script>
-    async function downloadPoster(url, filename) {
-      const btn = document.getElementById('dl-btn');
-      btn.disabled = true;
-      btn.textContent = '⏳ Đang tải...';
-      try {
-        const res = await fetch(url);
-        const blob = await res.blob();
-        const a = document.createElement('a');
-        a.href = URL.createObjectURL(blob);
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(a.href);
-        btn.textContent = '✅ Đã tải';
-      } catch (e) {
-        btn.textContent = '❌ Lỗi tải';
-        console.error(e);
-      } finally {
-        btn.disabled = false;
-      }
-    }
+    document.getElementById('back-btn').addEventListener('click', () => window.history.back());
   </script>
-  </div>
 </body>
 </html>
   `);

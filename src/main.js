@@ -70,139 +70,68 @@ const POSTER_THEMES = [
   { bg: '#100B1A', barBg: '#170E24', accent: '#A78BFA', textCol: '#F0F5F2' },
 ];
 
-// ── 20 per-photo mini-frame styles ───────────────────────────────────────────
-// Each photo slot (510×510) gets one randomly chosen frame drawn around it.
+// ── 8 per-photo mini-frame styles — Greenwich Vietnam identity ────────────────
 // border.dash → [dash, gap] for dashed stroke
 // inner       → second border drawn inset from the main border
-// corner      → decorative marks at each corner
+// corner      → decorative marks at each corner (vine = dây leo + hoa)
 // glow        → shadow blur painted behind the border
 const PHOTO_FRAMES = [
-  // 01 — Greenwich Classic: thick green border + gold L-bracket corners
+  // 01 — GW Floral (signature): green border + vine+flower corners
+  {
+    id: 'gw-floral',
+    border: { color: '#006b3f', width: 5 },
+    inner:  { color: '#FFCB2F', width: 1.5, offset: 9 },
+    corner: { style: 'vine', size: 40, color: '#2D8B4E', flower: '#FF8FAB', lw: 1.5 },
+  },
+  // 02 — GW Floral Gold: gold border + green vine corners
+  {
+    id: 'gw-floral-gold',
+    border: { color: '#FFCB2F', width: 5 },
+    inner:  { color: '#006b3f', width: 1.5, offset: 9 },
+    corner: { style: 'vine', size: 40, color: '#3DAB60', flower: '#FF6BA8', lw: 1.5 },
+  },
+  // 03 — GW Classic: thick green + gold inner + gold L-corners
   {
     id: 'gw-classic',
     border: { color: '#006b3f', width: 8 },
     inner:  { color: '#FFCB2F', width: 2, offset: 12 },
     corner: { style: 'bracket', size: 28, color: '#FFCB2F', lw: 3 },
   },
-  // 02 — Gold Bold: thick gold border + subtle inner
+  // 04 — GW Academic: navy + gold (tốt nghiệp)
   {
-    id: 'gold-bold',
-    border: { color: '#FFCB2F', width: 10 },
-    inner:  { color: '#7a5000', width: 1, offset: 13 },
-  },
-  // 03 — Navy Cross: navy border + gold cross corner marks
-  {
-    id: 'navy-cross',
+    id: 'gw-academic',
     border: { color: '#001B5E', width: 7 },
-    corner: { style: 'cross', size: 20, color: '#FFCB2F', lw: 3 },
+    inner:  { color: '#FFCB2F', width: 2, offset: 11 },
+    corner: { style: 'bracket', size: 26, color: '#FFCB2F', lw: 3 },
+    glow:   { color: '#001B5E', blur: 10 },
   },
-  // 04 — Crimson Glow: burgundy border with warm red glow
+  // 05 — GW Emerald Glow: neon green glow border
   {
-    id: 'crimson-glow',
-    border: { color: '#8B1A1A', width: 6 },
-    glow:   { color: '#FF3030', blur: 14 },
-  },
-  // 05 — Ghost Slim: ultra-thin translucent border — barely there
-  {
-    id: 'ghost-slim',
-    border: { color: 'rgba(255,255,255,0.55)', width: 2 },
-  },
-  // 06 — Double Emerald: green outer + white inner double border
-  {
-    id: 'double-emerald',
-    border: { color: '#006b3f', width: 8 },
-    inner:  { color: '#F0F5F2', width: 2, offset: 12 },
-  },
-  // 07 — Diamond Corner: dark border + gold diamond ornaments at corners
-  {
-    id: 'diamond-corner',
-    border: { color: '#1a1a1a', width: 6 },
-    inner:  { color: 'rgba(255,255,255,0.12)', width: 1, offset: 9 },
-    corner: { style: 'diamond', size: 13, color: '#FFCB2F', lw: 1 },
-  },
-  // 08 — Film Bracket: dashed dark brown border + amber L-brackets (film-strip vibe)
-  {
-    id: 'film-bracket',
-    border: { color: '#2B1D0E', width: 6, dash: [10, 6] },
-    corner: { style: 'bracket', size: 24, color: '#C9963A', lw: 3 },
-  },
-  // 09 — Neon Emerald: thin neon green border with strong glow
-  {
-    id: 'neon-emerald',
-    border: { color: '#2DD77A', width: 3 },
+    id: 'gw-emerald',
+    border: { color: '#2DD77A', width: 4 },
+    inner:  { color: '#006b3f', width: 2, offset: 8 },
     glow:   { color: '#2DD77A', blur: 18 },
   },
-  // 10 — Gold Dashed: classic dashed gold border — photo strip aesthetic
+  // 06 — GW Royal: deep green + gold diamond corners
   {
-    id: 'gold-dashed',
-    border: { color: '#FFCB2F', width: 5, dash: [14, 7] },
-  },
-  // 11 — Bold Black: heavy black border + white inner + gold circle corners
-  {
-    id: 'bold-black',
-    border: { color: '#080808', width: 12 },
-    inner:  { color: '#F0F5F2', width: 2, offset: 15 },
-    corner: { style: 'circle', size: 8, color: '#FFCB2F', lw: 1 },
-  },
-  // 12 — Rose: soft pink border + circle corner dots
-  {
-    id: 'rose',
-    border: { color: '#E8698A', width: 6 },
-    inner:  { color: '#FCE4EC', width: 1, offset: 9 },
-    corner: { style: 'circle', size: 7, color: '#E8698A', lw: 1 },
-  },
-  // 13 — Copper Ornate: amber border + cross corners + warm glow
-  {
-    id: 'copper-ornate',
-    border: { color: '#C9963A', width: 7 },
-    corner: { style: 'cross', size: 18, color: '#7a5800', lw: 2.5 },
-    glow:   { color: '#C9963A', blur: 8 },
-  },
-  // 14 — Arctic: light blue border + L-bracket corners
-  {
-    id: 'arctic',
-    border: { color: '#7DD3FC', width: 4 },
-    corner: { style: 'bracket', size: 20, color: '#BAE6FD', lw: 2 },
-  },
-  // 15 — Purple Mist: purple border + soft glow + inner line
-  {
-    id: 'purple-mist',
-    border: { color: '#A78BFA', width: 5 },
-    inner:  { color: 'rgba(167,139,250,0.3)', width: 1, offset: 8 },
-    glow:   { color: '#7C3AED', blur: 16 },
-  },
-  // 16 — Retro Film: sepia dashed border + dot cluster corners
-  {
-    id: 'retro-film',
-    border: { color: '#8B7355', width: 5, dash: [8, 5] },
-    corner: { style: 'cluster', size: 5, color: '#C9963A', lw: 1 },
-  },
-  // 17 — Midnight: near-black outer + faint gold inner + subtle bracket corners
-  {
-    id: 'midnight',
-    border: { color: '#0a0a0a', width: 10 },
-    inner:  { color: 'rgba(255,203,47,0.25)', width: 1, offset: 13 },
-    corner: { style: 'bracket', size: 22, color: 'rgba(255,203,47,0.5)', lw: 2 },
-  },
-  // 18 — Emerald Dot: deep green border + neon inner + cluster dots at corners
-  {
-    id: 'emerald-dot',
+    id: 'gw-royal',
     border: { color: '#003820', width: 8 },
-    inner:  { color: '#2DD77A', width: 1.5, offset: 12 },
-    corner: { style: 'cluster', size: 5, color: '#2DD77A', lw: 1 },
+    inner:  { color: '#FFCB2F', width: 2, offset: 12 },
+    corner: { style: 'diamond', size: 12, color: '#FFCB2F', lw: 1 },
+    glow:   { color: '#FFCB2F', blur: 8 },
   },
-  // 19 — Tuxedo: white outer + gold hairline inner — formal & sharp
+  // 07 — GW Dashed: dashed green + gold L-corners
   {
-    id: 'tuxedo',
-    border: { color: '#F0F5F2', width: 3 },
-    inner:  { color: '#FFCB2F', width: 2, offset: 7 },
+    id: 'gw-dashed',
+    border: { color: '#006b3f', width: 5, dash: [12, 6] },
+    corner: { style: 'bracket', size: 22, color: '#FFCB2F', lw: 3 },
   },
-  // 20 — Sakura: soft pink border + circle corners + petal glow
+  // 08 — GW Mint Floral: soft mint + orange-gold vine corners
   {
-    id: 'sakura',
-    border: { color: '#F9A8D4', width: 5 },
-    corner: { style: 'circle', size: 9, color: '#F472B6', lw: 1 },
-    glow:   { color: '#F9A8D4', blur: 12 },
+    id: 'gw-mint',
+    border: { color: '#5DBF8A', width: 5 },
+    inner:  { color: 'rgba(255,203,47,0.5)', width: 1.5, offset: 9 },
+    corner: { style: 'vine', size: 36, color: '#3A9E6A', flower: '#FFB347', lw: 1.5 },
   },
 ];
 
@@ -288,6 +217,28 @@ function drawPhotoFrame(ctx, frame, x, y, w, h) {
             ctx.arc(cx + ox, cy + oy, cs, 0, Math.PI * 2);
             ctx.fill();
           });
+      } else if (c.style === 'vine') {
+        // dây leo + hoa ở góc
+        ctx.strokeStyle = c.color;
+        ctx.fillStyle = c.flower || c.color;
+        const stemLen = cs * 1.2;
+        const leafSize = cs * 0.25;
+        // Vẽ dây leo từ góc
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.quadraticCurveTo(cx + dx * stemLen * 0.6, cy + dy * stemLen * 0.3, cx + dx * stemLen, cy + dy * stemLen);
+        ctx.stroke();
+        // Lá
+        [[dx * stemLen * 0.3, dy * stemLen * 0.15], [dx * stemLen * 0.7, dy * stemLen * 0.5]].forEach(([ox, oy]) => {
+          ctx.beginPath();
+          ctx.ellipse(cx + ox, cy + oy, leafSize * 1.2, leafSize * 0.8, dx * 0.3, 0, Math.PI * 2);
+          ctx.fill();
+        });
+        // Hoa ở đầu
+        ctx.fillStyle = c.flower || '#FF8FAB';
+        ctx.beginPath();
+        ctx.arc(cx + dx * stemLen, cy + dy * stemLen, cs * 0.35, 0, Math.PI * 2);
+        ctx.fill();
       }
     });
   }
@@ -527,14 +478,18 @@ async function shoot() {
   q('#cov').classList.add('hidden');
   q('.ctrl-col').classList.remove('shooting');
   q('#shoot-btn').disabled = false;
-  S.mode = 'done';
   q('#proc-sub').textContent = 'Đang tạo poster...';
   q('#proc-ov').classList.remove('hidden');
   try {
     await buildPoster();
   } catch (err) {
     console.error('buildPoster failed:', err);
+    q('#proc-sub').textContent = 'Không thể tạo poster, hãy chụp lại.';
+    q('#proc-ov').classList.add('hidden');
+    S.mode = 'ready';
+    return;
   }
+  S.mode = 'done';
   // Tính posterUrl và bắt đầu upload ngay — không chờ showResult setup DOM
   S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
   const uploadP = uploadPoster(S.posterUrl);
@@ -755,6 +710,7 @@ async function uploadPoster(dataUrl) {
 }
 
 function retake() {
+  if (!confirm('Chụp lại sẽ xoá 4 ảnh vừa chụp. Bạn chắc không?')) return;
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
