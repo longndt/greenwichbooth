@@ -234,6 +234,71 @@ html, body {
 .cam-err-icon { font-size: 40px; }
 .cam-err p { color: var(--dim); text-align: center; line-height: 1.7; font-size: 14px; }
 
+/* ── Empty state ─────────────────────────────────────── */
+.empty-state {
+  position: absolute;
+  inset: 0;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+}
+
+.empty-state.hidden { display: none; }
+
+.empty-state-content {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.empty-state-icon {
+  font-size: 56px;
+  line-height: 1;
+}
+
+.empty-state-title {
+  font: var(--type-lg);
+  color: var(--color-accent);
+  letter-spacing: 1px;
+  margin: 0;
+}
+
+.empty-state-steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  min-width: 260px;
+}
+
+.step-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 14px;
+  color: var(--color-text-muted);
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: white;
+  font-weight: 700;
+  font-size: 12px;
+}
+
 /* ── Controls column ─────────────────────────────────────── */
 .ctrl-col {
   display: flex;

@@ -444,6 +444,18 @@ q('#app').innerHTML = `
           <p>Không thể dùng camera.<br/>Kiểm tra quyền truy cập.</p>
           <button id="retry-cam" class="btn-outline" aria-label="Thử kết nối camera lại">Thử lại</button>
         </div>
+
+        <div class="empty-state" id="empty-state">
+          <div class="empty-state-content">
+            <div class="empty-state-icon">🚀</div>
+            <h2 class="empty-state-title">Bắt đầu ngay!</h2>
+            <div class="empty-state-steps">
+              <div class="step-item"><span class="step-num">1</span> Chọn khung</div>
+              <div class="step-item"><span class="step-num">2</span> Chụp 4 ảnh</div>
+              <div class="step-item"><span class="step-num">3</span> Tải về</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -531,6 +543,7 @@ async function startCam() {
     cam.srcObject = S.stream;
     await new Promise(res => cam.addEventListener('loadedmetadata', res, { once: true }));
     q('#cerr').classList.add('hidden');
+    q('#empty-state').classList.add('hidden');
   } catch {
     q('#cerr').classList.remove('hidden');
   }
