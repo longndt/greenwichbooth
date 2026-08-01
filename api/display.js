@@ -86,6 +86,10 @@ export default async function handler(req, res) {
     .btn-back:hover {
       background: rgba(255, 255, 255, 0.15);
     }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     @media (max-width: 480px) {
       h1 { font-size: 20px; }
       .btn { min-width: 100px; padding: 12px 16px; font-size: 14px; }
@@ -98,13 +102,39 @@ export default async function handler(req, res) {
     <h1>📸 Greenwich Booth Poster</h1>
     <img src="${url}" alt="Poster" />
     <div class="btn-group">
-      <a href="${url}" download="${filename}" class="btn btn-download">
+      <button id="dl-btn" class="btn btn-download" onclick="downloadPoster('${url}', '${filename}')">
         ⬇️ Tải về máy
-      </a>
+      </button>
       <button class="btn btn-back" onclick="window.history.back()">
         ← Quay lại
       </button>
     </div>
+  </div>
+
+  <script>
+    async function downloadPoster(url, filename) {
+      const btn = document.getElementById('dl-btn');
+      btn.disabled = true;
+      btn.textContent = '⏳ Đang tải...';
+      try {
+        const res = await fetch(url);
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+        btn.textContent = '✅ Đã tải';
+      } catch (e) {
+        btn.textContent = '❌ Lỗi tải';
+        console.error(e);
+      } finally {
+        btn.disabled = false;
+      }
+    }
+  </script>
   </div>
 </body>
 </html>
