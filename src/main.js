@@ -1,22 +1,5 @@
 import QRCode from 'qrcode';
-import { removeBackground } from '@imgly/background-removal';
 import './styles.css';
-
-// ponytail: không set publicPath → library dùng default staticimgly.com (CDN chính thức có model files)
-const RMBG_CFG = {};
-
-async function removeBg(dataUrl) {
-  if (!S.removeBg) return dataUrl;
-  try {
-    return URL.createObjectURL(await removeBackground(dataUrl, RMBG_CFG));
-  } catch { return dataUrl; }
-}
-
-// Pre-warm: tải WASM model vào cache trước khi user chụp ảnh (chạy nền lúc idle)
-function warmUpRemoveBg() {
-  const c = document.createElement('canvas'); c.width = 64; c.height = 64;
-  removeBackground(c.toDataURL(), RMBG_CFG).catch(() => {});
-}
 
 // ponytail: face detection optional, load on-demand khi enable
 async function loadFaceApi() {
@@ -349,7 +332,6 @@ const S = {
   filterIdx: 0,
   stickerIdx: 0,
   accessoryIdx: 0,
-  removeBg: true,
   faceAiEnabled: false,
   interval: 3,
   photos: [],
@@ -413,7 +395,6 @@ q('#app').innerHTML = `
       <div class="tab-bar" id="tab-bar">
         <button class="tab active" data-tab="filter">🎨 Lọc</button>
         <button class="tab" data-tab="sticker">🎭 Hiệu ứng</button>
-        <button class="tab" data-tab="bg">🪄 Nền</button>
       </div>
 
       <div class="tab-pane" id="tab-filter">
@@ -431,15 +412,6 @@ q('#app').innerHTML = `
         </button>
         <div class="ctrl-lbl" style="padding:8px 2px 4px">Sticker poster</div>
         <div id="sticker-grid" class="sticker-grid"></div>
-      </div>
-
-      <div class="tab-pane hidden" id="tab-bg">
-        <div class="ctrl-lbl" style="padding:0 2px 8px">Xóa nền AI</div>
-        <button id="bg-toggle" class="bg-toggle active">
-          <span class="bg-tog-icon">✨</span>
-          <span class="bg-tog-lbl">Xóa nền · BẬT</span>
-          <small class="bg-tog-hint">Tự động xóa nền sau khi chụp</small>
-        </button>
       </div>
 
       <div class="photo-grid" id="photo-grid">
@@ -548,10 +520,10 @@ async function shoot() {
   q('.ctrl-col').classList.remove('shooting');
   q('#shoot-btn').disabled = false;
   S.mode = 'done';
-  q('#proc-sub').textContent = S.removeBg ? 'Đang xóa nền AI... (khoảng 30s)' : 'Đang tạo poster...';
+  q('#proc-sub').textContent = 'Đang tạo poster...';
   q('#proc-ov').classList.remove('hidden');
   try {
-    await Promise.race([buildPoster(), sleep(40000)]);
+    await buildPoster();
   } catch (err) {
     console.error('buildPoster failed:', err);
   }
@@ -612,7 +584,7 @@ async function buildPoster() {
   ctx.fillStyle = theme.bg;
   ctx.fillRect(0, 0, W, H);
 
-  const photos = await Promise.all(S.photos.map(removeBg));
+  const photos = S.photos;
   S.detectedFaces = [];
 
   // Draw photos + detect faces if Face AI enabled
@@ -626,7 +598,6 @@ async function buildPoster() {
       S.detectedFaces[i] = face ? { x: face.x * (PH / img.width) + pos[i][0], y: face.y * (PH / img.height) + pos[i][1], w: face.width * (PH / img.width), h: face.height * (PH / img.height) } : null;
     }
   }
-  photos.forEach(url => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); });
 
   // Per-photo mini-frames + accessories (Face AI positioned if detected)
   frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
@@ -869,12 +840,6 @@ q('#sticker-grid').addEventListener('click', e => {
   updateStickerOv();
 });
 
-q('#bg-toggle').addEventListener('click', () => {
-  S.removeBg = !S.removeBg;
-  q('#bg-toggle').classList.toggle('active', S.removeBg);
-  q('#bg-toggle').querySelector('.bg-tog-lbl').textContent = S.removeBg ? 'Xóa nền · BẬT' : 'Xóa nền · TẮT';
-});
-
 q('#face-ai-toggle').addEventListener('click', async () => {
   if (S.faceAiEnabled) {
     S.faceAiEnabled = false;
@@ -911,5 +876,3 @@ q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
 q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
 q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
 startCam();
-// Pre-warm AI model lúc idle — lần chụp đầu sẽ không phải chờ tải model nữa
-(window.requestIdleCallback || (fn => setTimeout(fn, 3000)))(warmUpRemoveBg);
