@@ -1,5 +1,15 @@
 import QRCode from 'qrcode';
+import { removeBackground } from '@imgly/background-removal';
 import './styles.css';
+
+async function removeBg(dataUrl) {
+  try {
+    const blob = await removeBackground(dataUrl, { publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/' });
+    return URL.createObjectURL(blob);
+  } catch {
+    return dataUrl; // fallback: giữ ảnh gốc nếu xóa nền thất bại
+  }
+}
 
 // ── Lion Captain mascot SVG ───────────────────────────────────────────────────
 const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
@@ -399,7 +409,7 @@ async function shoot() {
   q('#shoot-btn').disabled = false;
   S.mode = 'done';
   try {
-    await Promise.race([buildPoster(), sleep(10000)]);
+    await Promise.race([buildPoster(), sleep(40000)]);
   } catch (err) {
     console.error('buildPoster failed:', err);
   }
@@ -454,8 +464,14 @@ async function buildPoster() {
   ctx.fillStyle = f.bg;
   ctx.fillRect(0, 0, W, H);
 
-  // Draw 4 square photos
-  await Promise.all(S.photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], PH, PH)));
+  // Xóa nền 4 ảnh song song, fallback về ảnh gốc nếu lỗi
+  const photos = await Promise.all(S.photos.map(removeBg));
+
+  // Draw 4 square photos (đã xóa nền)
+  await Promise.all(photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], PH, PH)));
+
+  // Giải phóng object URLs tạm
+  photos.forEach(url => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); });
 
   // Dashed border around each photo
   ctx.strokeStyle = 'rgba(255,255,255,0.35)';
