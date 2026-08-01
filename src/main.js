@@ -52,24 +52,25 @@ const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
 // pattern     → 'dots' | 'lines' subtle overlay on bars
 const FRAMES = [
   {
-    id: 'studio-prime', label: '✨ Studio Prime', emoji: '💎',
-    bg: '#3D1B2F',  bgEnd: '#1A0F1F',        accent: '#D4AF37',
-    title: 'GREENWICH STUDIO',    sub: 'Memories Captured',
-    borderW: 8,     borderDouble: true,      decorStyle: 'diamonds',
-    photoLocation: 'Hà Nội Campus',
+    id: 'fotolab', label: '🖼️ Fotolab Classic', emoji: '📸',
+    bg: '#6B1E24',  bgEnd: '#4A1620',        accent: '#F0E4C3',
+    title: 'GREENWICH VIETNAM',   sub: 'Est. 2024',
+    borderW: 7,     borderDouble: true,      decorStyle: 'cornerFrames',
+    photoLocation: 'Hà Nội Campus',  showFrameNumber: true,
   },
   {
-    id: 'film-strip', label: '🎞️ Film Strip',   emoji: '🎥',
-    bg: '#1A1A1A',  accent: '#FFD700',
-    title: 'GREENWICH MOMENTS',   sub: 'Frame by Frame',
-    borderW: 6,     decorStyle: 'filmstrip',
-    photoLocation: 'Photo Booth',
+    id: 'magic-hanoi', label: '✨ Magic Hanoi',   emoji: '🌟',
+    bg: '#5A1C24',  bgEnd: '#3B1118',        accent: '#E8D5C4',
+    title: 'GREENWICH MOMENTS',   sub: 'Picture Perfect',
+    borderW: 6,     decorStyle: 'emojiTop',  photoLocation: 'Studio Hà Nội',
+    topEmoji: ['✨', '🎉', '✨', '🎉'],
   },
   {
-    id: 'modern-chic', label: '🎀 Modern Chic',  emoji: '✨',
-    bg: '#2C3E50',  bgEnd: '#1A252F',        accent: '#E8698A',
-    title: 'GREENWICH VIBES',     sub: 'Picture Perfect',
-    decorStyle: 'squares',        photoLocation: 'Campus Studio',
+    id: 'studio-gold', label: '💎 Studio Gold',  emoji: '✨',
+    bg: '#3D2817',  bgEnd: '#2B1B0E',        accent: '#D4AF37',
+    title: 'GREENWICH STUDIO',    sub: 'Premium Memories',
+    borderW: 8,     borderDouble: true,      decorStyle: 'goldDots',
+    photoLocation: 'Campus Studio',
   },
   {
     id: 'burgundy', label: 'Burgundy Luxe',  emoji: '🎬',
@@ -596,6 +597,37 @@ function drawDecorations(ctx, f, W, H) {
     for (let x = 25; x < W - 25; x += sp) {
       for (let y = 25; y < H - 25; y += sp) {
         ctx.strokeRect(x, y, sz, sz);
+      }
+    }
+  } else if (f.decorStyle === 'cornerFrames') {
+    // Small frame decorations at corners (Fotolab style)
+    const r = 15, offset = 25;
+    ctx.strokeStyle = f.accent + '66';
+    ctx.lineWidth = 2;
+    // Top-left, top-right, bottom-left, bottom-right
+    [[offset, offset], [W - offset, offset], [offset, H - offset], [W - offset, H - offset]].forEach(([x, y]) => {
+      ctx.strokeRect(x - r, y - r, r * 2, r * 2);
+    });
+  } else if (f.decorStyle === 'emojiTop') {
+    // Emoji decorations on top bar (Magic Hanoi style)
+    if (f.topEmoji) {
+      ctx.font = '40px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      const positions = [100, 350, 730, 980];
+      f.topEmoji.forEach((emoji, i) => {
+        ctx.fillText(emoji, positions[i], 70);
+      });
+    }
+  } else if (f.decorStyle === 'goldDots') {
+    // Gold dot pattern (Studio Gold style)
+    const r = 3, sp = 30;
+    ctx.fillStyle = f.accent + '55';
+    for (let x = 50; x < W - 50; x += sp) {
+      for (let y = 50; y < H - 50; y += sp) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
   }
