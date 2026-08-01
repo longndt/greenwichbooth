@@ -672,6 +672,17 @@ input[type="range"] {
 }
 
 
+/* ── Accessory camera overlay ────────────────────────────── */
+.acc-ov {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  line-height: 1;
+  pointer-events: none;
+  z-index: 4;
+}
+.acc-ov.hidden { display: none; }
+
 /* ── Processing overlay ──────────────────────────────────── */
 .proc-ov {
   position: fixed;

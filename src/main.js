@@ -290,6 +290,21 @@ const FILTERS = [
   { id: 'vintage', label: 'Vintage',     css: 'sepia(0.55) saturate(0.85) brightness(0.94) contrast(1.08)' },
 ];
 
+// ── 9 accessories — overlaid on each captured photo ──────────────────────────
+// top: vertical position (0=top, 1=bottom) as fraction of photo height
+// fs:  emoji font size as fraction of photo height
+const ACCESSORIES = [
+  { id: 'none',    label: 'Không',   icon: '',   top: 0,    fs: 0 },
+  { id: 'glasses', label: 'Kính 😎', icon: '😎', top: 0.44, fs: 0.22 },
+  { id: 'hat',     label: 'Mũ 🎩',  icon: '🎩', top: 0.03, fs: 0.28 },
+  { id: 'bow',     label: 'Nơ 🎀',  icon: '🎀', top: 0.05, fs: 0.20 },
+  { id: 'crown',   label: 'Vương 👑',icon: '👑', top: 0.03, fs: 0.22 },
+  { id: 'grad',    label: 'Cử nhân 🎓',icon:'🎓',top: 0.03, fs: 0.28 },
+  { id: 'disguise',label: 'Râu 🥸', icon: '🥸', top: 0.38, fs: 0.26 },
+  { id: 'flower',  label: 'Hoa 🌸', icon: '🌸', top: 0.03, fs: 0.18 },
+  { id: 'rainbow', label: 'Cầu vồng 🌈',icon:'🌈',top:0.01,fs: 0.30 },
+];
+
 // ── 9 stickers (1 = none + 8 emoji) — drawn on top-bar right of poster ────────
 const STICKERS = [
   { id: 'none',    label: 'Không',   icon: '' },
@@ -308,6 +323,7 @@ const S = {
   mode: 'ready',
   filterIdx: 0,
   stickerIdx: 0,
+  accessoryIdx: 0,
   removeBg: true,
   interval: 3,
   photos: [],
@@ -342,6 +358,7 @@ q('#app').innerHTML = `
         <video id="cam" autoplay muted playsinline></video>
         <div class="frame-ov" id="fov"></div>
         <div class="sticker-ov hidden" id="sov"></div>
+        <div class="acc-ov hidden" id="acc-ov"></div>
 
         <div class="cnt-ov hidden" id="cov">
           <div class="cnt-num-wrap">
@@ -368,7 +385,7 @@ q('#app').innerHTML = `
     <div class="ctrl-col">
       <div class="tab-bar" id="tab-bar">
         <button class="tab active" data-tab="filter">🎨 Lọc</button>
-        <button class="tab" data-tab="sticker">✨ Sticker</button>
+        <button class="tab" data-tab="sticker">🎭 Hiệu ứng</button>
         <button class="tab" data-tab="bg">🪄 Nền</button>
       </div>
 
@@ -378,7 +395,9 @@ q('#app').innerHTML = `
       </div>
 
       <div class="tab-pane hidden" id="tab-sticker">
-        <div class="ctrl-lbl" style="padding:0 2px 4px">Sticker</div>
+        <div class="ctrl-lbl" style="padding:0 2px 4px">Đeo lên ảnh</div>
+        <div id="acc-grid" class="sticker-grid"></div>
+        <div class="ctrl-lbl" style="padding:8px 2px 4px">Sticker poster</div>
         <div id="sticker-grid" class="sticker-grid"></div>
       </div>
 
@@ -517,22 +536,28 @@ function capFrame(cam) {
   const vw = cam.videoWidth, vh = cam.videoHeight;
   const sz = Math.min(vw, vh);
 
-  // Step 1: capture raw mirrored frame
   const raw = document.createElement('canvas');
   raw.width = sz; raw.height = sz;
   const rx = raw.getContext('2d');
   rx.translate(sz, 0); rx.scale(-1, 1);
   rx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
 
-  // Step 2: apply CSS filter via a separate canvas (avoids video-taint risk)
-  const fCss = FILTERS[S.filterIdx].css;
-  if (fCss === 'none') return raw.toDataURL('image/jpeg', 0.9);
-
   const out = document.createElement('canvas');
   out.width = sz; out.height = sz;
   const ox = out.getContext('2d');
-  ox.filter = fCss;
+  const fCss = FILTERS[S.filterIdx].css;
+  if (fCss !== 'none') ox.filter = fCss;
   ox.drawImage(raw, 0, 0);
+  ox.filter = 'none';
+
+  if (S.accessoryIdx > 0) {
+    const acc = ACCESSORIES[S.accessoryIdx];
+    ox.font = `${Math.round(sz * acc.fs)}px serif`;
+    ox.textBaseline = 'top';
+    ox.textAlign = 'center';
+    ox.fillText(acc.icon, sz / 2, Math.round(sz * acc.top));
+  }
+
   return out.toDataURL('image/jpeg', 0.9);
 }
 
@@ -718,6 +743,24 @@ function updateStickerOv() {
   sov.classList.remove('hidden');
 }
 
+function makeAcc(a, i) {
+  return `
+    <button class="stkr${i === 0 ? ' active' : ''}" data-ai="${i}" title="${a.label}">
+      <div class="stkr-icon">${i === 0 ? '✕' : a.icon}</div>
+      <span class="stkr-lbl">${a.label.split(' ')[0]}</span>
+    </button>`;
+}
+
+function updateAccOv() {
+  const aov = q('#acc-ov');
+  if (S.accessoryIdx === 0) { aov.classList.add('hidden'); return; }
+  const acc = ACCESSORIES[S.accessoryIdx];
+  aov.style.top = `${acc.top * 100}%`;
+  aov.style.fontSize = `${Math.round(acc.fs * 100)}vmin`;
+  aov.textContent = acc.icon;
+  aov.classList.remove('hidden');
+}
+
 // ── Filter swatch card HTML ───────────────────────────────────────────────────
 // Uses a fixed colorful gradient then applies the CSS filter — shows real effect
 const SWATCH_BASE = 'linear-gradient(135deg,#f4a,#ffd,#4cf)';
@@ -756,11 +799,20 @@ q('#ival').addEventListener('input', e => {
   q('#ival-h').textContent = S.interval;
 });
 
+q('#acc-grid').addEventListener('click', e => {
+  const btn = e.target.closest('.stkr');
+  if (!btn) return;
+  S.accessoryIdx = +btn.dataset.ai;
+  q('#acc-grid').querySelectorAll('.stkr').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateAccOv();
+});
+
 q('#sticker-grid').addEventListener('click', e => {
   const btn = e.target.closest('.stkr');
   if (!btn) return;
   S.stickerIdx = +btn.dataset.si;
-  qa('.stkr').forEach(b => b.classList.remove('active'));
+  q('#sticker-grid').querySelectorAll('.stkr').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateStickerOv();
 });
@@ -782,5 +834,6 @@ q('#filter-grid').addEventListener('click', e => {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
+q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
 q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
 startCam();
