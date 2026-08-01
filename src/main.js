@@ -2,6 +2,7 @@ import QRCode from 'qrcode';
 import './styles.css';
 
 // ponytail: face detection optional, load on-demand khi enable
+// Models served from /models/ (same domain) — CDN weights không có trên jsDelivr
 async function loadFaceApi() {
   if (!window.faceapi) {
     await new Promise((res, rej) => {
@@ -13,17 +14,16 @@ async function loadFaceApi() {
     });
   }
   if (!window.faceapi) throw new Error('face-api not loaded');
-  const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/';
   await Promise.all([
-    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
-    faceapi.nets.faceLandmarks68Net.loadFromUri(MODEL_URL),
+    faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+    faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models'),
   ]);
 }
 
 async function detectFaceInImage(imgEl) {
   if (!S.faceAiEnabled || !window.faceapi) return null;
   try {
-    const detection = await faceapi.detectSingleFace(imgEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
+    const detection = await faceapi.detectSingleFace(imgEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(true);
     return detection?.detection?.box || null;
   } catch { return null; }
 }
