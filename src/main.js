@@ -457,11 +457,11 @@ async function shoot() {
   if (!cam.srcObject || cam.videoWidth === 0) return;
 
   S.mode = 'shooting';
+  q('#shoot-btn').disabled = true;
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
   q('.ctrl-col').classList.add('shooting');
-  q('#shoot-btn').disabled = true;
   q('#cov').classList.remove('hidden');
 
   for (let i = 0; i < 4; i++) {
@@ -736,6 +736,7 @@ function retake() {
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
+  q('#shoot-btn').disabled = false;
   qa('.dot').forEach(d => d.classList.remove('done'));
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
