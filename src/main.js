@@ -259,10 +259,6 @@ q('#app').innerHTML = `
             ${FRAMES.map((f, i) => makeFcard(f, i)).join('')}
           </div>
         </div>
-        <div class="ctrl-sec ctrl-sec--slim">
-          <div class="ctrl-lbl">Thời gian: <strong id="ival-v">2</strong>s</div>
-          <input type="range" id="ival" min="2" max="6" value="2" step="1"/>
-        </div>
       </div>
 
       <div class="tab-pane hidden" id="tab-filter">
@@ -273,6 +269,11 @@ q('#app').innerHTML = `
       <div class="tab-pane hidden" id="tab-sticker">
         <div class="ctrl-lbl" style="padding:0 2px 4px">Sticker</div>
         <div id="sticker-grid" class="sticker-grid"></div>
+      </div>
+
+      <div class="ival-bar">
+        <div class="ctrl-lbl">Thời gian: <strong id="ival-v">2</strong>s</div>
+        <input type="range" id="ival" min="2" max="4" value="2" step="1"/>
       </div>
 
       <div class="photo-grid" id="photo-grid">

@@ -407,6 +407,15 @@ html, body {
 .ctrl-sec { display: flex; flex-direction: column; gap: 8px; }
 .ctrl-sec--slim { gap: 6px; }
 
+.ival-bar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0 4px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+}
+
 .ctrl-lbl {
   font-size: 10px;
   font-weight: 700;
