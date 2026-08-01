@@ -11,13 +11,12 @@ export default async function handler(req, res) {
   try {
     const { image } = req.body;
     const buf = Buffer.from(image.replace(/^data:\w+\/\w+;base64,/, ''), 'base64');
-    const result = await put(`booth/${Date.now()}.jpg`, buf, {
-      access: 'private',
+    const { url } = await put(`booth/${Date.now()}.jpg`, buf, {
+      access: 'public',
       contentType: 'image/jpeg',
       addRandomSuffix: true,
     });
-    // downloadUrl is a signed public URL for private stores; fallback to url
-    res.json({ url: result.downloadUrl || result.url });
+    res.json({ url });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err?.message || 'Upload failed' });
