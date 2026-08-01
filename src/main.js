@@ -3,7 +3,15 @@ import './styles.css';
 
 // ponytail: face detection optional, load on-demand khi enable
 async function loadFaceApi() {
-  if (!window.faceapi) { await new Promise(r => setTimeout(r, 500)); }
+  if (!window.faceapi) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
+      s.onload = res;
+      s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
   if (!window.faceapi) throw new Error('face-api not loaded');
   const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/';
   await Promise.all([
