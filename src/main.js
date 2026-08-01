@@ -182,7 +182,7 @@ const S = {
   frameIdx: 0,
   filterIdx: 0,
   stickerIdx: 0,
-  interval: 2,
+  interval: 3,
   photos: [],
   stream: null,
   posterUrl: null,
@@ -283,8 +283,8 @@ q('#app').innerHTML = `
       </div>
 
       <div class="ival-bar">
-        <div class="ctrl-lbl">Thời gian: <strong id="ival-v">2</strong>s</div>
-        <input type="range" id="ival" min="2" max="4" value="2" step="1"/>
+        <div class="ctrl-lbl">Thời gian: <strong id="ival-v">3</strong>s</div>
+        <input type="range" id="ival" min="2" max="4" value="3" step="1"/>
       </div>
 
       <div class="photo-grid" id="photo-grid">
@@ -297,7 +297,7 @@ q('#app').innerHTML = `
       <button class="shoot-btn" id="shoot-btn">
         <span class="s-icon">📷</span>
         <span class="s-text">CHỤP NGAY</span>
-        <small class="s-hint">4 ảnh · <span id="ival-h">2</span>s mỗi ảnh</small>
+        <small class="s-hint">4 ảnh · <span id="ival-h">3</span>s mỗi ảnh</small>
       </button>
     </div>
   </div>
