@@ -144,6 +144,63 @@ const PHOTO_FRAMES = [
     inner:  { color: 'rgba(255,203,47,0.5)', width: 1.5, offset: 9 },
     corner: { style: 'vine', size: 36, color: '#3A9E6A', flower: '#FFB347', lw: 1.5 },
   },
+  // 09 — GW Neon: thin border + bright glow (modern)
+  {
+    id: 'gw-neon',
+    border: { color: '#00FF88', width: 2 },
+    glow:   { color: '#00FF88', blur: 24 },
+  },
+  // 10 — GW Shadow Depth: dark border with inner depth effect
+  {
+    id: 'gw-shadow',
+    border: { color: '#001B1A', width: 6 },
+    inner:  { color: 'rgba(45,215,122,0.3)', width: 2, offset: 10 },
+    glow:   { color: 'rgba(0,0,0,0.6)', blur: 12 },
+  },
+  // 11 — GW Geometric Circles: cluster of circles at corners
+  {
+    id: 'gw-circles',
+    border: { color: '#006b3f', width: 4 },
+    corner: { style: 'cluster', size: 8, color: '#FFCB2F', lw: 1 },
+  },
+  // 12 — GW Minimalist: ultra-thin gold line, clean
+  {
+    id: 'gw-minimal',
+    border: { color: '#FFCB2F', width: 2 },
+    corner: { style: 'bracket', size: 18, color: '#FFCB2F', lw: 2 },
+  },
+  // 13 — GW Celebration: bright green + playful corners
+  {
+    id: 'gw-celebration',
+    border: { color: '#2DD77A', width: 5 },
+    inner:  { color: '#FF6BA8', width: 1, offset: 8 },
+    corner: { style: 'circle', size: 10, color: '#FF6BA8', lw: 1 },
+  },
+  // 14 — GW Elegant: thin gold border, sophisticated
+  {
+    id: 'gw-elegant',
+    border: { color: '#D4A574', width: 3 },
+    inner:  { color: '#FFCB2F', width: 1, offset: 7 },
+  },
+  // 15 — GW Bold: thick navy + emerald glow
+  {
+    id: 'gw-bold',
+    border: { color: '#001B5E', width: 8 },
+    inner:  { color: '#2DD77A', width: 2, offset: 12 },
+    glow:   { color: '#2DD77A', blur: 14 },
+  },
+  // 16 — GW Festive: gold dashed + colorful corners
+  {
+    id: 'gw-festive',
+    border: { color: '#FFCB2F', width: 4, dash: [8, 4] },
+    corner: { style: 'circle', size: 9, color: '#FF6BA8', lw: 1 },
+  },
+  // 17 — GW Modern Vine: thin border + subtle vine
+  {
+    id: 'gw-modern-vine',
+    border: { color: '#006b3f', width: 3 },
+    corner: { style: 'vine', size: 32, color: '#2DD77A', flower: '#FFCB2F', lw: 1 },
+  },
 ];
 
 // Pick N unique frames randomly (no duplicates within same poster)
