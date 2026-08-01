@@ -489,6 +489,7 @@ input[type="range"] {
 }
 
 .ctrl-col.shooting .shoot-btn { display: none; }
+.ctrl-col.shooting .photo-grid { display: grid; }
 .ctrl-col.shooting { justify-content: center; }
 
 /* ── Photo slot — 2×2 grid item ─────────────────────────── */
