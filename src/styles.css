@@ -690,15 +690,6 @@ input[type="range"] {
 }
 
 /* ── Flash ───────────────────────────────────────────────── */
-.flash {
-  position: fixed;
-  inset: 0;
-  background: white;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 200;
-  transition: opacity 0.24s;
-}
 
 
 /* ── Photo preview grid (during shooting) ───────────────── */

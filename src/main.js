@@ -324,7 +324,7 @@ q('#app').innerHTML = `
   </div>
 </div>
 
-<div class="flash" id="flash"></div>
+
 <canvas id="cvs" width="1080" height="1440" style="display:none"></canvas>
 `;
 
@@ -393,10 +393,6 @@ async function shoot() {
     await sleep(280);
 
     S.photos.push(capFrame(cam));
-
-    const fl = q('#flash');
-    fl.style.opacity = '1';
-    setTimeout(() => { fl.style.opacity = '0'; }, 240);
 
     q(`#pv${i}`).src = S.photos[i];
     q(`#pvs${i}`).classList.add('filled');
