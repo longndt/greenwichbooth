@@ -589,8 +589,18 @@ async function shoot() {
     return;
   }
   S.mode = 'done';
-  // Tính posterUrl và bắt đầu upload ngay — không chờ showResult setup DOM
-  S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
+  let posterDataUrl;
+  try {
+    posterDataUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
+  } catch (err) {
+    // ponytail: canvas taint (SVG/CORS) → degrade gracefully
+    console.error('toDataURL failed:', err);
+    q('#proc-sub').textContent = 'Không thể xuất ảnh, hãy chụp lại.';
+    q('#proc-ov').classList.add('hidden');
+    S.mode = 'ready';
+    return;
+  }
+  S.posterUrl = posterDataUrl;
   const uploadP = uploadPoster(S.posterUrl);
   q('#proc-ov').classList.add('hidden');
   showResult(uploadP);
@@ -649,16 +659,19 @@ async function buildPoster() {
   const photos = S.photos;
   S.detectedFaces = [];
 
-  // Draw photos + detect faces if Face AI enabled
-  for (let i = 0; i < photos.length; i++) {
-    await drawPhoto(ctx, photos[i], pos[i][0], pos[i][1], PH, PH);
-    if (S.faceAiEnabled && window.faceapi) {
+  // Draw all 4 photos in parallel (sequential was the main bottleneck)
+  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
+
+  // Face detection in parallel if enabled
+  if (S.faceAiEnabled && window.faceapi) {
+    S.detectedFaces = await Promise.all(photos.map(async (p, i) => {
       const img = new Image();
-      img.src = photos[i];
-      await new Promise(r => img.onload = r);
+      img.src = p;
+      await new Promise(r => { img.onload = r; img.onerror = r; });
       const face = await detectFaceInImage(img);
-      S.detectedFaces[i] = face ? { x: face.x * (PH / img.width) + pos[i][0], y: face.y * (PH / img.height) + pos[i][1], w: face.width * (PH / img.width), h: face.height * (PH / img.height) } : null;
-    }
+      if (!face) return null;
+      return { x: face.x * (PH / img.width) + pos[i][0], y: face.y * (PH / img.height) + pos[i][1], w: face.width * (PH / img.width), h: face.height * (PH / img.height) };
+    }));
   }
 
   // Per-photo mini-frames + accessories (Face AI positioned if detected)
@@ -765,8 +778,8 @@ function drawImg(ctx, url, x, y, w, h) {
 }
 
 function drawSvg(ctx, svg, x, y, w, h) {
-  const url = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' }));
-  return drawImg(ctx, url, x, y, w, h).then(() => URL.revokeObjectURL(url));
+  // ponytail: data URL avoids Blob URL canvas-taint in Firefox/Safari
+  return drawImg(ctx, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), x, y, w, h);
 }
 
 // ── Result screen ─────────────────────────────────────────────────────────────
