@@ -18,6 +18,25 @@ function warmUpRemoveBg() {
   removeBackground(c.toDataURL(), RMBG_CFG).catch(() => {});
 }
 
+// ponytail: face detection optional, load on-demand khi enable
+async function loadFaceApi() {
+  if (!window.faceapi) { await new Promise(r => setTimeout(r, 500)); }
+  if (!window.faceapi) throw new Error('face-api not loaded');
+  const MODEL_URL = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights/';
+  await Promise.all([
+    faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+    faceapi.nets.faceLandmarks68Net.loadFromUri(MODEL_URL),
+  ]);
+}
+
+async function detectFaceInImage(imgEl) {
+  if (!S.faceAiEnabled || !window.faceapi) return null;
+  try {
+    const detection = await faceapi.detectSingleFace(imgEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks();
+    return detection?.detection?.box || null;
+  } catch { return null; }
+}
+
 // ── Lion Captain mascot SVG ───────────────────────────────────────────────────
 const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
   <path d="M32 58 Q16 82 24 112 L76 112 Q84 82 68 58 Z" fill="#FF6B1A"/>
@@ -331,10 +350,12 @@ const S = {
   stickerIdx: 0,
   accessoryIdx: 0,
   removeBg: true,
+  faceAiEnabled: false,
   interval: 3,
   photos: [],
   stream: null,
   posterUrl: null,
+  detectedFaces: [],
 };
 
 const q  = s => document.querySelector(s);
@@ -401,8 +422,13 @@ q('#app').innerHTML = `
       </div>
 
       <div class="tab-pane hidden" id="tab-sticker">
-        <div class="ctrl-lbl" style="padding:0 2px 4px">Đeo lên ảnh</div>
+        <div class="ctrl-lbl" style="padding:0 2px 8px">Đeo lên ảnh</div>
         <div id="acc-grid" class="sticker-grid"></div>
+        <button id="face-ai-toggle" class="face-ai-toggle">
+          <span class="face-ai-icon">🤖</span>
+          <span class="face-ai-lbl">Face AI · TẮT</span>
+          <small class="face-ai-hint">Tự động định vị lên mặt</small>
+        </button>
         <div class="ctrl-lbl" style="padding:8px 2px 4px">Sticker poster</div>
         <div id="sticker-grid" class="sticker-grid"></div>
       </div>
@@ -587,11 +613,39 @@ async function buildPoster() {
   ctx.fillRect(0, 0, W, H);
 
   const photos = await Promise.all(S.photos.map(removeBg));
-  await Promise.all(photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], PH, PH)));
+  S.detectedFaces = [];
+
+  // Draw photos + detect faces if Face AI enabled
+  for (let i = 0; i < photos.length; i++) {
+    await drawPhoto(ctx, photos[i], pos[i][0], pos[i][1], PH, PH);
+    if (S.faceAiEnabled && window.faceapi) {
+      const img = new Image();
+      img.src = photos[i];
+      await new Promise(r => img.onload = r);
+      const face = await detectFaceInImage(img);
+      S.detectedFaces[i] = face ? { x: face.x * (PH / img.width) + pos[i][0], y: face.y * (PH / img.height) + pos[i][1], w: face.width * (PH / img.width), h: face.height * (PH / img.height) } : null;
+    }
+  }
   photos.forEach(url => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); });
 
-  // Per-photo mini-frames
+  // Per-photo mini-frames + accessories (Face AI positioned if detected)
   frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
+  if (S.accessoryIdx > 0 && S.faceAiEnabled) {
+    S.detectedFaces.forEach((face, i) => {
+      if (!face) return;
+      const acc = ACCESSORIES[S.accessoryIdx];
+      ctx.font = `${Math.round(PH * acc.fs)}px serif`;
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'center';
+      // Position based on face bounds
+      let accY;
+      if (acc.id === 'glasses' || acc.id === 'disguise') accY = face.y + face.h * 0.35;
+      else if (acc.id === 'hat' || acc.id === 'crown' || acc.id === 'grad') accY = face.y - PH * 0.05;
+      else if (acc.id === 'bow') accY = face.y + face.h * 0.85;
+      else accY = face.y + face.h * acc.top;
+      ctx.fillText(acc.icon, face.x + face.w / 2, accY);
+    });
+  }
 
   // Separator dots
   const sepX = Math.round(HPAD + PH + GAP / 2);
@@ -819,6 +873,28 @@ q('#bg-toggle').addEventListener('click', () => {
   S.removeBg = !S.removeBg;
   q('#bg-toggle').classList.toggle('active', S.removeBg);
   q('#bg-toggle').querySelector('.bg-tog-lbl').textContent = S.removeBg ? 'Xóa nền · BẬT' : 'Xóa nền · TẮT';
+});
+
+q('#face-ai-toggle').addEventListener('click', async () => {
+  if (S.faceAiEnabled) {
+    S.faceAiEnabled = false;
+    q('#face-ai-toggle').classList.remove('active');
+    q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Face AI · TẮT';
+  } else {
+    q('#face-ai-toggle').disabled = true;
+    q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Đang tải model...';
+    try {
+      await loadFaceApi();
+      S.faceAiEnabled = true;
+      q('#face-ai-toggle').classList.add('active');
+      q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Face AI · BẬT';
+    } catch (e) {
+      q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Lỗi tải model';
+      console.error(e);
+    } finally {
+      q('#face-ai-toggle').disabled = false;
+    }
+  }
 });
 
 q('#filter-grid').addEventListener('click', e => {
