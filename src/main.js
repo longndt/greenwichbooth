@@ -448,7 +448,7 @@ q('#app').innerHTML = `
       <div class="dl-info">
         <div class="qr-hint">
           <strong id="qr-title">Đang tạo link...</strong>
-          <span>Sắp xong, chờ chút</span>
+          <span id="qr-sub">Sắp xong, chờ chút</span>
         </div>
         <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về máy</a>
       </div>
@@ -707,6 +707,7 @@ function showResult(uploadP) {
       .then(qr => {
         q('#qr-img').src = qr;
         q('#qr-title').textContent = '📱 Quét để tải về';
+        q('#qr-sub').textContent = 'Dùng camera điện thoại quét mã';
       });
   });
 }
