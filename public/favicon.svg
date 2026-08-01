@@ -1,7 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#006b3f"/>
-  <rect x="4" y="13" width="24" height="14" rx="3" fill="#FFCB2F"/>
-  <rect x="12" y="9" width="8" height="6" rx="2" fill="#FFCB2F"/>
-  <circle cx="16" cy="20" r="5" fill="#0B1912"/>
-  <circle cx="16" cy="20" r="2.5" fill="#FFCB2F" opacity="0.5"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <defs>
+    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#006b3f"/>
+      <stop offset="100%" style="stop-color:#FFCB2F"/>
+    </linearGradient>
+  </defs>
+  <polygon points="60,8 55,28 65,28" fill="#006b3f"/>
+  <polygon points="42,16 32,36 52,32" fill="#006b3f"/>
+  <polygon points="78,16 68,32 88,36" fill="#006b3f"/>
+  <circle cx="60" cy="58" r="32" fill="url(#lg)"/>
+  <circle cx="48" cy="58" r="3" fill="#002D72"/>
+  <circle cx="72" cy="58" r="3" fill="#002D72"/>
+  <path d="M 60 64 L 57 70 L 63 70 Z" fill="#FFCB2F"/>
+  <circle cx="36" cy="38" r="7" fill="#006b3f" stroke="#FFCB2F" stroke-width="1.5"/>
+  <circle cx="84" cy="38" r="7" fill="#006b3f" stroke="#FFCB2F" stroke-width="1.5"/>
 </svg>

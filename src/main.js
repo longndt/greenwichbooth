@@ -1,75 +1,34 @@
 import QRCode from 'qrcode';
 import './styles.css';
 
-// ponytail: face detection optional, load on-demand khi enable
-// Models served from /models/ (same domain) — CDN weights không có trên jsDelivr
-async function loadFaceApi() {
-  if (!window.faceapi) {
-    await new Promise((res, rej) => {
-      const s = document.createElement('script');
-      s.src = 'https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js';
-      s.onload = res;
-      s.onerror = rej;
-      document.head.appendChild(s);
-    });
-  }
-  if (!window.faceapi) throw new Error('face-api script not loaded');
-  try {
-    await Promise.all([
-      faceapi.nets.tinyFaceDetector.loadFromUri('/models/'),
-      faceapi.nets.faceLandmark68TinyNet.loadFromUri('/models/'),
-    ]);
-    console.log('✓ Face AI models loaded');
-  } catch (err) {
-    console.error('✗ Face AI model load failed:', err);
-    throw err;
-  }
-}
+// Face detection removed — simplified accessory positioning (fixed positioning)
 
-async function detectFaceInImage(imgEl) {
-  if (!S.faceAiEnabled || !window.faceapi) return null;
-  try {
-    const detection = await faceapi.detectSingleFace(imgEl, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks(true);
-    if (detection?.detection?.box) return detection.detection.box;
-    console.warn('Face detection: no face found in image');
-    return null;
-  } catch (err) {
-    console.error('Face detection error:', err);
-    return null;
-  }
-}
-
-// ── Lion Captain mascot SVG ───────────────────────────────────────────────────
-const LION = `<svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
-  <path d="M32 58 Q16 82 24 112 L76 112 Q84 82 68 58 Z" fill="#FF6B1A"/>
-  <path d="M28 57 L72 57 L74 90 Q74 96 50 96 Q26 96 26 90 Z" fill="#002D72"/>
-  <rect x="36" y="66" width="28" height="18" rx="4" fill="#F7C948"/>
-  <text x="50" y="79" font-family="Arial" font-size="9" font-weight="900" fill="#002D72" text-anchor="middle">GV</text>
-  <ellipse cx="18" cy="72" rx="12" ry="7" fill="#FFB347" transform="rotate(-20 18 72)"/>
-  <ellipse cx="82" cy="65" rx="12" ry="7" fill="#FFB347" transform="rotate(35 82 65)"/>
-  <circle cx="50" cy="35" r="32" fill="#C96010"/>
-  <circle cx="24" cy="20" r="12" fill="#C96010"/>
-  <circle cx="76" cy="20" r="12" fill="#C96010"/>
-  <circle cx="50" cy="6"  r="11" fill="#C96010"/>
-  <circle cx="50" cy="36" r="24" fill="#F59B30"/>
-  <ellipse cx="50" cy="38" rx="18" ry="17" fill="#FFB347"/>
-  <circle cx="24" cy="20" r="6" fill="#FFB347"/>
-  <circle cx="76" cy="20" r="6" fill="#FFB347"/>
-  <circle cx="38" cy="36" r="9" fill="white" stroke="#002D72" stroke-width="2.5"/>
-  <circle cx="62" cy="36" r="9" fill="white" stroke="#002D72" stroke-width="2.5"/>
-  <path d="M47 36 L53 36" stroke="#002D72" stroke-width="2" fill="none"/>
-  <path d="M29 33 L22 30" stroke="#002D72" stroke-width="2" fill="none"/>
-  <path d="M71 33 L78 30" stroke="#002D72" stroke-width="2" fill="none"/>
-  <circle cx="38" cy="36" r="5" fill="#1a1a40"/>
-  <circle cx="62" cy="36" r="5" fill="#1a1a40"/>
-  <circle cx="40" cy="34" r="2" fill="white"/>
-  <circle cx="64" cy="34" r="2" fill="white"/>
-  <ellipse cx="50" cy="46" rx="5" ry="4" fill="#C97020"/>
-  <path d="M40 51 Q50 59 60 51" stroke="#8B4513" stroke-width="2" fill="none" stroke-linecap="round"/>
-  <line x1="10" y1="44" x2="35" y2="46" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
-  <line x1="10" y1="49" x2="35" y2="49" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
-  <line x1="65" y1="46" x2="90" y2="44" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
-  <line x1="65" y1="49" x2="90" y2="49" stroke="#8B4513" stroke-width="1" opacity="0.4"/>
+// ── Modern Lion mascot — gradient green + gold ────────────────────────────────
+const LION = `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#006b3f"/>
+      <stop offset="100%" style="stop-color:#FFCB2F"/>
+    </linearGradient>
+  </defs>
+  <polygon points="60,8 55,28 65,28" fill="#006b3f"/>
+  <polygon points="42,16 32,36 52,32" fill="#006b3f"/>
+  <polygon points="78,16 68,32 88,36" fill="#006b3f"/>
+  <polygon points="30,28 18,45 38,44" fill="#006b3f"/>
+  <polygon points="90,28 82,44 102,45" fill="#006b3f"/>
+  <circle cx="60" cy="58" r="32" fill="url(#lg)"/>
+  <path d="M 48 52 L 44 58 L 48 64 L 52 58 Z" fill="white" stroke="#006b3f" stroke-width="1"/>
+  <circle cx="48" cy="58" r="3.5" fill="#002D72"/>
+  <circle cx="48.5" cy="56.5" r="1.2" fill="white"/>
+  <path d="M 72 52 L 68 58 L 72 64 L 76 58 Z" fill="white" stroke="#006b3f" stroke-width="1"/>
+  <circle cx="72" cy="58" r="3.5" fill="#002D72"/>
+  <circle cx="72.5" cy="56.5" r="1.2" fill="white"/>
+  <path d="M 60 64 L 57 70 L 63 70 Z" fill="#FFCB2F" stroke="#006b3f" stroke-width="0.5"/>
+  <path d="M 54 74 Q 60 77 66 74" stroke="#002D72" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="36" cy="38" r="7" fill="#006b3f" stroke="#FFCB2F" stroke-width="1.5"/>
+  <circle cx="84" cy="38" r="7" fill="#006b3f" stroke="#FFCB2F" stroke-width="1.5"/>
+  <circle cx="36" cy="38" r="4" fill="#FFCB2F" opacity="0.7"/>
+  <circle cx="84" cy="38" r="4" fill="#FFCB2F" opacity="0.7"/>
 </svg>`;
 
 // ── 5 poster base themes — background + bar color applied to whole poster ─────
@@ -81,11 +40,9 @@ const POSTER_THEMES = [
   { bg: '#100B1A', barBg: '#170E24', accent: '#A78BFA', textCol: '#F0F5F2' },
 ];
 
-// ── 8 per-photo mini-frame styles — Greenwich Vietnam identity ────────────────
-// border.dash → [dash, gap] for dashed stroke
-// inner       → second border drawn inset from the main border
-// corner      → decorative marks at each corner (vine = dây leo + hoa)
-// glow        → shadow blur painted behind the border
+// ── 8 curated photo frame styles — Greenwich Vietnam identity ──────────────────
+// Reduced from 17 to 8 best designs (53% reduction in cognitive load)
+// Styles: classic, modern, playful, formal — all maintaining brand colors
 const PHOTO_FRAMES = [
   // 01 — GW Floral (signature): green border + vine+flower corners
   {
@@ -94,36 +51,40 @@ const PHOTO_FRAMES = [
     inner:  { color: '#FFCB2F', width: 1.5, offset: 9 },
     corner: { style: 'vine', size: 40, color: '#2D8B4E', flower: '#FF8FAB', lw: 1.5 },
   },
-  // 02 — GW Floral Gold: gold border + green vine corners
-  {
-    id: 'gw-floral-gold',
-    border: { color: '#FFCB2F', width: 5 },
-    inner:  { color: '#006b3f', width: 1.5, offset: 9 },
-    corner: { style: 'vine', size: 40, color: '#3DAB60', flower: '#FF6BA8', lw: 1.5 },
-  },
-  // 03 — GW Classic: thick green + gold inner + gold L-corners
+  // 02 — GW Classic: thick green + gold inner + gold L-corners
   {
     id: 'gw-classic',
     border: { color: '#006b3f', width: 8 },
     inner:  { color: '#FFCB2F', width: 2, offset: 12 },
     corner: { style: 'bracket', size: 28, color: '#FFCB2F', lw: 3 },
   },
-  // 04 — GW Academic: navy + gold (tốt nghiệp)
-  {
-    id: 'gw-academic',
-    border: { color: '#001B5E', width: 7 },
-    inner:  { color: '#FFCB2F', width: 2, offset: 11 },
-    corner: { style: 'bracket', size: 26, color: '#FFCB2F', lw: 3 },
-    glow:   { color: '#001B5E', blur: 10 },
-  },
-  // 05 — GW Emerald Glow: neon green glow border
+  // 03 — GW Emerald Glow: neon green glow border (modern)
   {
     id: 'gw-emerald',
     border: { color: '#2DD77A', width: 4 },
     inner:  { color: '#006b3f', width: 2, offset: 8 },
     glow:   { color: '#2DD77A', blur: 18 },
   },
-  // 06 — GW Royal: deep green + gold diamond corners
+  // 04 — GW Minimalist: ultra-thin gold line, clean (portraits)
+  {
+    id: 'gw-minimal',
+    border: { color: '#FFCB2F', width: 2 },
+    corner: { style: 'bracket', size: 18, color: '#FFCB2F', lw: 2 },
+  },
+  // 05 — GW Celebration: bright green + playful pink corners (fun)
+  {
+    id: 'gw-celebration',
+    border: { color: '#2DD77A', width: 5 },
+    inner:  { color: '#FF6BA8', width: 1, offset: 8 },
+    corner: { style: 'circle', size: 10, color: '#FF6BA8', lw: 1 },
+  },
+  // 06 — GW Neon: thin border + bright glow (ultra-modern)
+  {
+    id: 'gw-neon',
+    border: { color: '#00FF88', width: 2 },
+    glow:   { color: '#00FF88', blur: 24 },
+  },
+  // 07 — GW Royal: deep green + gold diamond corners (formal/sophisticated)
   {
     id: 'gw-royal',
     border: { color: '#003820', width: 8 },
@@ -131,71 +92,7 @@ const PHOTO_FRAMES = [
     corner: { style: 'diamond', size: 12, color: '#FFCB2F', lw: 1 },
     glow:   { color: '#FFCB2F', blur: 8 },
   },
-  // 07 — GW Dashed: dashed green + gold L-corners
-  {
-    id: 'gw-dashed',
-    border: { color: '#006b3f', width: 5, dash: [12, 6] },
-    corner: { style: 'bracket', size: 22, color: '#FFCB2F', lw: 3 },
-  },
-  // 08 — GW Mint Floral: soft mint + orange-gold vine corners
-  {
-    id: 'gw-mint',
-    border: { color: '#5DBF8A', width: 5 },
-    inner:  { color: 'rgba(255,203,47,0.5)', width: 1.5, offset: 9 },
-    corner: { style: 'vine', size: 36, color: '#3A9E6A', flower: '#FFB347', lw: 1.5 },
-  },
-  // 09 — GW Neon: thin border + bright glow (modern)
-  {
-    id: 'gw-neon',
-    border: { color: '#00FF88', width: 2 },
-    glow:   { color: '#00FF88', blur: 24 },
-  },
-  // 10 — GW Shadow Depth: dark border with inner depth effect
-  {
-    id: 'gw-shadow',
-    border: { color: '#001B1A', width: 6 },
-    inner:  { color: 'rgba(45,215,122,0.3)', width: 2, offset: 10 },
-    glow:   { color: 'rgba(0,0,0,0.6)', blur: 12 },
-  },
-  // 11 — GW Geometric Circles: cluster of circles at corners
-  {
-    id: 'gw-circles',
-    border: { color: '#006b3f', width: 4 },
-    corner: { style: 'cluster', size: 8, color: '#FFCB2F', lw: 1 },
-  },
-  // 12 — GW Minimalist: ultra-thin gold line, clean
-  {
-    id: 'gw-minimal',
-    border: { color: '#FFCB2F', width: 2 },
-    corner: { style: 'bracket', size: 18, color: '#FFCB2F', lw: 2 },
-  },
-  // 13 — GW Celebration: bright green + playful corners
-  {
-    id: 'gw-celebration',
-    border: { color: '#2DD77A', width: 5 },
-    inner:  { color: '#FF6BA8', width: 1, offset: 8 },
-    corner: { style: 'circle', size: 10, color: '#FF6BA8', lw: 1 },
-  },
-  // 14 — GW Elegant: thin gold border, sophisticated
-  {
-    id: 'gw-elegant',
-    border: { color: '#D4A574', width: 3 },
-    inner:  { color: '#FFCB2F', width: 1, offset: 7 },
-  },
-  // 15 — GW Bold: thick navy + emerald glow
-  {
-    id: 'gw-bold',
-    border: { color: '#001B5E', width: 8 },
-    inner:  { color: '#2DD77A', width: 2, offset: 12 },
-    glow:   { color: '#2DD77A', blur: 14 },
-  },
-  // 16 — GW Festive: gold dashed + colorful corners
-  {
-    id: 'gw-festive',
-    border: { color: '#FFCB2F', width: 4, dash: [8, 4] },
-    corner: { style: 'circle', size: 9, color: '#FF6BA8', lw: 1 },
-  },
-  // 17 — GW Modern Vine: thin border + subtle vine
+  // 08 — GW Modern Vine: thin border + subtle vine (classic+modern balance)
   {
     id: 'gw-modern-vine',
     border: { color: '#006b3f', width: 3 },
@@ -389,12 +286,10 @@ const S = {
   filterIdx: 0,
   stickerIdx: 0,
   accessoryIdx: 0,
-  faceAiEnabled: false,
   interval: 3,
   photos: [],
   stream: null,
   posterUrl: null,
-  detectedFaces: [],
 };
 
 const q  = s => document.querySelector(s);
@@ -474,11 +369,6 @@ q('#app').innerHTML = `
       <div class="tab-pane hidden" id="tab-sticker">
         <div class="ctrl-lbl" style="padding:0 2px 8px">Đeo lên ảnh</div>
         <div id="acc-grid" class="sticker-grid"></div>
-        <button id="face-ai-toggle" class="face-ai-toggle" aria-label="Bật tắt nhận dạng khuôn mặt AI">
-          <span class="face-ai-icon">🤖</span>
-          <span class="face-ai-lbl">Face AI · TẮT</span>
-          <small class="face-ai-hint">Tự động định vị lên mặt</small>
-        </button>
         <div class="ctrl-lbl" style="padding:8px 2px 4px">Sticker poster</div>
         <div id="sticker-grid" class="sticker-grid"></div>
       </div>
@@ -641,8 +531,8 @@ function capFrame(cam) {
   ox.drawImage(raw, 0, 0);
   ox.filter = 'none';
 
-  // Skip when Face AI is on — buildPoster handles positioning after face detection
-  if (S.accessoryIdx > 0 && !S.faceAiEnabled) {
+  // Draw accessory on captured photo (fixed positioning)
+  if (S.accessoryIdx > 0) {
     const acc = ACCESSORIES[S.accessoryIdx];
     ox.font = `${Math.round(sz * acc.fs)}px serif`;
     ox.textBaseline = 'top';
@@ -675,44 +565,22 @@ async function buildPoster() {
   ctx.fillRect(0, 0, W, H);
 
   const photos = S.photos;
-  // null = no face detected (fallback to fixed position); always 4 items
-  S.detectedFaces = new Array(photos.length).fill(null);
 
-  // Draw all 4 photos in parallel (sequential was the main bottleneck)
+  // Draw all 4 photos in parallel
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
 
-  // Face detection in parallel if enabled
-  if (S.faceAiEnabled && window.faceapi) {
-    const detected = await Promise.all(photos.map(async (p, i) => {
-      const img = new Image();
-      img.src = p;
-      await new Promise(r => { img.onload = r; img.onerror = r; });
-      const face = await detectFaceInImage(img);
-      if (!face) return null;
-      return { x: face.x * (PH / img.width) + pos[i][0], y: face.y * (PH / img.height) + pos[i][1], w: face.width * (PH / img.width), h: face.height * (PH / img.height) };
-    }));
-    S.detectedFaces = detected;
-  }
-
-  // Per-photo mini-frames + accessories (Face AI positioned if detected)
+  // Per-photo mini-frames
   frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
-  if (S.accessoryIdx > 0 && S.faceAiEnabled) {
+
+  // Draw accessories on poster (fixed positioning)
+  if (S.accessoryIdx > 0) {
     const acc = ACCESSORIES[S.accessoryIdx];
-    S.detectedFaces.forEach((face, i) => {
+    for (let i = 0; i < 4; i++) {
       ctx.font = `${Math.round(PH * acc.fs)}px serif`;
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
-      if (face) {
-        let accY;
-        if (acc.cat === 'face') accY = face.y + face.h * 0.35;
-        else if (acc.id === 'bow') accY = face.y + face.h * 0.85;
-        else accY = face.y - PH * 0.05; // hats/props: above head
-        ctx.fillText(acc.icon, face.x + face.w / 2, accY);
-      } else {
-        // No face detected — fallback to fixed position
-        ctx.fillText(acc.icon, pos[i][0] + PH / 2, pos[i][1] + Math.round(PH * acc.top));
-      }
-    });
+      ctx.fillText(acc.icon, pos[i][0] + PH / 2, pos[i][1] + Math.round(PH * acc.top));
+    }
   }
 
   // Separator dots
@@ -973,28 +841,6 @@ q('#sticker-grid').addEventListener('click', e => {
   q('#sticker-grid').querySelectorAll('.stkr').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateStickerOv();
-});
-
-q('#face-ai-toggle').addEventListener('click', async () => {
-  if (S.faceAiEnabled) {
-    S.faceAiEnabled = false;
-    q('#face-ai-toggle').classList.remove('active');
-    q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Face AI · TẮT';
-  } else {
-    q('#face-ai-toggle').disabled = true;
-    q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Đang tải model...';
-    try {
-      await loadFaceApi();
-      S.faceAiEnabled = true;
-      q('#face-ai-toggle').classList.add('active');
-      q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Face AI · BẬT';
-    } catch (e) {
-      q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Lỗi · Bấm thử lại';
-      console.error(e);
-    } finally {
-      q('#face-ai-toggle').disabled = false;
-    }
-  }
 });
 
 q('#filter-grid').addEventListener('click', e => {
