@@ -658,14 +658,15 @@ async function buildPoster() {
   ctx.fillRect(0, 0, W, H);
 
   const photos = S.photos;
-  S.detectedFaces = [];
+  // null = no face detected (fallback to fixed position); always 4 items
+  S.detectedFaces = new Array(photos.length).fill(null);
 
   // Draw all 4 photos in parallel (sequential was the main bottleneck)
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
 
   // Face detection in parallel if enabled
   if (S.faceAiEnabled && window.faceapi) {
-    S.detectedFaces = await Promise.all(photos.map(async (p, i) => {
+    const detected = await Promise.all(photos.map(async (p, i) => {
       const img = new Image();
       img.src = p;
       await new Promise(r => { img.onload = r; img.onerror = r; });
@@ -673,6 +674,7 @@ async function buildPoster() {
       if (!face) return null;
       return { x: face.x * (PH / img.width) + pos[i][0], y: face.y * (PH / img.height) + pos[i][1], w: face.width * (PH / img.width), h: face.height * (PH / img.height) };
     }));
+    S.detectedFaces = detected;
   }
 
   // Per-photo mini-frames + accessories (Face AI positioned if detected)
@@ -972,3 +974,4 @@ q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
 q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
 q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
 startCam();
+if (import.meta.env.DEV) window.__t = { S, buildPoster, ACCESSORIES, STICKERS, FILTERS };
