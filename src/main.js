@@ -355,7 +355,7 @@ q('#app').innerHTML = `
         <div class="cam-err hidden" id="cerr">
           <span class="cam-err-icon">📷</span>
           <p>Không thể dùng camera.<br/>Kiểm tra quyền truy cập.</p>
-          <button id="retry-cam" class="btn-outline">Thử lại</button>
+          <button id="retry-cam" class="btn-outline" aria-label="Thử kết nối camera lại">Thử lại</button>
         </div>
       </div>
     </div>
@@ -363,8 +363,8 @@ q('#app').innerHTML = `
     <!-- Controls -->
     <div class="ctrl-col">
       <div class="tab-bar" id="tab-bar">
-        <button class="tab active" data-tab="filter">🎨 Lọc</button>
-        <button class="tab" data-tab="sticker">🎭 Hiệu ứng</button>
+        <button class="tab active" data-tab="filter" aria-label="Tab bộ lọc màu">🎨 Lọc</button>
+        <button class="tab" data-tab="sticker" aria-label="Tab hiệu ứng và sticker">🎭 Hiệu ứng</button>
       </div>
 
       <div class="tab-pane" id="tab-filter">
@@ -375,7 +375,7 @@ q('#app').innerHTML = `
       <div class="tab-pane hidden" id="tab-sticker">
         <div class="ctrl-lbl" style="padding:0 2px 8px">Đeo lên ảnh</div>
         <div id="acc-grid" class="sticker-grid"></div>
-        <button id="face-ai-toggle" class="face-ai-toggle">
+        <button id="face-ai-toggle" class="face-ai-toggle" aria-label="Bật tắt nhận dạng khuôn mặt AI">
           <span class="face-ai-icon">🤖</span>
           <span class="face-ai-lbl">Face AI · TẮT</span>
           <small class="face-ai-hint">Tự động định vị lên mặt</small>
@@ -385,13 +385,13 @@ q('#app').innerHTML = `
       </div>
 
       <div class="photo-grid" id="photo-grid">
-        <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt=""/><span class="pv-badge">1</span></div>
-        <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt=""/><span class="pv-badge">2</span></div>
-        <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt=""/><span class="pv-badge">3</span></div>
-        <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt=""/><span class="pv-badge">4</span></div>
+        <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
+        <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt="Ảnh 2 được chụp"/><span class="pv-badge">2</span></div>
+        <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt="Ảnh 3 được chụp"/><span class="pv-badge">3</span></div>
+        <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt="Ảnh 4 được chụp"/><span class="pv-badge">4</span></div>
       </div>
 
-      <button class="shoot-btn" id="shoot-btn">
+      <button class="shoot-btn" id="shoot-btn" aria-label="Chụp 4 ảnh liên tiếp, mỗi ảnh cách 3 giây">
         <span class="s-icon">📷</span>
         <span class="s-text">CHỤP NGAY</span>
         <small class="s-hint">4 ảnh · 3s mỗi ảnh</small>
@@ -404,20 +404,20 @@ q('#app').innerHTML = `
 <div class="result-ov hidden" id="rov">
   <div class="result-card">
     <p class="result-title">🎉 Xong rồi!</p>
-    <img class="poster-img" id="poster-img" alt="Your photo"/>
+    <img class="poster-img" id="poster-img" alt="Bộ poster 4 ảnh được ghép lại"/>
     <div class="dl-row">
       <div class="qr-wrap">
-        <img id="qr-img" alt="QR"/>
+        <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
       </div>
       <div class="dl-info">
         <div class="qr-hint">
           <strong id="qr-title">Đang tạo link...</strong>
           <span id="qr-sub">Sắp xong, chờ chút</span>
         </div>
-        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg">⬇ Tải về máy</a>
+        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải poster về máy">⬇ Tải về máy</a>
       </div>
     </div>
-    <button id="retake-btn" class="btn-sec btn-full">↩ Chụp lại</button>
+    <button id="retake-btn" class="btn-sec btn-full" aria-label="Chụp lại bộ ảnh mới">↩ Chụp lại</button>
   </div>
 </div>
 
