@@ -3,32 +3,44 @@ import './styles.css';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
 
-// ── Modern Lion mascot — gradient green + gold ────────────────────────────────
-const LION = `<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+// ── Flat Cartoon Lion — Orange mane, smart glasses, navy shirt ────────────────
+const LION = `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#006b3f"/>
-      <stop offset="100%" style="stop-color:#FFCB2F"/>
+    <radialGradient id="mantleGrad" cx="50%" cy="40%">
+      <stop offset="0%" style="stop-color:#FFA500;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
+    </radialGradient>
+    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#003366;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#002244;stop-opacity:1" />
     </linearGradient>
   </defs>
-  <polygon points="60,8 55,28 65,28" fill="#006b3f"/>
-  <polygon points="42,16 32,36 52,32" fill="#006b3f"/>
-  <polygon points="78,16 68,32 88,36" fill="#006b3f"/>
-  <polygon points="30,28 18,45 38,44" fill="#006b3f"/>
-  <polygon points="90,28 82,44 102,45" fill="#006b3f"/>
-  <circle cx="60" cy="58" r="32" fill="url(#lg)"/>
-  <path d="M 48 52 L 44 58 L 48 64 L 52 58 Z" fill="white" stroke="#006b3f" stroke-width="1"/>
-  <circle cx="48" cy="58" r="3.5" fill="#002D72"/>
-  <circle cx="48.5" cy="56.5" r="1.2" fill="white"/>
-  <path d="M 72 52 L 68 58 L 72 64 L 76 58 Z" fill="white" stroke="#006b3f" stroke-width="1"/>
-  <circle cx="72" cy="58" r="3.5" fill="#002D72"/>
-  <circle cx="72.5" cy="56.5" r="1.2" fill="white"/>
-  <path d="M 60 64 L 57 70 L 63 70 Z" fill="#FFCB2F" stroke="#006b3f" stroke-width="0.5"/>
-  <path d="M 54 74 Q 60 77 66 74" stroke="#002D72" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <circle cx="36" cy="38" r="7" fill="#006b3f" stroke="#FFCB2F" stroke-width="1.5"/>
-  <circle cx="84" cy="38" r="7" fill="#006b3f" stroke="#FFCB2F" stroke-width="1.5"/>
-  <circle cx="36" cy="38" r="4" fill="#FFCB2F" opacity="0.7"/>
-  <circle cx="84" cy="38" r="4" fill="#FFCB2F" opacity="0.7"/>
+  <circle cx="100" cy="70" r="65" fill="url(#mantleGrad)" />
+  <circle cx="80" cy="45" r="25" fill="#FFB700" opacity="0.6" />
+  <circle cx="120" cy="50" r="20" fill="#FFB700" opacity="0.5" />
+  <circle cx="100" cy="95" r="45" fill="#FFD700" />
+  <circle cx="55" cy="60" r="18" fill="#FFA500" />
+  <circle cx="55" cy="65" r="10" fill="#FFD700" />
+  <circle cx="145" cy="60" r="18" fill="#FFA500" />
+  <circle cx="145" cy="65" r="10" fill="#FFD700" />
+  <circle cx="75" cy="85" r="16" fill="none" stroke="#333" stroke-width="3" />
+  <circle cx="125" cy="85" r="16" fill="none" stroke="#333" stroke-width="3" />
+  <line x1="91" y1="85" x2="109" y2="85" stroke="#333" stroke-width="3" />
+  <circle cx="75" cy="85" r="8" fill="#333" />
+  <circle cx="77" cy="81" r="3" fill="white" />
+  <circle cx="125" cy="85" r="8" fill="#333" />
+  <circle cx="127" cy="81" r="3" fill="white" />
+  <ellipse cx="100" cy="110" rx="6" ry="8" fill="#FF9800" />
+  <path d="M 95 120 Q 100 128 105 120" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round" />
+  <line x1="60" y1="105" x2="40" y2="103" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="60" y1="115" x2="40" y2="118" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="140" y1="105" x2="160" y2="103" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="140" y1="115" x2="160" y2="118" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
+  <rect x="45" y="145" width="110" height="80" rx="15" fill="url(#bodyGrad)" />
+  <rect x="20" y="160" width="30" height="35" rx="15" fill="#FFD700" />
+  <rect x="150" y="160" width="30" height="35" rx="15" fill="#FFD700" />
+  <rect x="80" y="165" width="40" height="25" rx="3" fill="#FFA500" />
+  <text x="100" y="182" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#003366">GW</text>
 </svg>`;
 
 // ── 5 poster base themes — background + bar color applied to whole poster ─────
