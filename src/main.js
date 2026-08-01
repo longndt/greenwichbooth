@@ -222,9 +222,15 @@ q('#app').innerHTML = `
   <header class="hdr">
     <div class="hdr-brand">
       <div class="hdr-lion">${LION}</div>
-      <span class="hdr-name">Greenwich Booth</span>
+      <div class="hdr-text">
+        <span class="hdr-name">Greenwich Booth</span>
+        <span class="hdr-sub">Studio ảnh nghệ thuật</span>
+      </div>
     </div>
-    <span class="hdr-tag">📸 Studio ảnh</span>
+    <div class="hdr-live">
+      <span class="hdr-dot"></span>
+      <span>Sẵn sàng</span>
+    </div>
   </header>
 
   <div class="main">
