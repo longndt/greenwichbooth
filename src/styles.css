@@ -52,7 +52,7 @@ html, body {
 
 .hdr-name {
   font-family: 'Unbounded', sans-serif;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 900;
   color: var(--gold);
   letter-spacing: 0.5px;
@@ -220,13 +220,13 @@ html, body {
 
 .tab {
   position: relative;
-  padding: 7px 4px;
+  padding: 8px 6px;
   border-radius: 8px;
   border: none;
   background: none;
   color: var(--dim);
   font-family: 'DM Sans', sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s;
@@ -290,7 +290,7 @@ html, body {
 }
 
 .flt-lbl {
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--dim);
   text-align: center;
@@ -340,7 +340,7 @@ html, body {
 }
 
 .stkr-lbl {
-  font-size: 8.5px;
+  font-size: 10px;
   font-weight: 700;
   color: var(--dim);
   text-align: center;
