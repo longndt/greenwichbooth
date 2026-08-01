@@ -3,11 +3,12 @@ import { removeBackground } from '@imgly/background-removal';
 import './styles.css';
 
 async function removeBg(dataUrl) {
+  if (!S.removeBg) return dataUrl;
   try {
     const blob = await removeBackground(dataUrl, { publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/' });
     return URL.createObjectURL(blob);
   } catch {
-    return dataUrl; // fallback: giữ ảnh gốc nếu xóa nền thất bại
+    return dataUrl;
   }
 }
 
@@ -307,6 +308,7 @@ const S = {
   mode: 'ready',
   filterIdx: 0,
   stickerIdx: 0,
+  removeBg: true,
   interval: 3,
   photos: [],
   stream: null,
@@ -367,6 +369,7 @@ q('#app').innerHTML = `
       <div class="tab-bar" id="tab-bar">
         <button class="tab active" data-tab="filter">🎨 Lọc</button>
         <button class="tab" data-tab="sticker">✨ Sticker</button>
+        <button class="tab" data-tab="bg">🪄 Nền</button>
       </div>
 
       <div class="tab-pane" id="tab-filter">
@@ -377,6 +380,15 @@ q('#app').innerHTML = `
       <div class="tab-pane hidden" id="tab-sticker">
         <div class="ctrl-lbl" style="padding:0 2px 4px">Sticker</div>
         <div id="sticker-grid" class="sticker-grid"></div>
+      </div>
+
+      <div class="tab-pane hidden" id="tab-bg">
+        <div class="ctrl-lbl" style="padding:0 2px 8px">Xóa nền AI</div>
+        <button id="bg-toggle" class="bg-toggle active">
+          <span class="bg-tog-icon">✨</span>
+          <span class="bg-tog-lbl">Xóa nền · BẬT</span>
+          <small class="bg-tog-hint">Tự động xóa nền sau khi chụp</small>
+        </button>
       </div>
 
       <div class="ival-bar">
@@ -421,6 +433,14 @@ q('#app').innerHTML = `
   </div>
 </div>
 
+
+<div class="proc-ov hidden" id="proc-ov">
+  <div class="proc-card">
+    <div class="proc-spin"></div>
+    <p class="proc-txt">Đang tạo poster...</p>
+    <small class="proc-sub" id="proc-sub">Vui lòng chờ</small>
+  </div>
+</div>
 
 <canvas id="cvs" width="1080" height="1440" style="display:none"></canvas>
 `;
@@ -482,11 +502,14 @@ async function shoot() {
   q('.ctrl-col').classList.remove('shooting');
   q('#shoot-btn').disabled = false;
   S.mode = 'done';
+  q('#proc-sub').textContent = S.removeBg ? 'Đang xóa nền AI... (khoảng 30s)' : 'Đang tạo poster...';
+  q('#proc-ov').classList.remove('hidden');
   try {
     await Promise.race([buildPoster(), sleep(40000)]);
   } catch (err) {
     console.error('buildPoster failed:', err);
   }
+  q('#proc-ov').classList.add('hidden');
   showResult();
 }
 
@@ -740,6 +763,12 @@ q('#sticker-grid').addEventListener('click', e => {
   qa('.stkr').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   updateStickerOv();
+});
+
+q('#bg-toggle').addEventListener('click', () => {
+  S.removeBg = !S.removeBg;
+  q('#bg-toggle').classList.toggle('active', S.removeBg);
+  q('#bg-toggle').querySelector('.bg-tog-lbl').textContent = S.removeBg ? 'Xóa nền · BẬT' : 'Xóa nền · TẮT';
 });
 
 q('#filter-grid').addEventListener('click', e => {
