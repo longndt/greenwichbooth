@@ -19,6 +19,6 @@ export default async function handler(req, res) {
     res.json({ url });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Upload failed' });
+    res.status(500).json({ error: err?.message || 'Upload failed' });
   }
 }
