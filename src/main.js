@@ -271,32 +271,59 @@ const FILTERS = [
   { id: 'neon',    label: 'Neon',        css: 'saturate(2.5) contrast(1.8) brightness(1.1) hue-rotate(-15deg)' },
 ];
 
-// ── 9 accessories — overlaid on each captured photo ──────────────────────────
+// ── 20 accessories — overlaid on each captured photo ──────────────────────────
+// Organized by category: Face | Props | Seasonal
 // top: vertical position (0=top, 1=bottom) as fraction of photo height
 // fs:  emoji font size as fraction of photo height
 const ACCESSORIES = [
-  { id: 'none',    label: 'Không',   icon: '',   top: 0,    fs: 0 },
-  { id: 'glasses', label: 'Kính 😎', icon: '😎', top: 0.44, fs: 0.22 },
-  { id: 'hat',     label: 'Mũ 🎩',  icon: '🎩', top: 0.03, fs: 0.28 },
-  { id: 'bow',     label: 'Nơ 🎀',  icon: '🎀', top: 0.05, fs: 0.20 },
-  { id: 'crown',   label: 'Vương 👑',icon: '👑', top: 0.03, fs: 0.22 },
-  { id: 'grad',    label: 'Cử nhân 🎓',icon:'🎓',top: 0.03, fs: 0.28 },
-  { id: 'disguise',label: 'Râu 🥸', icon: '🥸', top: 0.38, fs: 0.26 },
-  { id: 'flower',  label: 'Hoa 🌸', icon: '🌸', top: 0.03, fs: 0.18 },
-  { id: 'rainbow', label: 'Cầu vồng 🌈',icon:'🌈',top:0.01,fs: 0.30 },
+  // None
+  { id: 'none',    label: 'Không',   icon: '',   top: 0,    fs: 0,    cat: 'none' },
+  // Face (6 items)
+  { id: 'glasses', label: 'Kính 😎', icon: '😎', top: 0.44, fs: 0.22, cat: 'face' },
+  { id: 'sunglasses', label: 'Mắt 🕶️', icon: '🕶️', top: 0.44, fs: 0.20, cat: 'face' },
+  { id: 'monocle', label: 'Kính lúp 🧐', icon: '🧐', top: 0.42, fs: 0.18, cat: 'face' },
+  { id: 'disguise',label: 'Râu 🥸', icon: '🥸', top: 0.38, fs: 0.26, cat: 'face' },
+  { id: 'mask',    label: 'Mặt nạ 🎭', icon: '🎭', top: 0.40, fs: 0.24, cat: 'face' },
+  { id: 'zany',    label: 'Điên rồ 🤪', icon: '🤪', top: 0.40, fs: 0.24, cat: 'face' },
+  // Hats (5 items)
+  { id: 'hat',     label: 'Mũ 🎩',  icon: '🎩', top: 0.03, fs: 0.28, cat: 'props' },
+  { id: 'crown',   label: 'Vương 👑',icon: '👑', top: 0.03, fs: 0.22, cat: 'props' },
+  { id: 'grad',    label: 'Cử nhân 🎓',icon:'🎓',top: 0.03, fs: 0.28, cat: 'props' },
+  { id: 'party-hat', label: 'Bữa tiệc 🎉', icon: '🎉', top: 0.02, fs: 0.26, cat: 'props' },
+  { id: 'flower-crown', label: 'Hoa 👑', icon: '👑', top: 0.02, fs: 0.24, cat: 'props' },
+  // Props (4 items)
+  { id: 'bow',     label: 'Nơ 🎀',  icon: '🎀', top: 0.05, fs: 0.20, cat: 'props' },
+  { id: 'flower',  label: 'Hoa 🌸', icon: '🌸', top: 0.03, fs: 0.18, cat: 'props' },
+  { id: 'rainbow', label: 'Cầu vồng 🌈',icon:'🌈',top:0.01,fs: 0.30, cat: 'props' },
+  { id: 'horns',   label: 'Sừng 👿', icon: '👿', top: 0.02, fs: 0.22, cat: 'props' },
+  // Seasonal (4 items)
+  { id: 'santa',   label: 'Giáng sinh 🎄', icon: '🎄', top: 0.03, fs: 0.26, cat: 'season' },
+  { id: 'pumpkin', label: 'Halloween 🎃', icon: '🎃', top: 0.03, fs: 0.24, cat: 'season' },
+  { id: 'love',    label: 'Tình yêu 💝', icon: '💝', top: 0.03, fs: 0.20, cat: 'season' },
+  { id: 'wings',   label: 'Cánh thiên thần 😇', icon: '😇', top: 0.01, fs: 0.26, cat: 'season' },
 ];
 
-// ── 9 stickers (1 = none + 8 emoji) — drawn on top-bar right of poster ────────
+// ── 15 stickers (1 = none + 14 emoji) — drawn on top-bar right of poster ────────
 const STICKERS = [
   { id: 'none',    label: 'Không',   icon: '' },
+  // Mood (5)
   { id: 'sparkle', label: 'Vui ✨',  icon: '✨' },
-  { id: 'sakura',  label: 'Hoa 🌸',  icon: '🌸' },
   { id: 'star',    label: 'Sao ⭐',  icon: '⭐' },
   { id: 'fire',    label: 'Hot 🔥',  icon: '🔥' },
   { id: 'heart',   label: 'Tim 💜',  icon: '💜' },
-  { id: 'ribbon',  label: 'Nơ 🎀',   icon: '🎀' },
   { id: 'moon',    label: 'Đêm 🌙',  icon: '🌙' },
+  // Flowers & Ribbons (3)
+  { id: 'sakura',  label: 'Hoa 🌸',  icon: '🌸' },
+  { id: 'ribbon',  label: 'Nơ 🎀',   icon: '🎀' },
+  { id: 'sunflower', label: 'Hướng dương 🌻', icon: '🌻' },
+  // Celebration (4)
   { id: 'party',   label: 'Party 🎉', icon: '🎉' },
+  { id: 'balloon', label: 'Bong bóng 🎈', icon: '🎈' },
+  { id: 'gift',    label: 'Quà 🎁',  icon: '🎁' },
+  { id: 'confetti', label: 'Pháo 🎊', icon: '🎊' },
+  // Seasonal (2)
+  { id: 'christmas', label: 'Giáng sinh 🎄', icon: '🎄' },
+  { id: 'twinkle', label: 'Sáng ✨', icon: '✨' },
 ];
 
 // ── State ─────────────────────────────────────────────────────────────────────
