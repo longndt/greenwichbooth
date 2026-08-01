@@ -227,65 +227,10 @@ const FILTERS = [
 
 // ── 20 accessories — overlaid on each captured photo ──────────────────────────
 // Organized by category: Face | Props | Seasonal
-// top: vertical position (0=top, 1=bottom) as fraction of photo height
-// fs:  emoji font size as fraction of photo height
-const ACCESSORIES = [
-  // None
-  { id: 'none',    label: 'Không',   icon: '',   top: 0,    fs: 0,    cat: 'none' },
-  // Face (6 items)
-  { id: 'glasses', label: 'Kính 😎', icon: '😎', top: 0.44, fs: 0.22, cat: 'face' },
-  { id: 'sunglasses', label: 'Mắt 🕶️', icon: '🕶️', top: 0.44, fs: 0.20, cat: 'face' },
-  { id: 'monocle', label: 'Kính lúp 🧐', icon: '🧐', top: 0.42, fs: 0.18, cat: 'face' },
-  { id: 'disguise',label: 'Râu 🥸', icon: '🥸', top: 0.38, fs: 0.26, cat: 'face' },
-  { id: 'mask',    label: 'Mặt nạ 🎭', icon: '🎭', top: 0.40, fs: 0.24, cat: 'face' },
-  { id: 'zany',    label: 'Điên rồ 🤪', icon: '🤪', top: 0.40, fs: 0.24, cat: 'face' },
-  // Hats (5 items)
-  { id: 'hat',     label: 'Mũ 🎩',  icon: '🎩', top: 0.03, fs: 0.28, cat: 'props' },
-  { id: 'crown',   label: 'Vương 👑',icon: '👑', top: 0.03, fs: 0.22, cat: 'props' },
-  { id: 'grad',    label: 'Cử nhân 🎓',icon:'🎓',top: 0.03, fs: 0.28, cat: 'props' },
-  { id: 'party-hat', label: 'Bữa tiệc 🎉', icon: '🎉', top: 0.02, fs: 0.26, cat: 'props' },
-  { id: 'flower-crown', label: 'Hoa 👑', icon: '👑', top: 0.02, fs: 0.24, cat: 'props' },
-  // Props (4 items)
-  { id: 'bow',     label: 'Nơ 🎀',  icon: '🎀', top: 0.05, fs: 0.20, cat: 'props' },
-  { id: 'flower',  label: 'Hoa 🌸', icon: '🌸', top: 0.03, fs: 0.18, cat: 'props' },
-  { id: 'rainbow', label: 'Cầu vồng 🌈',icon:'🌈',top:0.01,fs: 0.30, cat: 'props' },
-  { id: 'horns',   label: 'Sừng 👿', icon: '👿', top: 0.02, fs: 0.22, cat: 'props' },
-  // Seasonal (4 items)
-  { id: 'santa',   label: 'Giáng sinh 🎄', icon: '🎄', top: 0.03, fs: 0.26, cat: 'season' },
-  { id: 'pumpkin', label: 'Halloween 🎃', icon: '🎃', top: 0.03, fs: 0.24, cat: 'season' },
-  { id: 'love',    label: 'Tình yêu 💝', icon: '💝', top: 0.03, fs: 0.20, cat: 'season' },
-  { id: 'wings',   label: 'Cánh thiên thần 😇', icon: '😇', top: 0.01, fs: 0.26, cat: 'season' },
-];
-
-// ── 15 stickers (1 = none + 14 emoji) — drawn on top-bar right of poster ────────
-const STICKERS = [
-  { id: 'none',    label: 'Không',   icon: '' },
-  // Mood (5)
-  { id: 'sparkle', label: 'Vui ✨',  icon: '✨' },
-  { id: 'star',    label: 'Sao ⭐',  icon: '⭐' },
-  { id: 'fire',    label: 'Hot 🔥',  icon: '🔥' },
-  { id: 'heart',   label: 'Tim 💜',  icon: '💜' },
-  { id: 'moon',    label: 'Đêm 🌙',  icon: '🌙' },
-  // Flowers & Ribbons (3)
-  { id: 'sakura',  label: 'Hoa 🌸',  icon: '🌸' },
-  { id: 'ribbon',  label: 'Nơ 🎀',   icon: '🎀' },
-  { id: 'sunflower', label: 'Hướng dương 🌻', icon: '🌻' },
-  // Celebration (4)
-  { id: 'party',   label: 'Party 🎉', icon: '🎉' },
-  { id: 'balloon', label: 'Bong bóng 🎈', icon: '🎈' },
-  { id: 'gift',    label: 'Quà 🎁',  icon: '🎁' },
-  { id: 'confetti', label: 'Pháo 🎊', icon: '🎊' },
-  // Seasonal (2)
-  { id: 'christmas', label: 'Giáng sinh 🎄', icon: '🎄' },
-  { id: 'twinkle', label: 'Sáng ✨', icon: '✨' },
-];
 
 // ── State ─────────────────────────────────────────────────────────────────────
 const S = {
   mode: 'ready',
-  filterIdx: 0,
-  stickerIdx: 0,
-  accessoryIdx: 0,
   interval: 3,
   photos: [],
   stream: null,
@@ -318,8 +263,6 @@ q('#app').innerHTML = `
       <div class="cam-box">
         <video id="cam" autoplay muted playsinline></video>
         <div class="frame-ov" id="fov"></div>
-        <div class="sticker-ov hidden" id="sov"></div>
-        <div class="acc-ov hidden" id="acc-ov"></div>
 
         <div class="cnt-ov hidden" id="cov">
           <div class="cnt-num-wrap">
@@ -356,22 +299,6 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
-      <div class="tab-bar" id="tab-bar">
-        <button class="tab active" data-tab="filter" aria-label="Tab bộ lọc màu">🎨 Lọc</button>
-        <button class="tab" data-tab="sticker" aria-label="Tab hiệu ứng và sticker">🎭 Hiệu ứng</button>
-      </div>
-
-      <div class="tab-pane" id="tab-filter">
-        <div class="ctrl-lbl" style="padding:0 2px 4px">Bộ lọc màu</div>
-        <div id="filter-grid" class="filter-grid"></div>
-      </div>
-
-      <div class="tab-pane hidden" id="tab-sticker">
-        <div class="ctrl-lbl" style="padding:0 2px 8px">Đeo lên ảnh</div>
-        <div id="acc-grid" class="sticker-grid"></div>
-        <div class="ctrl-lbl" style="padding:8px 2px 4px">Sticker poster</div>
-        <div id="sticker-grid" class="sticker-grid"></div>
-      </div>
 
       <div class="photo-grid" id="photo-grid">
         <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
@@ -531,15 +458,6 @@ function capFrame(cam) {
   ox.drawImage(raw, 0, 0);
   ox.filter = 'none';
 
-  // Draw accessory on captured photo (fixed positioning)
-  if (S.accessoryIdx > 0) {
-    const acc = ACCESSORIES[S.accessoryIdx];
-    ox.font = `${Math.round(sz * acc.fs)}px serif`;
-    ox.textBaseline = 'top';
-    ox.textAlign = 'center';
-    ox.fillText(acc.icon, sz / 2, Math.round(sz * acc.top));
-  }
-
   return out.toDataURL('image/jpeg', 0.9);
 }
 
@@ -625,15 +543,6 @@ async function buildPoster() {
   ctx.font = '500 20px Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, (H - BAR) + BAR * 0.72);
   ctx.textAlign = 'left';
-
-  if (S.stickerIdx > 0) {
-    ctx.font = '78px serif';
-    ctx.textBaseline = 'middle';
-    ctx.textAlign = 'right';
-    ctx.fillText(STICKERS[S.stickerIdx].icon, W - 14, BAR / 2);
-    ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-  }
 }
 
 function drawPhoto(ctx, url, x, y, w, h) {
@@ -734,114 +643,10 @@ function retake() {
   q('.ctrl-col').classList.remove('shooting');
 }
 
-// ── Sticker button HTML ───────────────────────────────────────────────────────
-function makeStkr(s, i, isSticker = false) {
-  const isHidden = i > 3 ? 'hidden' : ''; // Hide stickers 4+ initially
-  const dataAttr = isSticker ? 'data-si' : 'data-si';
-  return `
-    <button class="stkr${i === 0 ? ' active' : ''}${isHidden ? ' sticker-hidden' : ''}" ${dataAttr}="${i}" title="${s.label}" ${isHidden ? 'style="display:none"' : ''}>
-      <div class="stkr-icon">${i === 0 ? '✕' : s.icon}</div>
-      <span class="stkr-lbl">${s.label}</span>
-    </button>`;
-}
-
-function makeStickerGrid() {
-  const heroStkr = STICKERS.slice(0, 4).map((s, i) => makeStkr(s, i, true)).join('');
-  const toggleBtn = `<button class="sticker-toggle" id="sticker-toggle">+ Xem thêm</button>`;
-  const hiddenStkr = STICKERS.slice(4).map((s, i) => makeStkr(s, i + 4, true)).join('');
-  return `${heroStkr}${toggleBtn}<div id="sticker-hidden" class="sticker-hidden-group" style="display:none">${hiddenStkr}</div>`;
-}
-
-function updateStickerOv() {
-  const sov = q('#sov');
-  if (S.stickerIdx === 0) { sov.classList.add('hidden'); return; }
-  sov.textContent = STICKERS[S.stickerIdx].icon;
-  sov.classList.remove('hidden');
-}
-
-function makeAcc(a, i) {
-  const isHidden = i > 3 ? 'hidden' : ''; // Hide accessories 4+ initially
-  return `
-    <button class="stkr${i === 0 ? ' active' : ''}${isHidden ? ' acc-hidden' : ''}" data-ai="${i}" title="${a.label}" ${isHidden ? 'style="display:none"' : ''}>
-      <div class="stkr-icon">${i === 0 ? '✕' : a.icon}</div>
-      <span class="stkr-lbl">${a.label.split(' ')[0]}</span>
-    </button>`;
-}
-
-function makeAccGrid() {
-  const heroAcc = ACCESSORIES.slice(0, 4).map((a, i) => makeAcc(a, i)).join('');
-  const toggleBtn = `<button class="acc-toggle" id="acc-toggle">+ Xem thêm</button>`;
-  const hiddenAcc = ACCESSORIES.slice(4).map((a, i) => makeAcc(a, i + 4)).join('');
-  return `${heroAcc}${toggleBtn}<div id="acc-hidden" class="acc-hidden-group" style="display:none">${hiddenAcc}</div>`;
-}
-
-function updateAccOv() {
-  const aov = q('#acc-ov');
-  if (S.accessoryIdx === 0) { aov.classList.add('hidden'); return; }
-  const acc = ACCESSORIES[S.accessoryIdx];
-  aov.style.top = `${acc.top * 100}%`;
-  aov.style.fontSize = `${Math.round(acc.fs * 100)}vmin`;
-  aov.textContent = acc.icon;
-  aov.classList.remove('hidden');
-}
-
-// ── Filter swatch card HTML ───────────────────────────────────────────────────
-// Uses a fixed colorful gradient then applies the CSS filter — shows real effect
-const SWATCH_BASE = 'linear-gradient(135deg,#f4a,#ffd,#4cf)';
-function makeFlt(f, i) {
-  const previewFilter = f.css === 'none' ? '' : `filter:${f.css}`;
-  const isHidden = i > 3 ? 'hidden' : ''; // Hide filters 4-8 initially
-  return `
-    <button class="flt${i === 0 ? ' active' : ''}${isHidden ? ' filter-hidden' : ''}" data-fi="${i}" ${isHidden ? 'style="display:none"' : ''}>
-      <div class="flt-prev" style="background:${SWATCH_BASE};${previewFilter}"></div>
-      <span class="flt-lbl">${f.label}</span>
-    </button>`;
-}
-
-function makeFilterGrid() {
-  const heroFilters = FILTERS.slice(0, 4).map((f, i) => makeFlt(f, i)).join('');
-  const toggleBtn = `<button class="flt-toggle" id="filter-toggle">+ Xem thêm</button>`;
-  const hiddenFilters = FILTERS.slice(4).map((f, i) => makeFlt(f, i + 4)).join('');
-  return `${heroFilters}${toggleBtn}<div id="filter-hidden" class="filter-hidden-group" style="display:none">${hiddenFilters}</div>`;
-}
-
-function applyFilter() {
-  const css = FILTERS[S.filterIdx].css;
-  q('#cam').style.filter = css === 'none' ? '' : css;
-}
-
-// ── Tab switching ─────────────────────────────────────────────────────────────
-q('#tab-bar').addEventListener('click', e => {
-  const tab = e.target.closest('.tab');
-  if (!tab) return;
-  qa('.tab').forEach(t => t.classList.remove('active'));
-  qa('.tab-pane').forEach(p => p.classList.add('hidden'));
-  tab.classList.add('active');
-  q(`#tab-${tab.dataset.tab}`).classList.remove('hidden');
-});
-
 // ── Events ────────────────────────────────────────────────────────────────────
 q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
-
-q('#acc-grid').addEventListener('click', e => {
-  const btn = e.target.closest('.stkr');
-  if (!btn) return;
-  S.accessoryIdx = +btn.dataset.ai;
-  q('#acc-grid').querySelectorAll('.stkr').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  updateAccOv();
-});
-
-q('#sticker-grid').addEventListener('click', e => {
-  const btn = e.target.closest('.stkr');
-  if (!btn) return;
-  S.stickerIdx = +btn.dataset.si;
-  q('#sticker-grid').querySelectorAll('.stkr').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  updateStickerOv();
-});
 
 q('#filter-grid').addEventListener('click', e => {
   const btn = e.target.closest('.flt');
@@ -858,30 +663,5 @@ window.addEventListener('orientationchange', () => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-q('#filter-grid').innerHTML  = makeFilterGrid();
-q('#acc-grid').innerHTML     = makeAccGrid();
-q('#sticker-grid').innerHTML = makeStickerGrid();
-
-// Toggle handlers
-[
-  { id: 'filter-toggle', hidden: '#filter-hidden' },
-  { id: 'acc-toggle', hidden: '#acc-hidden' },
-  { id: 'sticker-toggle', hidden: '#sticker-hidden' }
-].forEach(({ id, hidden }) => {
-  const btn = q(`#${id}`);
-  if (btn) {
-    btn.addEventListener('click', () => {
-      const div = q(hidden);
-      if (div.style.display === 'none') {
-        div.style.display = '';
-        btn.textContent = '- Ẩn bớt';
-      } else {
-        div.style.display = 'none';
-        btn.textContent = '+ Xem thêm';
-      }
-    });
-  }
-});
-
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, ACCESSORIES, STICKERS, FILTERS };
+if (import.meta.env.DEV) window.__t = { S, buildPoster };

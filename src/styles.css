@@ -307,229 +307,6 @@ html, body {
   padding: 10px 14px 10px 8px;
 }
 
-/* ── Tab bar ─────────────────────────────────────────────── */
-.tab-bar {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-xs);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-xs);
-  flex-shrink: 0;
-}
-
-.tab {
-  position: relative;
-  padding: var(--space-sm) var(--space-xs);
-  border-radius: var(--radius-md);
-  border: none;
-  border-bottom: 3px solid transparent;
-  background: none;
-  color: var(--color-text-muted);
-  font-family: 'DM Sans', sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.18s;
-  white-space: nowrap;
-}
-
-.tab:hover { color: var(--text); background: rgba(255,255,255,0.06); }
-
-.tab.active {
-  background: none;
-  color: var(--text);
-  border-bottom-color: var(--color-accent);
-}
-
-/* ── Tab panes ───────────────────────────────────────────── */
-.tab-pane {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex: 1;
-  min-height: 0;
-  overflow-y: auto;
-  scrollbar-width: none;
-}
-
-.tab-pane::-webkit-scrollbar { display: none; }
-.tab-pane.hidden { display: none; }
-
-/* ── Filter swatches ─────────────────────────────────────── */
-.filter-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
-}
-
-.flt {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-xs);
-  cursor: pointer;
-  background: none;
-  border: none;
-  padding: 0;
-  transition: transform 0.15s;
-}
-
-.flt:hover { transform: scale(1.06); }
-
-.flt-prev {
-  width: 100%;
-  aspect-ratio: 1;
-  border-radius: var(--radius-md);
-  border: 2px solid var(--border);
-  transition: border-color 0.18s, box-shadow 0.18s;
-}
-
-.flt.active .flt-prev {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 20px rgba(255,203,47,0.4);
-}
-
-.flt-lbl {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--color-text-muted);
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
-
-.flt.active .flt-lbl { color: var(--text); }
-
-/* Filter toggle button */
-.flt-toggle {
-  grid-column: 1 / -1;
-  padding: var(--space-sm) var(--space-xs);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.flt-toggle:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.24);
-  color: var(--text);
-}
-
-.filter-hidden-group {
-  grid-column: 1 / -1;
-  display: contents;
-}
-
-.flt-lbl {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--dim);
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
-
-.flt.active .flt-lbl { color: var(--text); }
-
-/* ── Sticker grid ────────────────────────────────────────── */
-.sticker-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-sm);
-}
-
-.stkr {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  cursor: pointer;
-  background: rgba(255,255,255,0.04);
-  border: 1.5px solid rgba(255,255,255,0.1);
-  border-radius: 10px;
-  padding: 8px 4px 5px;
-  transition: all 0.18s;
-}
-
-.stkr:hover { background: rgba(255,255,255,0.09); border-color: rgba(255,255,255,0.28); }
-
-.stkr.active {
-  border-color: var(--gold);
-  background: rgba(255,203,47,0.1);
-  box-shadow: 0 0 12px rgba(255,203,47,0.3);
-}
-
-.stkr-icon { font-size: 26px; line-height: 1.2; }
-
-/* "Không" button — muted style */
-.stkr:first-child .stkr-icon {
-  font-size: 18px;
-  font-weight: 900;
-  color: var(--dim);
-}
-
-.stkr-lbl {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--dim);
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  width: 100%;
-}
-
-.stkr.active .stkr-lbl { color: var(--text); }
-
-/* Accessory & Sticker toggle buttons */
-.acc-toggle, .sticker-toggle {
-  grid-column: 1 / -1;
-  padding: var(--space-sm) var(--space-xs);
-  background: rgba(255,255,255,0.04);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  color: var(--color-text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.18s;
-}
-
-.acc-toggle:hover, .sticker-toggle:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.24);
-  color: var(--text);
-}
-
-.acc-hidden-group, .sticker-hidden-group {
-  grid-column: 1 / -1;
-  display: contents;
-}
-
-/* ── Sticker camera overlay ──────────────────────────────── */
-.sticker-ov {
-  position: absolute;
-  top: 6%;
-  right: 5%;
-  font-size: clamp(36px, 5vw, 58px);
-  line-height: 1;
-  pointer-events: none;
-  z-index: 3;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
-}
-
-.sticker-ov.hidden { display: none; }
 
 .ctrl-sec { display: flex; flex-direction: column; gap: 8px; }
 .ctrl-sec--slim { gap: 6px; }
@@ -745,10 +522,7 @@ input[type="range"] {
   width: 100%;
 }
 
-.ctrl-col.shooting .tab-bar,
-.ctrl-col.shooting .tab-pane,
 .ctrl-col.shooting .shoot-btn { display: none; }
-.ctrl-col.shooting .photo-grid { display: grid; }
 .ctrl-col.shooting { justify-content: center; }
 
 /* ── Photo slot — 2×2 grid item ─────────────────────────── */
@@ -827,17 +601,6 @@ input[type="range"] {
   to   { transform: scale(1);    opacity: 1; }
 }
 
-
-/* ── Accessory camera overlay ────────────────────────────── */
-.acc-ov {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  line-height: 1;
-  pointer-events: none;
-  z-index: 4;
-}
-.acc-ov.hidden { display: none; }
 
 /* ── Processing overlay ──────────────────────────────────── */
 .proc-ov {
@@ -928,23 +691,7 @@ input[type="range"] {
   pointer-events: none;
 }
 
-/* Active tab underline animation */
-.tab.active::after {
-  display: none;
-}
-
-@keyframes slideInUnderline {
-  from {
-    width: 0;
-    left: 50%;
-  }
-  to {
-    width: 100%;
-    left: 0;
-  }
-}
-
-/* Filter/sticker application feedback */
+/* Camera transition feedback */
 #cam {
   transition: filter 50ms ease-in-out;
 }
