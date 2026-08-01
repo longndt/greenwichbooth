@@ -739,7 +739,9 @@ function showResult() {
       q('#qr-title').textContent = 'Không tạo được link';
       return;
     }
-    QRCode.toDataURL(dlUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
+    // Wrap image URL in display page with download button
+    const displayUrl = `/api/display?url=${encodeURIComponent(dlUrl)}`;
+    QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
       .then(qr => {
         q('#qr-img').src = qr;
         q('#qr-title').textContent = '📱 Quét để tải về';
