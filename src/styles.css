@@ -370,16 +370,10 @@ input[type="range"] {
 .shoot-btn:active:not(:disabled) { transform: scale(0.97); }
 .shoot-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
-.s-icon { font-size: 22px; line-height: 1; }
-
 .s-text {
-  font-family: 'Unbounded', sans-serif;
-  font-size: 18px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
+  font-size: 16px;
+  font-weight: 600;
 }
-
-.s-hint { font-size: 11px; color: rgba(255,255,255,0.55); font-weight: 500; }
 
 /* ── Result overlay ──────────────────────────────────────── */
 .result-ov {
@@ -729,8 +723,6 @@ input[type="range"] {
   .hdr { height: 42px; }
   .ctrl-col { gap: 7px; padding: 8px 8px 8px 0; }
   .shoot-btn { padding: 12px 12px; }
-  .s-text { font-size: 15px; }
-  .s-icon { font-size: 18px; }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */

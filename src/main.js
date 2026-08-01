@@ -307,10 +307,8 @@ q('#app').innerHTML = `
         <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt="Ảnh 4 được chụp"/><span class="pv-badge">4</span></div>
       </div>
 
-      <button class="shoot-btn" id="shoot-btn" aria-label="Chụp 4 ảnh liên tiếp, mỗi ảnh cách 3 giây">
-        <span class="s-icon">📷</span>
-        <span class="s-text">CHỤP NGAY</span>
-        <small class="s-hint">4 ảnh · 3s mỗi ảnh</small>
+      <button class="shoot-btn" id="shoot-btn" aria-label="Chụp ảnh">
+        <span class="s-text">Chụp Ảnh</span>
       </button>
     </div>
   </div>
