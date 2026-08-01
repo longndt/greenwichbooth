@@ -225,17 +225,6 @@ function drawPhotoFrame(ctx, frame, x, y, w, h) {
 
 // ── 9 color filters ───────────────────────────────────────────────────────────
 // css applied to <video> live + ctx.filter on capFrame canvas
-const FILTERS = [
-  { id: 'normal',  label: 'Bình thường', css: 'none' },
-  { id: 'vivid',   label: 'Sống động',   css: 'saturate(1.9) contrast(1.15)' },
-  { id: 'warm',    label: 'Ấm áp',       css: 'sepia(0.45) saturate(1.4) brightness(1.06)' },
-  { id: 'cool',    label: 'Lạnh',        css: 'hue-rotate(195deg) saturate(1.25) brightness(1.08)' },
-  { id: 'bw',      label: 'Đen Trắng',   css: 'grayscale(1) contrast(1.1)' },
-  { id: 'vintage', label: 'Vintage',     css: 'sepia(0.55) saturate(0.85) brightness(0.94) contrast(1.08)' },
-  { id: 'sepia-pro', label: 'Sepia+',    css: 'sepia(0.8) saturate(1.3) brightness(0.92) contrast(1.15)' },
-  { id: 'blur',    label: 'Mờ',          css: 'blur(4px) brightness(1.05)' },
-  { id: 'neon',    label: 'Neon',        css: 'saturate(2.5) contrast(1.8) brightness(1.1) hue-rotate(-15deg)' },
-];
 
 // ── 20 accessories — overlaid on each captured photo ──────────────────────────
 // Organized by category: Face | Props | Seasonal
@@ -450,15 +439,7 @@ function capFrame(cam) {
   rx.translate(sz, 0); rx.scale(-1, 1);
   rx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
 
-  const out = document.createElement('canvas');
-  out.width = sz; out.height = sz;
-  const ox = out.getContext('2d');
-  const fCss = FILTERS[S.filterIdx].css;
-  if (fCss !== 'none') ox.filter = fCss;
-  ox.drawImage(raw, 0, 0);
-  ox.filter = 'none';
-
-  return out.toDataURL('image/jpeg', 0.9);
+  return raw.toDataURL('image/jpeg', 0.9);
 }
 
 // ── Poster composition (1080×1440) — 2×2 grid, randomized theme + per-photo frames
@@ -489,17 +470,6 @@ async function buildPoster() {
 
   // Per-photo mini-frames
   frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
-
-  // Draw accessories on poster (fixed positioning)
-  if (S.accessoryIdx > 0) {
-    const acc = ACCESSORIES[S.accessoryIdx];
-    for (let i = 0; i < 4; i++) {
-      ctx.font = `${Math.round(PH * acc.fs)}px serif`;
-      ctx.textBaseline = 'top';
-      ctx.textAlign = 'center';
-      ctx.fillText(acc.icon, pos[i][0] + PH / 2, pos[i][1] + Math.round(PH * acc.top));
-    }
-  }
 
   // Separator dots
   const sepX = Math.round(HPAD + PH + GAP / 2);
@@ -648,20 +618,10 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 
-q('#filter-grid').addEventListener('click', e => {
-  const btn = e.target.closest('.flt');
-  if (!btn) return;
-  S.filterIdx = +btn.dataset.fi;
-  qa('.flt').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  applyFilter();
-});
-
 // ── Mobile orientation ───────────────────────────────────────────────────────
 window.addEventListener('orientationchange', () => {
   if (S.mode === 'ready') startCam();
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-startCam();
 if (import.meta.env.DEV) window.__t = { S, buildPoster };
