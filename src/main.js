@@ -278,107 +278,6 @@ function drawPhotoFrame(ctx, frame, x, y, w, h) {
   ctx.restore();
 }
 
-// ── Legacy FRAMES kept for reference (will be removed in step 3) ──────────────
-const FRAMES = [
-  {
-    id: 'fotolab', label: '🖼️ Fotolab Classic', emoji: '📸',
-    bg: '#6B1E24',  bgEnd: '#4A1620',        accent: '#F0E4C3',
-    title: '',   sub: '',
-    borderW: 7,     borderDouble: true,      decorStyle: 'cornerFrames',
-  },
-  {
-    id: 'magic-hanoi', label: '✨ Magic Hanoi',   emoji: '🌟',
-    bg: '#5A1C24',  bgEnd: '#3B1118',        accent: '#E8D5C4',
-    title: '',   sub: '',
-    borderW: 6,     decorStyle: 'emojiTop',
-    topEmoji: ['✨', '🎉', '✨', '🎉'],
-  },
-  {
-    id: 'studio-gold', label: '💎 Studio Gold',  emoji: '✨',
-    bg: '#3D2817',  bgEnd: '#2B1B0E',        accent: '#D4AF37',
-    title: '',    sub: '',
-    borderW: 8,     borderDouble: true,      decorStyle: 'goldDots',
-  },
-  {
-    id: 'burgundy', label: 'Burgundy Luxe',  emoji: '🎬',
-    bg: '#5A1C24',  bgEnd: '#3B1118',        accent: '#E8E8E8',
-    title: '',           sub: '',
-    borderW: 7,
-  },
-  {
-    id: 'classic',  label: 'Classic',        emoji: '🌿',
-    bg: '#006b3f',  accent: '#FFCB2F',
-    title: '',   sub: '',
-  },
-  {
-    id: 'navy',     label: 'Navy Royal',     emoji: '🎓',
-    bg: '#001B5E',  bgEnd: '#002D72',        accent: '#FFCB2F',
-    title: '',        sub: '',
-  },
-  {
-    id: 'captain',  label: 'Lion Captain',   emoji: '🦁',
-    bg: '#1A0800',  bgEnd: '#2D1500',        accent: '#FF7A2E',
-    title: '',        sub: '',
-    borderDouble: true,
-  },
-  {
-    id: 'neon',     label: 'Neon Night',     emoji: '⚡',
-    bg: '#040D06',  accent: '#2DD77A',
-    title: '',     sub: '',
-    pattern: 'dots',
-  },
-  {
-    id: 'sakura',   label: 'Sakura',         emoji: '🌸',
-    bg: '#FCE4EC',  accent: '#E8698A',
-    textColor: '#7B1B3A',         subColor: '#AD4060',
-    title: '',   sub: '',
-    light: true,    borderW: 5,
-  },
-  {
-    id: 'emerald',  label: 'Emerald Luxe',   emoji: '💎',
-    bg: '#003820',  bgEnd: '#006b3f',        accent: '#FFCB2F',
-    title: '',   sub: '',
-    pattern: 'lines', borderDouble: true,
-  },
-  {
-    id: 'retro',    label: 'Retro Film',     emoji: '📽️',
-    bg: '#2B1D0E',  bgEnd: '#1E1208',        accent: '#C9963A',
-    title: '',  sub: '',
-    borderDash: [14, 8], borderW: 5,
-  },
-  {
-    id: 'black',    label: 'Bold Black',     emoji: '🖤',
-    bg: '#080808',  accent: '#FFCB2F',
-    title: '',           sub: '',
-    borderW: 8,     borderDouble: true,
-  },
-  {
-    id: 'sunset',   label: 'Sunset',         emoji: '🌅',
-    bg: '#7C1D06',  bgEnd: '#C2410C',        accent: '#FCD34D',
-    title: '',     sub: '',
-  },
-  {
-    id: 'mint',     label: 'Mint Fresh',     emoji: '🍃',
-    bg: '#D1FAE5',  accent: '#059669',
-    textColor: '#064E3B',         subColor: '#047857',
-    title: '',   sub: '',
-    light: true,    borderW: 4,
-  },
-  {
-    id: 'purple',   label: 'Purple Dream',   emoji: '💜',
-    bg: '#1A0B35',  bgEnd: '#2D1A52',        accent: '#A78BFA',
-    title: '',   sub: '',
-    pattern: 'dots',
-  },
-  {
-    id: 'white',    label: 'Clean White',    emoji: '🤍',
-    bg: '#F9FAFB',  accent: '#006b3f',
-    textColor: '#003D24',         subColor: '#006b3f',
-    title: 'GREENWICH VIETNAM',   sub: 'greenwich.edu.vn',
-    light: true,    borderW: 4,
-  },
-];
-
 // ── 6 color filters ───────────────────────────────────────────────────────────
 // css applied to <video> live + ctx.filter on capFrame canvas
 const FILTERS = [
@@ -406,7 +305,6 @@ const STICKERS = [
 // ── State ─────────────────────────────────────────────────────────────────────
 const S = {
   mode: 'ready',
-  frameIdx: 0,
   filterIdx: 0,
   stickerIdx: 0,
   interval: 3,
@@ -418,30 +316,6 @@ const S = {
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-
-// ── Frame card thumbnail HTML ─────────────────────────────────────────────────
-function makeFcard(f, i) {
-  const midBg  = f.light ? 'rgba(0,0,0,0.06)' : '#0f1e14';
-  const spanBg = f.light ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.18)';
-  const topBg  = f.bgEnd
-    ? `linear-gradient(90deg,${f.bg},${f.bgEnd})`
-    : f.bg;
-  return `
-    <button class="fcard${i === 0 ? ' active' : ''}" data-i="${i}"
-            style="--facc:${f.accent}" title="${f.label}">
-      <div class="fcard-thumb">
-        <div class="fct-top" style="background:${topBg}"></div>
-        <div class="fct-mid" style="background:${midBg}">
-          <span style="background:${spanBg}"></span>
-          <span style="background:${spanBg}"></span>
-          <span style="background:${spanBg}"></span>
-          <span style="background:${spanBg}"></span>
-        </div>
-        <div class="fct-bot" style="background:${f.bg}"></div>
-      </div>
-      <span class="fcard-lbl">${f.emoji} ${f.label}</span>
-    </button>`;
-}
 
 // ── Mount HTML ────────────────────────────────────────────────────────────────
 q('#app').innerHTML = `
@@ -491,20 +365,11 @@ q('#app').innerHTML = `
     <!-- Controls -->
     <div class="ctrl-col">
       <div class="tab-bar" id="tab-bar">
-        <button class="tab active" data-tab="frame">🖼 Anh</button>
-        <button class="tab" data-tab="filter">🎨 Lọc</button>
+        <button class="tab active" data-tab="filter">🎨 Lọc</button>
         <button class="tab" data-tab="sticker">✨ Sticker</button>
       </div>
 
-      <div class="tab-pane" id="tab-frame">
-        <div class="ctrl-sec">
-          <div class="frame-grid" id="frame-grid">
-            ${FRAMES.map((f, i) => makeFcard(f, i)).join('')}
-          </div>
-        </div>
-      </div>
-
-      <div class="tab-pane hidden" id="tab-filter">
+      <div class="tab-pane" id="tab-filter">
         <div class="ctrl-lbl" style="padding:0 2px 4px">Bộ lọc màu</div>
         <div id="filter-grid" class="filter-grid"></div>
       </div>
@@ -574,26 +439,6 @@ async function startCam() {
   } catch {
     q('#cerr').classList.remove('hidden');
   }
-}
-
-// ── Frame preview on camera ───────────────────────────────────────────────────
-function updatePreview() {
-  const f = FRAMES[S.frameIdx];
-  const topBg    = f.bgEnd ? `linear-gradient(90deg,${f.bg},${f.bgEnd})` : f.bg;
-  const titleCol = f.textColor || '#ffffff';
-  const subCol   = f.subColor  || 'rgba(255,255,255,0.72)';
-
-  q('#fov').innerHTML = `
-    <div class="fp" style="--acc:${f.accent}">
-      <div class="fp-top" style="background:${topBg}">
-        <span class="fp-title" style="color:${titleCol}">${f.title}</span>
-        <div class="fp-lion">${LION}</div>
-      </div>
-      <div class="fp-bot" style="background:${f.bg}">
-        <span style="color:${subCol}">${f.sub}</span>
-        <span style="color:${subCol}">#GreenwichVN</span>
-      </div>
-    </div>`;
 }
 
 // ── Shoot sequence ────────────────────────────────────────────────────────────
@@ -668,7 +513,7 @@ function capFrame(cam) {
   return out.toDataURL('image/jpeg', 0.9);
 }
 
-// ── Poster composition (1080×1440) — 2×2 square grid ────────────────────────────
+// ── Poster composition (1080×1440) — 2×2 grid, randomized theme + per-photo frames
 async function buildPoster() {
   await document.fonts.ready;
 
@@ -676,12 +521,9 @@ async function buildPoster() {
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
   const W = 1080, H = 1440, BAR = 140, HPAD = 20, VPAD = 30, GAP = 20;
-  const f = FRAMES[S.frameIdx];
-
-  // Square photo size: 2 columns fit exactly
+  const theme  = POSTER_THEMES[Math.floor(Math.random() * POSTER_THEMES.length)];
+  const frames = pickFrames(4);
   const PH = Math.floor((W - 2 * HPAD - GAP) / 2); // 510px
-
-  // 2×2 grid: [x, y] for each photo slot
   const pos = [
     [HPAD,            BAR + VPAD],
     [HPAD + PH + GAP, BAR + VPAD],
@@ -689,103 +531,59 @@ async function buildPoster() {
     [HPAD + PH + GAP, BAR + VPAD + PH + GAP],
   ];
 
-  // Base fill
-  ctx.fillStyle = f.bg;
+  ctx.fillStyle = theme.bg;
   ctx.fillRect(0, 0, W, H);
 
-  // Xóa nền 4 ảnh song song, fallback về ảnh gốc nếu lỗi
   const photos = await Promise.all(S.photos.map(removeBg));
-
-  // Draw 4 square photos (đã xóa nền)
   await Promise.all(photos.map((url, i) => drawPhoto(ctx, url, pos[i][0], pos[i][1], PH, PH)));
-
-  // Giải phóng object URLs tạm
   photos.forEach(url => { if (url.startsWith('blob:')) URL.revokeObjectURL(url); });
 
-  // Dashed border around each photo
-  ctx.strokeStyle = 'rgba(255,255,255,0.35)';
-  ctx.lineWidth = 2;
-  ctx.setLineDash([6, 5]);
-  for (const [px, py] of pos) ctx.strokeRect(px + 3, py + 3, PH - 6, PH - 6);
-  ctx.setLineDash([]);
+  // Per-photo mini-frames
+  frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
 
-  // Cross separators: horizontal dots + vertical dots
+  // Separator dots
   const sepX = Math.round(HPAD + PH + GAP / 2);
   const sepY = Math.round(BAR + VPAD + PH + GAP / 2);
-  ctx.fillStyle = f.accent + 'CC';
-  // horizontal row
+  ctx.fillStyle = theme.accent + 'CC';
   for (let x = HPAD; x <= W - HPAD; x += 12) {
     ctx.beginPath(); ctx.arc(x, sepY, 2.5, 0, Math.PI * 2); ctx.fill();
   }
-  // vertical column
   for (let y = BAR + VPAD; y <= BAR + VPAD + PH * 2 + GAP; y += 12) {
     ctx.beginPath(); ctx.arc(sepX, y, 2.5, 0, Math.PI * 2); ctx.fill();
   }
 
-  // Bars
-  drawBar(ctx, f, 0, 0, W, BAR);
-  drawBar(ctx, f, 0, H - BAR, W, BAR);
+  // Top + bottom bars
+  ctx.fillStyle = theme.barBg;
+  ctx.fillRect(0, 0, W, BAR);
+  ctx.fillRect(0, H - BAR, W, BAR);
 
   // Outer border
-  drawBorder(ctx, f, W, H);
+  ctx.strokeStyle = theme.accent;
+  ctx.lineWidth = 4;
+  ctx.setLineDash([]);
+  ctx.strokeRect(2, 2, W - 4, H - 4);
 
-  // Decorative dot border inside main border (for borderDouble/burgundy frames)
-  if (f.borderDouble || f.id === 'burgundy') {
-    const margin = (f.borderW || 6) + 12;
-    const step = 16, r = 2;
-    ctx.fillStyle = f.accent + '88';
-    for (let x = margin; x <= W - margin; x += step) {
-      ctx.beginPath(); ctx.arc(x, margin, r, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(x, H - margin, r, 0, Math.PI * 2); ctx.fill();
-    }
-    for (let y = margin + step; y < H - margin; y += step) {
-      ctx.beginPath(); ctx.arc(margin, y, r, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(W - margin, y, r, 0, Math.PI * 2); ctx.fill();
-    }
-  }
-
-  // Top-bar: Lion mascot + text
+  // Top-bar: Lion + text
   await drawSvg(ctx, LION, 14, (BAR - 110) / 2, 110, 110);
-
-  const titleX    = 142;
-  const titleCol  = f.textColor || '#FFFFFF';
-  const subCol    = f.subColor  || 'rgba(255,255,255,0.72)';
-  const titleSize = f.title.length > 20 ? 40 : 50;
-
   ctx.textBaseline = 'top';
-  ctx.fillStyle = titleCol;
-  ctx.font = `900 ${titleSize}px "Arial Black", Arial, sans-serif`;
-  ctx.fillText(f.title, titleX, 22);
+  ctx.fillStyle = theme.textCol;
+  ctx.font = '900 50px "Arial Black", Arial, sans-serif';
+  ctx.fillText('GREENWICH BOOTH', 142, 22);
+  ctx.fillStyle = theme.accent;
+  ctx.font = '600 26px Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn', 142, 88);
 
-  ctx.fillStyle = subCol;
-  ctx.font = '600 28px Arial, sans-serif';
-  ctx.fillText(f.sub, titleX, 88);
-
-  // Bottom-bar: centered branding
-  const btmY   = H - BAR;
-  const btmCol = f.light ? (f.textColor || '#1a1a1a') : titleCol;
+  // Bottom-bar: branding
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = btmCol;
+  ctx.fillStyle = theme.textCol;
   ctx.font = '900 32px "Arial Black", Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', W / 2, btmY + BAR * 0.36);
-  ctx.fillStyle = subCol;
+  ctx.fillText('GREENWICH VIETNAM', W / 2, (H - BAR) + BAR * 0.36);
+  ctx.fillStyle = 'rgba(240,245,242,0.72)';
   ctx.font = '500 20px Arial, sans-serif';
-  if (f.photoLocation) {
-    ctx.fillText(f.photoLocation, W / 2, btmY + BAR * 0.65);
-    ctx.font = '400 14px Arial, sans-serif';
-    ctx.fillText('greenwich.edu.vn', W / 2, btmY + BAR * 0.85);
-  } else {
-    ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, btmY + BAR * 0.72);
-  }
+  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, (H - BAR) + BAR * 0.72);
   ctx.textAlign = 'left';
 
-  // Decorative elements
-  if (f.decorStyle) {
-    drawDecorations(ctx, f, W, H);
-  }
-
-  // Sticker — top-bar right side (doesn't cover faces)
   if (S.stickerIdx > 0) {
     ctx.font = '78px serif';
     ctx.textBaseline = 'middle';
@@ -793,126 +591,6 @@ async function buildPoster() {
     ctx.fillText(STICKERS[S.stickerIdx].icon, W - 14, BAR / 2);
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-  }
-}
-
-function drawDecorations(ctx, f, W, H) {
-  if (f.decorStyle === 'diamonds') {
-    // Diamond pattern along borders
-    const sz = 20, sp = 28;
-    ctx.fillStyle = f.accent + '44';
-    for (let x = 30; x < W - 30; x += sp) {
-      drawDiamond(ctx, x, 20, sz);
-      drawDiamond(ctx, x, H - 20, sz);
-    }
-    for (let y = 50; y < H - 50; y += sp) {
-      drawDiamond(ctx, 20, y, sz);
-      drawDiamond(ctx, W - 20, y, sz);
-    }
-  } else if (f.decorStyle === 'filmstrip') {
-    // Film strip holes along left & right edges
-    const r = 10, sp = 50;
-    ctx.fillStyle = '#1a1a1a';
-    for (let y = 60; y < H - 60; y += sp) {
-      ctx.beginPath(); ctx.arc(22, y, r, 0, Math.PI * 2); ctx.fill();
-      ctx.beginPath(); ctx.arc(W - 22, y, r, 0, Math.PI * 2); ctx.fill();
-    }
-  } else if (f.decorStyle === 'squares') {
-    // Square grid pattern inside border
-    const sz = 18, sp = 32;
-    ctx.strokeStyle = f.accent + '33';
-    ctx.lineWidth = 1.5;
-    for (let x = 25; x < W - 25; x += sp) {
-      for (let y = 25; y < H - 25; y += sp) {
-        ctx.strokeRect(x, y, sz, sz);
-      }
-    }
-  } else if (f.decorStyle === 'cornerFrames') {
-    // Small frame decorations at corners (Fotolab style)
-    const r = 15, offset = 25;
-    ctx.strokeStyle = f.accent + '66';
-    ctx.lineWidth = 2;
-    // Top-left, top-right, bottom-left, bottom-right
-    [[offset, offset], [W - offset, offset], [offset, H - offset], [W - offset, H - offset]].forEach(([x, y]) => {
-      ctx.strokeRect(x - r, y - r, r * 2, r * 2);
-    });
-  } else if (f.decorStyle === 'emojiTop') {
-    // Emoji decorations on top bar (Magic Hanoi style)
-    if (f.topEmoji) {
-      ctx.font = '40px serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      const positions = [100, 350, 730, 980];
-      f.topEmoji.forEach((emoji, i) => {
-        ctx.fillText(emoji, positions[i], 70);
-      });
-    }
-  } else if (f.decorStyle === 'goldDots') {
-    // Gold dot pattern (Studio Gold style)
-    const r = 3, sp = 30;
-    ctx.fillStyle = f.accent + '55';
-    for (let x = 50; x < W - 50; x += sp) {
-      for (let y = 50; y < H - 50; y += sp) {
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  }
-}
-
-function drawDiamond(ctx, cx, cy, sz) {
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - sz);
-  ctx.lineTo(cx + sz, cy);
-  ctx.lineTo(cx, cy + sz);
-  ctx.lineTo(cx - sz, cy);
-  ctx.closePath();
-  ctx.fill();
-}
-
-function drawBar(ctx, f, x, y, w, h) {
-  if (f.bgEnd) {
-    const g = ctx.createLinearGradient(x, y, x + w, y + h);
-    g.addColorStop(0, f.bg);
-    g.addColorStop(1, f.bgEnd);
-    ctx.fillStyle = g;
-  } else {
-    ctx.fillStyle = f.bg;
-  }
-  ctx.fillRect(x, y, w, h);
-
-  if (f.pattern === 'dots') {
-    ctx.fillStyle = 'rgba(255,255,255,0.055)';
-    for (let px = 0; px < w; px += 24) {
-      for (let py = y + 4; py < y + h - 4; py += 20) {
-        ctx.beginPath();
-        ctx.arc(x + px, py, 2.5, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  } else if (f.pattern === 'lines') {
-    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
-    ctx.lineWidth = 1;
-    ctx.setLineDash([]);
-    for (let px = x; px < x + w; px += 28) {
-      ctx.beginPath(); ctx.moveTo(px, y); ctx.lineTo(px, y + h); ctx.stroke();
-    }
-  }
-}
-
-function drawBorder(ctx, f, W, H) {
-  const bw   = f.borderW || 6;
-  const half = bw / 2;
-  ctx.strokeStyle = f.accent;
-  ctx.lineWidth   = bw;
-  ctx.setLineDash(f.borderDash || []);
-  ctx.strokeRect(half, half, W - bw, H - bw);
-  ctx.setLineDash([]);
-  if (f.borderDouble) {
-    const off = bw + 5;
-    ctx.lineWidth = 2;
-    ctx.strokeRect(off, off, W - off * 2, H - off * 2);
   }
 }
 
@@ -1049,15 +727,6 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 
-q('#frame-grid').addEventListener('click', e => {
-  const card = e.target.closest('.fcard');
-  if (!card) return;
-  S.frameIdx = +card.dataset.i;
-  qa('.fcard').forEach(c => c.classList.remove('active'));
-  card.classList.add('active');
-  updatePreview();
-});
-
 q('#ival').addEventListener('input', e => {
   S.interval = +e.target.value;
   q('#ival-v').textContent = S.interval;
@@ -1085,5 +754,4 @@ q('#filter-grid').addEventListener('click', e => {
 // ── Init ──────────────────────────────────────────────────────────────────────
 q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
 q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
-updatePreview();
 startCam();
