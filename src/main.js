@@ -2,7 +2,8 @@ import QRCode from 'qrcode';
 import { removeBackground } from '@imgly/background-removal';
 import './styles.css';
 
-const RMBG_CFG = { publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/' };
+// ponytail: không set publicPath → library dùng default staticimgly.com (CDN chính thức có model files)
+const RMBG_CFG = {};
 
 async function removeBg(dataUrl) {
   if (!S.removeBg) return dataUrl;
