@@ -688,12 +688,14 @@ function showResult(uploadP) {
   q('#qr-img').src     = '';
   q('.qr-wrap').classList.add('qr-loading');
   q('#qr-title').textContent = 'Đang tạo link...';
+  q('#qr-sub').textContent = 'Chờ khoảng 8 giây...';
   q('#rov').classList.remove('hidden');
 
   uploadP.then(dlUrl => {
     q('.qr-wrap').classList.remove('qr-loading');
     if (!dlUrl) {
       q('#qr-title').textContent = 'Không tạo được link';
+      q('#qr-sub').textContent = 'Vui lòng tải về máy thay thế (nút dưới)';
       return;
     }
     // Wrap image URL in display page with download button
@@ -708,16 +710,25 @@ function showResult(uploadP) {
 }
 
 async function uploadPoster(dataUrl) {
+  const TIMEOUT_MS = 8000;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
     const res = await fetch('/api/upload', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ image: dataUrl }),
+      signal: controller.signal,
     });
     if (!res.ok) return null;
     const { url } = await res.json();
     return url;
-  } catch { return null; }
+  } catch (err) {
+    console.error('Upload error:', err.message);
+    return null;
+  } finally {
+    clearTimeout(timeoutId);
+  }
 }
 
 function retake() {
