@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     const { image } = req.body;
     const buf = Buffer.from(image.replace(/^data:\w+\/\w+;base64,/, ''), 'base64');
     const result = await put(`booth/${Date.now()}.jpg`, buf, {
+      access: 'private',
       contentType: 'image/jpeg',
       addRandomSuffix: true,
     });
