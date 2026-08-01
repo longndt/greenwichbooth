@@ -2,14 +2,19 @@ import QRCode from 'qrcode';
 import { removeBackground } from '@imgly/background-removal';
 import './styles.css';
 
+const RMBG_CFG = { publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/' };
+
 async function removeBg(dataUrl) {
   if (!S.removeBg) return dataUrl;
   try {
-    const blob = await removeBackground(dataUrl, { publicPath: 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.7.0/dist/' });
-    return URL.createObjectURL(blob);
-  } catch {
-    return dataUrl;
-  }
+    return URL.createObjectURL(await removeBackground(dataUrl, RMBG_CFG));
+  } catch { return dataUrl; }
+}
+
+// Pre-warm: tải WASM model vào cache trước khi user chụp ảnh (chạy nền lúc idle)
+function warmUpRemoveBg() {
+  const c = document.createElement('canvas'); c.width = 64; c.height = 64;
+  removeBackground(c.toDataURL(), RMBG_CFG).catch(() => {});
 }
 
 // ── Lion Captain mascot SVG ───────────────────────────────────────────────────
@@ -528,8 +533,11 @@ async function shoot() {
   } catch (err) {
     console.error('buildPoster failed:', err);
   }
+  // Tính posterUrl và bắt đầu upload ngay — không chờ showResult setup DOM
+  S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
+  const uploadP = uploadPoster(S.posterUrl);
   q('#proc-ov').classList.add('hidden');
-  showResult();
+  showResult(uploadP);
 }
 
 function capFrame(cam) {
@@ -679,8 +687,7 @@ function drawSvg(ctx, svg, x, y, w, h) {
 }
 
 // ── Result screen ─────────────────────────────────────────────────────────────
-function showResult() {
-  S.posterUrl = q('#cvs').toDataURL('image/jpeg', 0.92);
+function showResult(uploadP) {
   q('#poster-img').src = S.posterUrl;
   q('#dl-link').href   = S.posterUrl;
   q('#qr-img').src     = '';
@@ -688,7 +695,7 @@ function showResult() {
   q('#qr-title').textContent = 'Đang tạo link...';
   q('#rov').classList.remove('hidden');
 
-  uploadPoster(S.posterUrl).then(dlUrl => {
+  uploadP.then(dlUrl => {
     q('.qr-wrap').classList.remove('qr-loading');
     if (!dlUrl) {
       q('#qr-title').textContent = 'Không tạo được link';
@@ -837,3 +844,5 @@ q('#filter-grid').innerHTML  = FILTERS.map((f, i) => makeFlt(f, i)).join('');
 q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
 q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
 startCam();
+// Pre-warm AI model lúc idle — lần chụp đầu sẽ không phải chờ tải model nữa
+(window.requestIdleCallback || (fn => setTimeout(fn, 3000)))(warmUpRemoveBg);
