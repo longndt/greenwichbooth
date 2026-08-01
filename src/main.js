@@ -850,12 +850,21 @@ function retake() {
 }
 
 // ── Sticker button HTML ───────────────────────────────────────────────────────
-function makeStkr(s, i) {
+function makeStkr(s, i, isSticker = false) {
+  const isHidden = i > 3 ? 'hidden' : ''; // Hide stickers 4+ initially
+  const dataAttr = isSticker ? 'data-si' : 'data-si';
   return `
-    <button class="stkr${i === 0 ? ' active' : ''}" data-si="${i}" title="${s.label}">
+    <button class="stkr${i === 0 ? ' active' : ''}${isHidden ? ' sticker-hidden' : ''}" ${dataAttr}="${i}" title="${s.label}" ${isHidden ? 'style="display:none"' : ''}>
       <div class="stkr-icon">${i === 0 ? '✕' : s.icon}</div>
       <span class="stkr-lbl">${s.label}</span>
     </button>`;
+}
+
+function makeStickerGrid() {
+  const heroStkr = STICKERS.slice(0, 4).map((s, i) => makeStkr(s, i, true)).join('');
+  const toggleBtn = `<button class="sticker-toggle" id="sticker-toggle">+ Xem thêm</button>`;
+  const hiddenStkr = STICKERS.slice(4).map((s, i) => makeStkr(s, i + 4, true)).join('');
+  return `${heroStkr}${toggleBtn}<div id="sticker-hidden" class="sticker-hidden-group" style="display:none">${hiddenStkr}</div>`;
 }
 
 function updateStickerOv() {
@@ -866,11 +875,19 @@ function updateStickerOv() {
 }
 
 function makeAcc(a, i) {
+  const isHidden = i > 3 ? 'hidden' : ''; // Hide accessories 4+ initially
   return `
-    <button class="stkr${i === 0 ? ' active' : ''}" data-ai="${i}" title="${a.label}">
+    <button class="stkr${i === 0 ? ' active' : ''}${isHidden ? ' acc-hidden' : ''}" data-ai="${i}" title="${a.label}" ${isHidden ? 'style="display:none"' : ''}>
       <div class="stkr-icon">${i === 0 ? '✕' : a.icon}</div>
       <span class="stkr-lbl">${a.label.split(' ')[0]}</span>
     </button>`;
+}
+
+function makeAccGrid() {
+  const heroAcc = ACCESSORIES.slice(0, 4).map((a, i) => makeAcc(a, i)).join('');
+  const toggleBtn = `<button class="acc-toggle" id="acc-toggle">+ Xem thêm</button>`;
+  const hiddenAcc = ACCESSORIES.slice(4).map((a, i) => makeAcc(a, i + 4)).join('');
+  return `${heroAcc}${toggleBtn}<div id="acc-hidden" class="acc-hidden-group" style="display:none">${hiddenAcc}</div>`;
 }
 
 function updateAccOv() {
@@ -979,19 +996,27 @@ window.addEventListener('orientationchange', () => {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 q('#filter-grid').innerHTML  = makeFilterGrid();
-q('#acc-grid').innerHTML     = ACCESSORIES.map((a, i) => makeAcc(a, i)).join('');
-q('#sticker-grid').innerHTML = STICKERS.map((s, i) => makeStkr(s, i)).join('');
+q('#acc-grid').innerHTML     = makeAccGrid();
+q('#sticker-grid').innerHTML = makeStickerGrid();
 
-// Filter grid toggle
-q('#filter-toggle').addEventListener('click', () => {
-  const hidden = q('#filter-hidden');
-  const toggle = q('#filter-toggle');
-  if (hidden.style.display === 'none') {
-    hidden.style.display = '';
-    toggle.textContent = '- Ẩn bớt';
-  } else {
-    hidden.style.display = 'none';
-    toggle.textContent = '+ Xem thêm';
+// Toggle handlers
+[
+  { id: 'filter-toggle', hidden: '#filter-hidden' },
+  { id: 'acc-toggle', hidden: '#acc-hidden' },
+  { id: 'sticker-toggle', hidden: '#sticker-hidden' }
+].forEach(({ id, hidden }) => {
+  const btn = q(`#${id}`);
+  if (btn) {
+    btn.addEventListener('click', () => {
+      const div = q(hidden);
+      if (div.style.display === 'none') {
+        div.style.display = '';
+        btn.textContent = '- Ẩn bớt';
+      } else {
+        div.style.display = 'none';
+        btn.textContent = '+ Xem thêm';
+      }
+    });
   }
 });
 

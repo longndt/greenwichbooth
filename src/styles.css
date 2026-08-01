@@ -380,8 +380,8 @@ html, body {
 /* ── Sticker grid ────────────────────────────────────────── */
 .sticker-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 6px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-sm);
 }
 
 .stkr {
@@ -426,6 +426,31 @@ html, body {
 }
 
 .stkr.active .stkr-lbl { color: var(--text); }
+
+/* Accessory & Sticker toggle buttons */
+.acc-toggle, .sticker-toggle {
+  grid-column: 1 / -1;
+  padding: var(--space-sm) var(--space-xs);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s;
+}
+
+.acc-toggle:hover, .sticker-toggle:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.24);
+  color: var(--text);
+}
+
+.acc-hidden-group, .sticker-hidden-group {
+  grid-column: 1 / -1;
+  display: contents;
+}
 
 /* ── Sticker camera overlay ──────────────────────────────── */
 .sticker-ov {
