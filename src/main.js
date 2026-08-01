@@ -565,6 +565,7 @@ async function shoot() {
     await sleep(280);
 
     S.photos.push(capFrame(cam));
+    if (navigator.vibrate) navigator.vibrate([50]);
 
     q(`#pv${i}`).src = S.photos[i];
     q(`#pvs${i}`).classList.add('filled');
