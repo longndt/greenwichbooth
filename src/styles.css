@@ -874,9 +874,36 @@ input[type="range"] {
   font-family: 'Unbounded', sans-serif;
   font-size: 16px;
   font-weight: 900;
-  color: var(--gold);
+  color: var(--color-accent);
 }
 .proc-sub { font-size: 12px; color: var(--dim); }
+
+.proc-progress-wrap {
+  width: 240px;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.proc-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+  border-radius: var(--radius-full);
+  width: 0%;
+  animation: progress 40s ease-in-out;
+}
+
+@keyframes progress {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.proc-percent {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+}
 
 /* ── Face AI toggle ──────────────────────────────────────── */
 .face-ai-toggle {

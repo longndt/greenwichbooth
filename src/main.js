@@ -526,6 +526,10 @@ q('#app').innerHTML = `
     <div class="proc-spin"></div>
     <p class="proc-txt">Đang tạo poster...</p>
     <small class="proc-sub" id="proc-sub">Vui lòng chờ</small>
+    <div class="proc-progress-wrap">
+      <div class="proc-progress-bar" id="proc-progress"></div>
+    </div>
+    <span class="proc-percent" id="proc-percent">0%</span>
   </div>
 </div>
 
