@@ -246,23 +246,24 @@ html, body {
 .tab-bar {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
+  gap: var(--space-xs);
   background: rgba(255,255,255,0.04);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 3px;
+  border-radius: var(--radius-lg);
+  padding: var(--space-xs);
   flex-shrink: 0;
 }
 
 .tab {
   position: relative;
-  padding: 8px 6px;
-  border-radius: 8px;
+  padding: var(--space-sm) var(--space-xs);
+  border-radius: var(--radius-md);
   border: none;
+  border-bottom: 3px solid transparent;
   background: none;
-  color: var(--dim);
+  color: var(--color-text-muted);
   font-family: 'DM Sans', sans-serif;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.18s;
@@ -272,9 +273,9 @@ html, body {
 .tab:hover { color: var(--text); background: rgba(255,255,255,0.06); }
 
 .tab.active {
-  background: linear-gradient(135deg, var(--green), #009955);
-  color: white;
-  box-shadow: 0 2px 12px rgba(0,107,63,0.45);
+  background: none;
+  color: var(--text);
+  border-bottom-color: var(--color-accent);
 }
 
 /* ── Tab panes ───────────────────────────────────────────── */
@@ -802,15 +803,7 @@ input[type="range"] {
 
 /* Active tab underline animation */
 .tab.active::after {
-  content: '';
-  position: absolute;
-  bottom: -4px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gold);
-  border-radius: 2px;
-  animation: slideInUnderline 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  display: none;
 }
 
 @keyframes slideInUnderline {
