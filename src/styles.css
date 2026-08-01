@@ -490,10 +490,10 @@ input[type="range"] {
 /* ── Shoot button ────────────────────────────────────────── */
 .shoot-btn {
   margin-top: auto;
-  padding: 16px 14px;
-  border-radius: 14px;
+  padding: 18px 16px;
+  border-radius: var(--radius-lg);
   border: 1px solid rgba(255,255,255,0.1);
-  background: linear-gradient(145deg, #007a47, #009955);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
   color: white;
   font-family: 'DM Sans', sans-serif;
   cursor: pointer;
@@ -502,7 +502,9 @@ input[type="range"] {
   align-items: center;
   gap: 3px;
   transition: transform 0.18s, box-shadow 0.18s;
-  box-shadow: 0 6px 28px rgba(0,107,63,0.45), inset 0 1px 0 rgba(255,255,255,0.14);
+  box-shadow:
+    0 8px 32px rgba(0,107,63,0.45),
+    0 0 24px rgba(45,215,122,0.3);
   position: relative;
   overflow: hidden;
 }
@@ -518,17 +520,19 @@ input[type="range"] {
 
 .shoot-btn:hover:not(:disabled)::before { left: 120%; }
 .shoot-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 34px rgba(0,153,85,0.55);
+  transform: scale(1.04);
+  box-shadow:
+    0 12px 40px rgba(0,107,63,0.55),
+    0 0 40px rgba(45,215,122,0.5);
 }
-.shoot-btn:active:not(:disabled) { transform: translateY(0); }
-.shoot-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.shoot-btn:active:not(:disabled) { transform: scale(0.97); }
+.shoot-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 .s-icon { font-size: 22px; line-height: 1; }
 
 .s-text {
   font-family: 'Unbounded', sans-serif;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 900;
   letter-spacing: 1.5px;
 }
