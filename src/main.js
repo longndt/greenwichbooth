@@ -416,11 +416,6 @@ q('#app').innerHTML = `
         </button>
       </div>
 
-      <div class="ival-bar">
-        <div class="ctrl-lbl">Thời gian: <strong id="ival-v">3</strong>s</div>
-        <input type="range" id="ival" min="2" max="4" value="3" step="1"/>
-      </div>
-
       <div class="photo-grid" id="photo-grid">
         <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt=""/><span class="pv-badge">1</span></div>
         <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt=""/><span class="pv-badge">2</span></div>
@@ -431,7 +426,7 @@ q('#app').innerHTML = `
       <button class="shoot-btn" id="shoot-btn">
         <span class="s-icon">📷</span>
         <span class="s-text">CHỤP NGAY</span>
-        <small class="s-hint">4 ảnh · <span id="ival-h">3</span>s mỗi ảnh</small>
+        <small class="s-hint">4 ảnh · 3s mỗi ảnh</small>
       </button>
     </div>
   </div>
@@ -801,12 +796,6 @@ q('#tab-bar').addEventListener('click', e => {
 q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
-
-q('#ival').addEventListener('input', e => {
-  S.interval = +e.target.value;
-  q('#ival-v').textContent = S.interval;
-  q('#ival-h').textContent = S.interval;
-});
 
 q('#acc-grid').addEventListener('click', e => {
   const btn = e.target.closest('.stkr');
