@@ -96,24 +96,6 @@ html, body {
   line-height: 1;
 }
 
-.hdr-live {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--dim);
-  letter-spacing: 0.2px;
-}
-
-.hdr-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #2DD77A;
-  box-shadow: 0 0 8px rgba(45,215,122,0.7);
-}
-
 /* ── Main grid ───────────────────────────────────────────── */
 .main {
   flex: 1;

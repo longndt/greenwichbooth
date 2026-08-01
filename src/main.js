@@ -251,10 +251,6 @@ q('#app').innerHTML = `
         <span class="hdr-name">Greenwich Booth</span>
       </div>
     </div>
-    <div class="hdr-live">
-      <span class="hdr-dot"></span>
-      <span>Sẵn sàng</span>
-    </div>
   </header>
 
   <div class="main">
