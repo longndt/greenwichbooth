@@ -257,7 +257,7 @@ function drawPhotoFrame(ctx, frame, x, y, w, h) {
   ctx.restore();
 }
 
-// ── 6 color filters ───────────────────────────────────────────────────────────
+// ── 9 color filters ───────────────────────────────────────────────────────────
 // css applied to <video> live + ctx.filter on capFrame canvas
 const FILTERS = [
   { id: 'normal',  label: 'Bình thường', css: 'none' },
@@ -266,6 +266,9 @@ const FILTERS = [
   { id: 'cool',    label: 'Lạnh',        css: 'hue-rotate(195deg) saturate(1.25) brightness(1.08)' },
   { id: 'bw',      label: 'Đen Trắng',   css: 'grayscale(1) contrast(1.1)' },
   { id: 'vintage', label: 'Vintage',     css: 'sepia(0.55) saturate(0.85) brightness(0.94) contrast(1.08)' },
+  { id: 'sepia-pro', label: 'Sepia+',    css: 'sepia(0.8) saturate(1.3) brightness(0.92) contrast(1.15)' },
+  { id: 'blur',    label: 'Mờ',          css: 'blur(4px) brightness(1.05)' },
+  { id: 'neon',    label: 'Neon',        css: 'saturate(2.5) contrast(1.8) brightness(1.1) hue-rotate(-15deg)' },
 ];
 
 // ── 9 accessories — overlaid on each captured photo ──────────────────────────
