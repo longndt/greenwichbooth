@@ -219,6 +219,7 @@ html, body {
 }
 
 .tab {
+  position: relative;
   padding: 7px 4px;
   border-radius: 8px;
   border: none;
@@ -734,6 +735,91 @@ input[type="range"] {
 .face-ai-icon { font-size: 28px; }
 .face-ai-lbl { font-size: 13px; font-weight: 700; }
 .face-ai-hint { font-size: 10px; color: var(--dim); }
+
+/* ── Smooth Transitions & Animations ───────────────────────── */
+
+/* Photo grid fade-in */
+.pv {
+  animation: fadeInScale 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Tab pane fade transition */
+.tab-pane {
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.tab-pane.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Active tab underline animation */
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gold);
+  border-radius: 2px;
+  animation: slideInUnderline 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInUnderline {
+  from {
+    width: 0;
+    left: 50%;
+  }
+  to {
+    width: 100%;
+    left: 0;
+  }
+}
+
+/* Filter/sticker application feedback */
+#cam {
+  transition: filter 50ms ease-in-out;
+}
+
+/* Result screen staggered animations */
+.poster-img {
+  animation: slideInUp 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.qr-wrap {
+  animation: slideInUp 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms backwards;
+}
+
+.dl-info {
+  animation: slideInUp 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 200ms backwards;
+}
+
+.btn-primary, .btn-sec {
+  animation: slideInUp 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 400ms backwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* ── Short landscape ─────────────────────────────────────── */
 @media (max-height: 600px) and (min-width: 681px) {
