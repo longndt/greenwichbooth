@@ -222,7 +222,6 @@ q('#app').innerHTML = `
       <div class="hdr-lion">${LION}</div>
       <div class="hdr-text">
         <span class="hdr-name">Greenwich Booth</span>
-        <span class="hdr-sub">Studio ảnh nghệ thuật</span>
       </div>
     </div>
     <div class="hdr-live">
