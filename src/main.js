@@ -393,7 +393,7 @@ async function shoot() {
       await sleep(920);
     }
     q('#cnt-n').textContent = '😊';
-    q('#cnt-lbl').textContent = 'Cười lên nào!';
+    q('#cnt-lbl').textContent = '';
     await sleep(280);
 
     S.photos.push(capFrame(cam));
