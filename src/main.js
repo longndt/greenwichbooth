@@ -826,8 +826,8 @@ function showResult(uploadP) {
     QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
       .then(qr => {
         q('#qr-img').src = qr;
-        q('#qr-title').textContent = '📱 Quét để tải về';
-        q('#qr-sub').textContent = 'Dùng camera điện thoại quét mã';
+        q('#qr-title').textContent = '✓ Sẵn sàng · 📱 Quét để tải về';
+        q('#qr-sub').textContent = 'Dùng camera điện thoại để quét';
       });
   });
 }
