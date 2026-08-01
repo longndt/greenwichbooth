@@ -1,6 +1,19 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
+  /* Colors */
+  --color-primary:      #006b3f;
+  --color-secondary:    #2DD77A;
+  --color-accent:       #FFCB2F;
+  --color-bg:           #0B1912;
+  --color-surface:      rgba(15, 30, 20, 0.8);
+  --color-border:       rgba(255, 255, 255, 0.12);
+  --color-text:         #F0F5F2;
+  --color-text-muted:   rgba(255, 255, 255, 0.56);
+  --color-success:      #10b981;
+  --color-error:        #ef4444;
+
+  /* Legacy aliases (for backward compat during migration) */
   --bg:       #0B1912;
   --surface:  rgba(255,255,255,0.055);
   --border:   rgba(255,255,255,0.1);
@@ -9,7 +22,30 @@
   --gold:     #FFCB2F;
   --text:     #F0F5F2;
   --dim:      rgba(255,255,255,0.44);
-  --r:        12px;
+
+  /* Spacing (8px base) */
+  --space-xs:   4px;
+  --space-sm:   8px;
+  --space-md:   16px;
+  --space-lg:   24px;
+  --space-xl:   32px;
+  --space-2xl:  48px;
+
+  /* Typography */
+  --type-hero:  900 32px / 1.2 'Unbounded', sans-serif;
+  --type-lg:    900 20px / 1.3 'Unbounded', sans-serif;
+  --type-md:    700 16px / 1.4 'DM Sans', sans-serif;
+  --type-sm:    600 13px / 1.5 'DM Sans', sans-serif;
+  --type-body:  400 14px / 1.6 'DM Sans', sans-serif;
+  --type-hint:  500 12px / 1.5 'DM Sans', sans-serif;
+
+  /* Rounded corners */
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   18px;
+  --radius-full: 9999px;
+
+  /* Font */
   font-family: 'DM Sans', system-ui, sans-serif;
 }
 
@@ -38,7 +74,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
+  padding: 0 var(--space-lg);
   background: #0D1F14;
   border-bottom: 1px solid rgba(0,107,63,0.4);
 }
