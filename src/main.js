@@ -624,7 +624,8 @@ function capFrame(cam) {
   ox.drawImage(raw, 0, 0);
   ox.filter = 'none';
 
-  if (S.accessoryIdx > 0) {
+  // Skip when Face AI is on — buildPoster handles positioning after face detection
+  if (S.accessoryIdx > 0 && !S.faceAiEnabled) {
     const acc = ACCESSORIES[S.accessoryIdx];
     ox.font = `${Math.round(sz * acc.fs)}px serif`;
     ox.textBaseline = 'top';
@@ -677,19 +678,21 @@ async function buildPoster() {
   // Per-photo mini-frames + accessories (Face AI positioned if detected)
   frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
   if (S.accessoryIdx > 0 && S.faceAiEnabled) {
+    const acc = ACCESSORIES[S.accessoryIdx];
     S.detectedFaces.forEach((face, i) => {
-      if (!face) return;
-      const acc = ACCESSORIES[S.accessoryIdx];
       ctx.font = `${Math.round(PH * acc.fs)}px serif`;
       ctx.textBaseline = 'top';
       ctx.textAlign = 'center';
-      // Position based on face bounds
-      let accY;
-      if (acc.id === 'glasses' || acc.id === 'disguise') accY = face.y + face.h * 0.35;
-      else if (acc.id === 'hat' || acc.id === 'crown' || acc.id === 'grad') accY = face.y - PH * 0.05;
-      else if (acc.id === 'bow') accY = face.y + face.h * 0.85;
-      else accY = face.y + face.h * acc.top;
-      ctx.fillText(acc.icon, face.x + face.w / 2, accY);
+      if (face) {
+        let accY;
+        if (acc.cat === 'face') accY = face.y + face.h * 0.35;
+        else if (acc.id === 'bow') accY = face.y + face.h * 0.85;
+        else accY = face.y - PH * 0.05; // hats/props: above head
+        ctx.fillText(acc.icon, face.x + face.w / 2, accY);
+      } else {
+        // No face detected — fallback to fixed position
+        ctx.fillText(acc.icon, pos[i][0] + PH / 2, pos[i][1] + Math.round(PH * acc.top));
+      }
     });
   }
 
@@ -942,7 +945,7 @@ q('#face-ai-toggle').addEventListener('click', async () => {
       q('#face-ai-toggle').classList.add('active');
       q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Face AI · BẬT';
     } catch (e) {
-      q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Lỗi tải model';
+      q('#face-ai-toggle').querySelector('.face-ai-lbl').textContent = 'Lỗi · Bấm thử lại';
       console.error(e);
     } finally {
       q('#face-ai-toggle').disabled = false;
