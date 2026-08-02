@@ -326,8 +326,14 @@ async function buildPoster() {
     ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
   }
 
-  // ── Logo ──
-  await drawImg(ctx, logoUrl, theme.logo.x, theme.logo.y, theme.logo.size, theme.logo.size);
+  // ── Logo — white badge removes PNG white bg clash on dark headers ──
+  const logoS = 64, logoX = (W - logoS) / 2, logoY = 14;
+  roundRect(ctx, logoX - 10, logoY - 10, logoS + 20, logoS + 20, 16);
+  ctx.fillStyle = 'rgba(255,255,255,0.92)';
+  ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = 12;
+  ctx.fill();
+  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
+  await drawImg(ctx, logoUrl, logoX, logoY, logoS, logoS);
 
   // ── Title ──
   ctx.textAlign = 'center';
@@ -348,7 +354,8 @@ async function buildPoster() {
   // ── Date ──
   ctx.fillStyle = theme.date.color;
   ctx.font = '500 15px "Space Grotesk", Arial, sans-serif';
-  const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  const d = new Date();
+  const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   ctx.fillText(today, 540, theme.date.y);
 
   // ── Photo slot shadows ──
@@ -406,26 +413,39 @@ async function buildPoster() {
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
-  // ── Footer URL ──
+  // ── Footer content — brand card ──
   ctx.textAlign = 'center';
-  ctx.fillStyle = theme.footer.url.color;
-  ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText(theme.footer.url.text, 540, footerY + 50);
 
-  // ── Footer dashed separator ──
-  ctx.strokeStyle = `${theme.photos.borderColor}4d`;
-  ctx.setLineDash([6, 4]);
+  // Line 1: wordmark
+  ctx.fillStyle = theme.footer.url.color;
+  ctx.font = '800 18px "Plus Jakarta Sans", Arial, sans-serif';
+  ctx.fillText('GREENWICH VIETNAM', 540, footerY + 42);
+
+  // Line 2: campus info
+  ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
+    ? 'rgba(255,255,255,0.65)'
+    : 'rgba(0,0,0,0.5)';
+  ctx.font = '500 13px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('FPT University · University of Greenwich (UK)', 540, footerY + 72);
+
+  // Line 3: campus cities
+  ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
+    ? 'rgba(255,255,255,0.5)'
+    : 'rgba(0,0,0,0.4)';
+  ctx.font = '400 12px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Hà Nội  ·  TP.HCM  ·  Đà Nẵng  ·  Cần Thơ', 540, footerY + 96);
+
+  // Thin separator
+  ctx.strokeStyle = theme.footer.topStrip + '55';
+  ctx.setLineDash([4, 4]);
   ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(120, footerY + 72);
-  ctx.lineTo(960, footerY + 72);
-  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(160, footerY + 114); ctx.lineTo(920, footerY + 114); ctx.stroke();
   ctx.setLineDash([]);
 
-  // ── Footer hashtag ──
+  // Line 4: website + hashtag
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, footerY + 100);
+  ctx.font = '600 13px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', 540, footerY + 138);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
