@@ -22,7 +22,7 @@ q('#app').innerHTML = `
 <div class="app">
   <header class="hdr">
     <div class="hdr-brand">
-      <img class="hdr-lion" src="${lionUrl}" alt="" aria-hidden="true">
+      <img class="hdr-lion" src="${logoUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
         <span class="hdr-name">Greenwich Vietnam Booth</span>
       </div>
@@ -294,7 +294,7 @@ async function buildPoster() {
   ctx.strokeStyle = '#f8f2e4';
   ctx.lineWidth = 4;
   ctx.stroke();
-  await drawImg(ctx, lionUrl, 43, 35, 104, 104);
+  await drawImg(ctx, logoUrl, 43, 35, 104, 104);
 
   // Main title + subtitle
   ctx.fillStyle = '#ffcb2f';
@@ -353,7 +353,7 @@ async function buildPoster() {
 
   ctx.save();
   ctx.globalAlpha = 0.06;
-  await drawImg(ctx, lionUrl, 746, 1110, 230, 230);
+  await drawImg(ctx, logoUrl, 746, 1110, 230, 230);
   ctx.restore();
 
   roundRect(ctx, 52, footerY, 976, footerH, 28);
@@ -378,7 +378,7 @@ async function buildPoster() {
   ctx.lineWidth = 4;
   roundRect(ctx, 702, footerY + 22, 286, 118, 22);
   ctx.stroke();
-  await drawImg(ctx, lionUrl, 724, footerY + 36, 82, 82);
+  await drawImg(ctx, logoUrl, 724, footerY + 36, 82, 82);
   ctx.fillStyle = '#006b3f';
   ctx.font = '900 22px Sora, Arial, sans-serif';
   ctx.fillText('GREENWICH', 818, footerY + 42);
