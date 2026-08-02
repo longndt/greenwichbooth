@@ -279,9 +279,9 @@ async function buildPoster() {
   const PAD = 54;
   const GAP = 22;
   const PH = 446;
-  const headerH = 220;
-  const photosY = 236;
-  const footerY = 1174;
+  const headerH = 260;
+  const photosY = 276;
+  const footerY = 1214;
   const footerH = 188;
   const pos = [
     [PAD,            photosY],
@@ -319,38 +319,38 @@ async function buildPoster() {
   ctx.fillStyle = '#00E5FF';
   ctx.fillRect(0, headerH - 6, W, 6);
 
-  // Centered logo circle (radial gradient — hot pink neon)
-  const logoBg = ctx.createRadialGradient(540, 68, 20, 540, 68, 52);
+  // Centered logo circle — shrunk to 88px to clear title below
+  const logoBg = ctx.createRadialGradient(540, 56, 14, 540, 56, 44);
   logoBg.addColorStop(0, '#FF1493');
   logoBg.addColorStop(1, '#C71585');
-  roundRect(ctx, 488, 16, 104, 104, 52);
+  roundRect(ctx, 496, 12, 88, 88, 44);
   ctx.fillStyle = logoBg;
   ctx.fill();
   ctx.strokeStyle = '#00E5FF';
   ctx.lineWidth = 3;
   ctx.stroke();
-  await drawImg(ctx, logoUrl, 495, 23, 90, 90);
+  await drawImg(ctx, logoUrl, 503, 19, 74, 74);
 
-  // Title with hot pink glow — GREENWICH VIETNAM (larger)
+  // Title — 60px (was 68px), y=140: top≈110, clears logo bottom at y=100
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.shadowColor = 'rgba(255, 20, 147, 0.6)';
   ctx.shadowBlur = 20;
   ctx.shadowOffsetY = 0;
   ctx.fillStyle = '#00E5FF';
-  ctx.font = '900 68px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', 540, 145);
+  ctx.font = '900 60px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH VIETNAM', 540, 140);
 
-  // Subtitle — new tagline (more engaging)
+  // Subtitle — y=190: top≈179, clears title bottom at y=170
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = '#FF1493';
   ctx.font = '700 22px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('✦  CREATE YOUR MEMORIES  ✦', 540, 185);
+  ctx.fillText('✦  CREATE YOUR MEMORIES  ✦', 540, 190);
 
-  // Date/time/location info
+  // Date info — y=228: bottom≈236, clears header bottom bar at y=254
   ctx.fillStyle = '#00E5FF';
   ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('📅 Aug 15-20  |  📍 Student Center  |  ⏰ 10am-4pm', 540, 215);
+  ctx.fillText('📅 Aug 15-20  |  📍 Student Center  |  ⏰ 10am-4pm', 540, 228);
 
   // Photo slot frames: glow shadow + frame + corner accents
   pos.forEach(([x, y], i) => {
