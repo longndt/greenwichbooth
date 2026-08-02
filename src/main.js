@@ -274,13 +274,13 @@ async function buildPoster() {
   for (let y = 0; y < H; y += 34) ctx.fillRect(0, y, W, 1);
 
   const header = ctx.createLinearGradient(0, 0, W, 0);
-  header.addColorStop(0, '#004a32');
-  header.addColorStop(0.45, '#006b3f');
-  header.addColorStop(1, '#09764a');
+  header.addColorStop(0, '#003d2e');
+  header.addColorStop(0.45, '#005a33');
+  header.addColorStop(1, '#0d6b38');
   ctx.fillStyle = header;
   ctx.fillRect(0, 0, W, headerH);
-  ctx.fillStyle = '#ffcb2f';
-  ctx.fillRect(0, headerH - 10, W, 10);
+  ctx.fillStyle = '#ffd700';
+  ctx.fillRect(0, headerH - 12, W, 12);
   ctx.fillStyle = '#17211c';
   ctx.fillRect(0, 0, W, 12);
 
@@ -289,15 +289,15 @@ async function buildPoster() {
 
   // Logo circle + image
   roundRect(ctx, 32, 24, 126, 126, 63);
-  ctx.fillStyle = '#ffcb2f';
+  ctx.fillStyle = '#ffd700';
   ctx.fill();
   ctx.strokeStyle = '#f8f2e4';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 5;
   ctx.stroke();
   await drawImg(ctx, logoUrl, 43, 35, 104, 104);
 
   // Main title + subtitle
-  ctx.fillStyle = '#ffcb2f';
+  ctx.fillStyle = '#ffd700';
   ctx.font = '900 48px Sora, Arial, sans-serif';
   ctx.textAlign = 'left';
   ctx.fillText('GREENWICH VIETNAM', 175, 55);
@@ -306,28 +306,18 @@ async function buildPoster() {
   ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('FUTURE STUDENT PASS', 175, 95);
 
-  // Badge: OFFICIAL BOOTH (top right)
-  ctx.fillStyle = 'rgba(248,242,228,0.18)';
-  roundRect(ctx, 800, 30, 230, 70, 18);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(248,242,228,0.35)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  ctx.textAlign = 'center';
-  ctx.fillStyle = 'rgba(248,242,228,0.85)';
-  ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('OFFICIAL', 915, 50);
-  ctx.fillStyle = '#ffcb2f';
-  ctx.font = '900 28px Sora, Arial, sans-serif';
-  ctx.fillText('BOOTH', 915, 80);
+  // Top-right corner: GREENWICH text only
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#ffd700';
+  ctx.font = '900 36px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 1020, 70);
 
   pos.forEach(([x, y], i) => {
     ctx.save();
-    ctx.shadowColor = 'rgba(23, 33, 28, 0.24)';
-    ctx.shadowBlur = 18;
-    ctx.shadowOffsetY = 6;
-    ctx.fillStyle = '#17211c';
+    ctx.shadowColor = 'rgba(23, 33, 28, 0.4)';
+    ctx.shadowBlur = 28;
+    ctx.shadowOffsetY = 8;
+    ctx.fillStyle = '#0d1811';
     roundRect(ctx, x - 7, y - 7, PH + 14, PH + 14, 24);
     ctx.fill();
     ctx.restore();
@@ -342,11 +332,11 @@ async function buildPoster() {
 
   pos.forEach(([x, y], i) => {
     ctx.strokeStyle = '#17211c';
-    ctx.lineWidth = 4;
+    ctx.lineWidth = 5;
     roundRect(ctx, x, y, PH, PH, 18);
     ctx.stroke();
-    ctx.strokeStyle = '#ffcb2f';
-    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 3;
     roundRect(ctx, x + 10, y + 10, PH - 20, PH - 20, 14);
     ctx.stroke();
   });
@@ -360,12 +350,12 @@ async function buildPoster() {
   ctx.fillStyle = '#f5eddc';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 5;
   roundRect(ctx, 52, footerY, 976, footerH, 28);
   ctx.stroke();
 
   ctx.textAlign = 'left';
-  ctx.fillStyle = '#006b3f';
+  ctx.fillStyle = '#005a33';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn', 76, footerY + 32);
   ctx.fillStyle = '#17211c';
@@ -376,12 +366,12 @@ async function buildPoster() {
   ctx.fillStyle = '#fffaf0';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 4;
+  ctx.lineWidth = 5;
   roundRect(ctx, 702, footerY + 22, 286, 118, 22);
   ctx.stroke();
   await drawImg(ctx, logoUrl, 722, footerY + 30, 70, 70);
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#006b3f';
+  ctx.fillStyle = '#005a33';
   ctx.font = '800 18px Sora, Arial, sans-serif';
   ctx.fillText('GREENWICH', 890, footerY + 40);
   ctx.fillStyle = '#17211c';
@@ -389,7 +379,7 @@ async function buildPoster() {
   ctx.fillText('Official student booth', 890, footerY + 68);
 
   ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 8;
+  ctx.lineWidth = 10;
   ctx.strokeRect(20, 20, W - 40, H - 40);
 }
 
@@ -480,7 +470,6 @@ async function uploadPoster(blob) {
 }
 
 function retake() {
-  if (!confirm('Chụp lại sẽ xoá 4 ảnh vừa chụp. Bạn chắc không?')) return;
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
