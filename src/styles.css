@@ -82,12 +82,12 @@ html, body {
 .hdr-brand { display: flex; align-items: center; gap: 12px; }
 
 .hdr-lion {
-  width: 36px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex-shrink: 0;
   border-radius: 6px;
-  object-fit: cover;
-  object-position: 50% 18%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .hdr-text { display: flex; flex-direction: column; gap: 4px; }
@@ -122,7 +122,7 @@ html, body {
   position: relative;
   flex: 1;
   background: #050e08;
-  border-radius: var(--r);
+  border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid rgba(255,255,255,0.09);
   box-shadow: 0 0 0 1px rgba(45,215,122,0.1), 0 8px 40px rgba(0,0,0,0.5);
@@ -524,6 +524,82 @@ input[type="range"] {
   background: transparent;
   color: var(--dim);
   border-color: var(--border);
+}
+
+@media (max-width: 940px) {
+  .app {
+    height: auto;
+    min-height: 100dvh;
+  }
+
+  .main {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .cam-col,
+  .ctrl-col {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .cam-col { order: 1; }
+  .ctrl-col {
+    order: 2;
+    align-items: stretch;
+  }
+
+  .poster-shell {
+    min-height: 0;
+  }
+
+  .shoot-btn {
+    width: min(72vw, 212px);
+  }
+}
+
+@media (max-width: 720px) {
+  .hdr {
+    height: auto;
+    padding: 12px;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .hdr-name {
+    font-size: 16px;
+  }
+
+  .hdr-lion {
+    width: 44px;
+    height: 44px;
+  }
+
+  .cam-col,
+  .ctrl-col {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .cam-box {
+    min-height: 54svh;
+  }
+
+  .photo-grid {
+    gap: 10px;
+  }
+
+  .shoot-btn {
+    width: min(68vw, 192px);
+  }
+
+  .s-text {
+    font-size: 15px;
+  }
+
+  .s-text span:last-child {
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 900px) {

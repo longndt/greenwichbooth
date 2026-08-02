@@ -1,234 +1,9 @@
 import QRCode from 'qrcode';
+import lionUrl from './assets/lion-new.svg';
 import mascotUrl from './assets/greenwich-mascot.png';
 import './styles.css';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
-
-// ── Flat Cartoon Lion — Orange mane, smart glasses, navy shirt ────────────────
-const LION = `<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <radialGradient id="mantleGrad" cx="50%" cy="40%">
-      <stop offset="0%" style="stop-color:#FFA500;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#FF8C00;stop-opacity:1" />
-    </radialGradient>
-    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" style="stop-color:#003366;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#002244;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  <circle cx="100" cy="70" r="65" fill="url(#mantleGrad)" />
-  <circle cx="80" cy="45" r="25" fill="#FFB700" opacity="0.6" />
-  <circle cx="120" cy="50" r="20" fill="#FFB700" opacity="0.5" />
-  <circle cx="100" cy="95" r="45" fill="#FFD700" />
-  <circle cx="55" cy="60" r="18" fill="#FFA500" />
-  <circle cx="55" cy="65" r="10" fill="#FFD700" />
-  <circle cx="145" cy="60" r="18" fill="#FFA500" />
-  <circle cx="145" cy="65" r="10" fill="#FFD700" />
-  <circle cx="75" cy="85" r="16" fill="none" stroke="#333" stroke-width="3" />
-  <circle cx="125" cy="85" r="16" fill="none" stroke="#333" stroke-width="3" />
-  <line x1="91" y1="85" x2="109" y2="85" stroke="#333" stroke-width="3" />
-  <circle cx="75" cy="85" r="8" fill="#333" />
-  <circle cx="77" cy="81" r="3" fill="white" />
-  <circle cx="125" cy="85" r="8" fill="#333" />
-  <circle cx="127" cy="81" r="3" fill="white" />
-  <ellipse cx="100" cy="110" rx="6" ry="8" fill="#FF9800" />
-  <path d="M 95 120 Q 100 128 105 120" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round" />
-  <line x1="60" y1="105" x2="40" y2="103" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="60" y1="115" x2="40" y2="118" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="140" y1="105" x2="160" y2="103" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
-  <line x1="140" y1="115" x2="160" y2="118" stroke="#333" stroke-width="1.5" stroke-linecap="round" />
-  <rect x="45" y="145" width="110" height="80" rx="15" fill="url(#bodyGrad)" />
-  <rect x="20" y="160" width="30" height="35" rx="15" fill="#FFD700" />
-  <rect x="150" y="160" width="30" height="35" rx="15" fill="#FFD700" />
-  <rect x="80" y="165" width="40" height="25" rx="3" fill="#FFA500" />
-  <text x="100" y="182" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#003366">GW</text>
-</svg>`;
-
-// ── 5 poster base themes — background + bar color applied to whole poster ─────
-const POSTER_THEMES = [
-  { bg: '#0B1912', barBg: '#0D2318', accent: '#FFCB2F', textCol: '#F0F5F2' },
-  { bg: '#080808', barBg: '#111111', accent: '#FFCB2F', textCol: '#F0F5F2' },
-  { bg: '#0B1220', barBg: '#0E1A2E', accent: '#FFCB2F', textCol: '#F0F5F2' },
-  { bg: '#1A0800', barBg: '#220F00', accent: '#FF7A2E', textCol: '#F0F5F2' },
-  { bg: '#100B1A', barBg: '#170E24', accent: '#A78BFA', textCol: '#F0F5F2' },
-];
-
-// ── 8 curated photo frame styles — Greenwich Vietnam identity ──────────────────
-// Reduced from 17 to 8 best designs (53% reduction in cognitive load)
-// Styles: classic, modern, playful, formal — all maintaining brand colors
-const PHOTO_FRAMES = [
-  // 01 — GW Floral (signature): green border + vine+flower corners
-  {
-    id: 'gw-floral',
-    border: { color: '#006b3f', width: 5 },
-    inner:  { color: '#FFCB2F', width: 1.5, offset: 9 },
-    corner: { style: 'vine', size: 40, color: '#2D8B4E', flower: '#FF8FAB', lw: 1.5 },
-  },
-  // 02 — GW Classic: thick green + gold inner + gold L-corners
-  {
-    id: 'gw-classic',
-    border: { color: '#006b3f', width: 8 },
-    inner:  { color: '#FFCB2F', width: 2, offset: 12 },
-    corner: { style: 'bracket', size: 28, color: '#FFCB2F', lw: 3 },
-  },
-  // 03 — GW Emerald Glow: neon green glow border (modern)
-  {
-    id: 'gw-emerald',
-    border: { color: '#2DD77A', width: 4 },
-    inner:  { color: '#006b3f', width: 2, offset: 8 },
-    glow:   { color: '#2DD77A', blur: 18 },
-  },
-  // 04 — GW Minimalist: ultra-thin gold line, clean (portraits)
-  {
-    id: 'gw-minimal',
-    border: { color: '#FFCB2F', width: 2 },
-    corner: { style: 'bracket', size: 18, color: '#FFCB2F', lw: 2 },
-  },
-  // 05 — GW Celebration: bright green + playful pink corners (fun)
-  {
-    id: 'gw-celebration',
-    border: { color: '#2DD77A', width: 5 },
-    inner:  { color: '#FF6BA8', width: 1, offset: 8 },
-    corner: { style: 'circle', size: 10, color: '#FF6BA8', lw: 1 },
-  },
-  // 06 — GW Neon: thin border + bright glow (ultra-modern)
-  {
-    id: 'gw-neon',
-    border: { color: '#00FF88', width: 2 },
-    glow:   { color: '#00FF88', blur: 24 },
-  },
-  // 07 — GW Royal: deep green + gold diamond corners (formal/sophisticated)
-  {
-    id: 'gw-royal',
-    border: { color: '#003820', width: 8 },
-    inner:  { color: '#FFCB2F', width: 2, offset: 12 },
-    corner: { style: 'diamond', size: 12, color: '#FFCB2F', lw: 1 },
-    glow:   { color: '#FFCB2F', blur: 8 },
-  },
-  // 08 — GW Modern Vine: thin border + subtle vine (classic+modern balance)
-  {
-    id: 'gw-modern-vine',
-    border: { color: '#006b3f', width: 3 },
-    corner: { style: 'vine', size: 32, color: '#2DD77A', flower: '#FFCB2F', lw: 1 },
-  },
-];
-
-// Pick N unique frames randomly (no duplicates within same poster)
-function pickFrames(n) {
-  const pool = [...PHOTO_FRAMES].sort(() => Math.random() - 0.5);
-  return Array.from({ length: n }, (_, i) => pool[i % pool.length]);
-}
-
-// Draw a per-photo mini-frame around one slot
-function drawPhotoFrame(ctx, frame, x, y, w, h) {
-  ctx.save();
-
-  if (frame.glow) {
-    ctx.shadowColor = frame.glow.color;
-    ctx.shadowBlur  = frame.glow.blur;
-  }
-
-  // Outer border
-  const bw   = frame.border.width;
-  const half = bw / 2;
-  ctx.strokeStyle = frame.border.color;
-  ctx.lineWidth   = bw;
-  ctx.setLineDash(frame.border.dash || []);
-  ctx.strokeRect(x + half, y + half, w - bw, h - bw);
-  ctx.setLineDash([]);
-  ctx.shadowBlur  = 0;
-  ctx.shadowColor = 'transparent';
-
-  // Inner border
-  if (frame.inner) {
-    const off = frame.inner.offset;
-    ctx.strokeStyle = frame.inner.color;
-    ctx.lineWidth   = frame.inner.width;
-    ctx.strokeRect(x + off, y + off, w - off * 2, h - off * 2);
-  }
-
-  // Corner decorations
-  if (frame.corner) {
-    const c  = frame.corner;
-    const cs = c.size;
-    // [corner_x, corner_y, dir_x, dir_y]
-    const corners = [
-      [x,     y,     1,  1],
-      [x + w, y,    -1,  1],
-      [x,     y + h, 1, -1],
-      [x + w, y + h,-1, -1],
-    ];
-    ctx.strokeStyle = c.color;
-    ctx.fillStyle   = c.color;
-    ctx.lineWidth   = c.lw || 2;
-    ctx.setLineDash([]);
-
-    corners.forEach(([cx, cy, dx, dy]) => {
-      if (c.style === 'bracket') {
-        ctx.beginPath();
-        ctx.moveTo(cx + dx * cs, cy);
-        ctx.lineTo(cx, cy);
-        ctx.lineTo(cx, cy + dy * cs);
-        ctx.stroke();
-      } else if (c.style === 'cross') {
-        const h2 = cs / 2;
-        ctx.beginPath();
-        ctx.moveTo(cx - h2, cy); ctx.lineTo(cx + h2, cy);
-        ctx.moveTo(cx, cy - h2); ctx.lineTo(cx, cy + h2);
-        ctx.stroke();
-      } else if (c.style === 'diamond') {
-        ctx.beginPath();
-        ctx.moveTo(cx,      cy - cs);
-        ctx.lineTo(cx + cs, cy);
-        ctx.lineTo(cx,      cy + cs);
-        ctx.lineTo(cx - cs, cy);
-        ctx.closePath();
-        ctx.fill();
-      } else if (c.style === 'circle') {
-        ctx.beginPath();
-        ctx.arc(cx, cy, cs, 0, Math.PI * 2);
-        ctx.fill();
-      } else if (c.style === 'cluster') {
-        [[dx * cs * 2, 0], [0, dy * cs * 2], [dx * cs * 1.3, dy * cs * 1.3]]
-          .forEach(([ox, oy]) => {
-            ctx.beginPath();
-            ctx.arc(cx + ox, cy + oy, cs, 0, Math.PI * 2);
-            ctx.fill();
-          });
-      } else if (c.style === 'vine') {
-        // dây leo + hoa ở góc
-        ctx.strokeStyle = c.color;
-        ctx.fillStyle = c.flower || c.color;
-        const stemLen = cs * 1.2;
-        const leafSize = cs * 0.25;
-        // Vẽ dây leo từ góc
-        ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.quadraticCurveTo(cx + dx * stemLen * 0.6, cy + dy * stemLen * 0.3, cx + dx * stemLen, cy + dy * stemLen);
-        ctx.stroke();
-        // Lá
-        [[dx * stemLen * 0.3, dy * stemLen * 0.15], [dx * stemLen * 0.7, dy * stemLen * 0.5]].forEach(([ox, oy]) => {
-          ctx.beginPath();
-          ctx.ellipse(cx + ox, cy + oy, leafSize * 1.2, leafSize * 0.8, dx * 0.3, 0, Math.PI * 2);
-          ctx.fill();
-        });
-        // Hoa ở đầu
-        ctx.fillStyle = c.flower || '#FF8FAB';
-        ctx.beginPath();
-        ctx.arc(cx + dx * stemLen, cy + dy * stemLen, cs * 0.35, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    });
-  }
-
-  ctx.restore();
-}
-
-// ── 9 color filters ───────────────────────────────────────────────────────────
-// css applied to <video> live + ctx.filter on capFrame canvas
-
-// ── 20 accessories — overlaid on each captured photo ──────────────────────────
-// Organized by category: Face | Props | Seasonal
 
 // ── State ─────────────────────────────────────────────────────────────────────
 const S = {
@@ -248,7 +23,7 @@ q('#app').innerHTML = `
 <div class="app">
   <header class="hdr">
     <div class="hdr-brand">
-      <img class="hdr-lion" src="${mascotUrl}" alt="" aria-hidden="true">
+      <img class="hdr-lion" src="${lionUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
         <span class="hdr-name">Greenwich Vietnam Booth</span>
       </div>
@@ -479,13 +254,13 @@ async function buildPoster() {
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1440, GAP = 28;
-  const PH = 448;
+  const W = 1080, H = 1440, GAP = 24;
+  const PH = 450;
   const pos = [
-    [56,            238],
-    [56 + PH + GAP, 238],
-    [56,            238 + PH + GAP],
-    [56 + PH + GAP, 238 + PH + GAP],
+    [52,            224],
+    [52 + PH + GAP, 224],
+    [52,            224 + PH + GAP],
+    [52 + PH + GAP, 224 + PH + GAP],
   ];
 
   ctx.fillStyle = '#fff9ef';
@@ -495,68 +270,47 @@ async function buildPoster() {
   for (let y = 0; y < H; y += 36) ctx.fillRect(0, y, W, 1);
 
   ctx.fillStyle = '#006b3f';
-  ctx.fillRect(0, 0, W, 190);
+  ctx.fillRect(0, 0, W, 168);
   ctx.fillStyle = '#ffcb2f';
-  ctx.fillRect(0, 190, W, 14);
+  ctx.fillRect(0, 168, W, 12);
   ctx.fillStyle = '#f0f5f2';
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
+  await drawImg(ctx, lionUrl, 44, 20, 106, 106);
   ctx.font = '900 58px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 56, 38);
-  ctx.fillText('VIETNAM', 56, 102);
+  ctx.fillText('GREENWICH VIETNAM', 162, 34);
   ctx.font = '700 24px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('FUTURE STUDENT PASS', 646, 54);
-  ctx.fillStyle = 'rgba(240,245,242,0.76)';
-  ctx.font = '500 21px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Capture. Share. Belong.', 646, 92);
-  ctx.fillText('#GreenwichVietnam', 646, 128);
+  ctx.fillStyle = 'rgba(240,245,242,0.82)';
+  ctx.fillText('FUTURE STUDENT PASS', 164, 98);
 
   const photos = S.photos;
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
 
   pos.forEach(([x, y], i) => {
     ctx.strokeStyle = '#17211c';
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 5;
     roundRect(ctx, x, y, PH, PH, 22);
     ctx.stroke();
     ctx.strokeStyle = '#ffcb2f';
-    ctx.lineWidth = 3;
-    roundRect(ctx, x + 12, y + 12, PH - 24, PH - 24, 14);
+    ctx.lineWidth = 2;
+    roundRect(ctx, x + 12, y + 12, PH - 24, PH - 24, 12);
     ctx.stroke();
     ctx.fillStyle = '#e86f51';
-    ctx.font = '900 32px Sora, Arial, sans-serif';
-    ctx.fillText(`0${i + 1}`, x + 22, y + 20);
+    ctx.font = '900 22px Sora, Arial, sans-serif';
+    ctx.fillText(`${i + 1}`, x + 18, y + 18);
   });
 
-  roundRect(ctx, 56, 1196, 610, 166, 24);
-  ctx.fillStyle = '#006b3f';
-  ctx.fill();
-  ctx.fillStyle = '#f0f5f2';
-  ctx.font = '900 42px Sora, Arial, sans-serif';
-  ctx.fillText("I'M GREENWICH READY", 88, 1230);
-  ctx.fillStyle = 'rgba(240,245,242,0.78)';
-  ctx.font = '600 25px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Future student - Greenwich Vietnam', 88, 1290);
-  ctx.fillText('#GreenwichVietnam', 88, 1324);
-
-  roundRect(ctx, 704, 1196, 320, 166, 24);
+  roundRect(ctx, 694, 1174, 332, 196, 24);
   ctx.fillStyle = '#f5eddc';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 5;
+  roundRect(ctx, 694, 1174, 332, 196, 24);
   ctx.stroke();
-  await drawImg(ctx, mascotUrl, 724, 1214, 104, 130);
-  ctx.fillStyle = '#006b3f';
-  ctx.font = '800 19px Sora, Arial, sans-serif';
-  ctx.fillText('AMBASSADOR', 848, 1216);
-  ctx.fillStyle = '#17211c';
-  ctx.font = '900 24px Sora, Arial, sans-serif';
-  ctx.fillText('Your campus', 848, 1250);
-  ctx.fillText('guide', 848, 1280);
-  ctx.fillStyle = '#627067';
-  ctx.font = '600 17px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Share your', 848, 1322);
-  ctx.fillText('Greenwich moment.', 848, 1344);
+  ctx.fillStyle = '#ffcb2f';
+  ctx.font = '800 20px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('AMBASSADOR', 718, 1198);
+  await drawImg(ctx, mascotUrl, 718, 1216, 250, 142);
 
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 8;
