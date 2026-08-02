@@ -331,26 +331,43 @@ async function buildPoster() {
   ctx.stroke();
   await drawImg(ctx, logoUrl, 503, 19, 74, 74);
 
-  // Title — 60px (was 68px), y=140: top≈110, clears logo bottom at y=100
+  // Title — stroke first (dark outline) then fill (cyan) for crisp neon edge
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.shadowColor = 'rgba(255, 20, 147, 0.6)';
-  ctx.shadowBlur = 20;
-  ctx.shadowOffsetY = 0;
-  ctx.fillStyle = '#00E5FF';
   ctx.font = '900 60px Sora, Arial, sans-serif';
+  ctx.shadowColor = 'rgba(255, 20, 147, 0.8)';
+  ctx.shadowBlur = 28;
+  ctx.shadowOffsetY = 0;
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+  ctx.lineWidth = 5;
+  ctx.lineJoin = 'round';
+  ctx.strokeText('GREENWICH VIETNAM', 540, 140);
+  ctx.fillStyle = '#00E5FF';
   ctx.fillText('GREENWICH VIETNAM', 540, 140);
 
-  // Subtitle — y=190: top≈179, clears title bottom at y=170
-  ctx.shadowColor = 'transparent';
-  ctx.fillStyle = '#FF1493';
+  // Subtitle — white stroke + hot pink fill for contrast on any background
+  ctx.shadowColor = 'rgba(255, 20, 147, 0.5)';
+  ctx.shadowBlur = 12;
   ctx.font = '700 22px "Space Grotesk", Arial, sans-serif';
+  ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+  ctx.lineWidth = 3;
+  ctx.strokeText('✦  CREATE YOUR MEMORIES  ✦', 540, 190);
+  ctx.fillStyle = '#FF1493';
   ctx.fillText('✦  CREATE YOUR MEMORIES  ✦', 540, 190);
 
-  // Date info — y=228: bottom≈236, clears header bottom bar at y=254
-  ctx.fillStyle = '#00E5FF';
+  // Date — pill background + white text (most readable on dark bg)
+  ctx.shadowColor = 'transparent';
   ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('📅 Aug 15-20  |  📍 Student Center  |  ⏰ 10am-4pm', 540, 228);
+  const dateText = '📅 Aug 15-20  |  📍 Student Center  |  ⏰ 10am-4pm';
+  const dateW = ctx.measureText(dateText).width;
+  roundRect(ctx, 540 - dateW / 2 - 18, 215, dateW + 36, 28, 14);
+  ctx.fillStyle = 'rgba(0, 229, 255, 0.13)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText(dateText, 540, 228);
 
   // Photo slot frames: glow shadow + frame + corner accents
   pos.forEach(([x, y], i) => {
