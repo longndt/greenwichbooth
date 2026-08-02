@@ -1,4 +1,5 @@
 import QRCode from 'qrcode';
+import mascotUrl from './assets/greenwich-mascot.png';
 import './styles.css';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
@@ -247,9 +248,9 @@ q('#app').innerHTML = `
 <div class="app">
   <header class="hdr">
     <div class="hdr-brand">
-      <div class="hdr-lion">${LION}</div>
+      <img class="hdr-lion" src="${mascotUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
-        <span class="hdr-name">Greenwich Booth</span>
+        <span class="hdr-name">Greenwich Vietnam Booth</span>
       </div>
     </div>
   </header>
@@ -460,77 +461,106 @@ function capFrame(cam) {
   return raw.toDataURL('image/jpeg', 0.98);
 }
 
-// ── Poster composition (1080×1440) — 2×2 grid, randomized theme + per-photo frames
+function roundRect(ctx, x, y, w, h, r) {
+  const radius = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + radius, y);
+  ctx.arcTo(x + w, y, x + w, y + h, radius);
+  ctx.arcTo(x + w, y + h, x, y + h, radius);
+  ctx.arcTo(x, y + h, x, y, radius);
+  ctx.arcTo(x, y, x + w, y, radius);
+  ctx.closePath();
+}
+
+// ── Poster composition (1080×1440) — Future Student Pass
 async function buildPoster() {
   await document.fonts.ready;
 
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1440, BAR = 140, HPAD = 20, VPAD = 30, GAP = 20;
-  const theme  = POSTER_THEMES[Math.floor(Math.random() * POSTER_THEMES.length)];
-  const frames = pickFrames(4);
-  const PH = Math.floor((W - 2 * HPAD - GAP) / 2); // 510px
+  const W = 1080, H = 1440, GAP = 28;
+  const PH = 448;
   const pos = [
-    [HPAD,            BAR + VPAD],
-    [HPAD + PH + GAP, BAR + VPAD],
-    [HPAD,            BAR + VPAD + PH + GAP],
-    [HPAD + PH + GAP, BAR + VPAD + PH + GAP],
+    [56,            238],
+    [56 + PH + GAP, 238],
+    [56,            238 + PH + GAP],
+    [56 + PH + GAP, 238 + PH + GAP],
   ];
 
-  ctx.fillStyle = theme.bg;
+  ctx.fillStyle = '#fff9ef';
   ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(0, 107, 63, 0.06)';
+  for (let x = 0; x < W; x += 36) ctx.fillRect(x, 0, 1, H);
+  for (let y = 0; y < H; y += 36) ctx.fillRect(0, y, W, 1);
+
+  ctx.fillStyle = '#006b3f';
+  ctx.fillRect(0, 0, W, 190);
+  ctx.fillStyle = '#ffcb2f';
+  ctx.fillRect(0, 190, W, 14);
+  ctx.fillStyle = '#f0f5f2';
+  ctx.textBaseline = 'top';
+  ctx.textAlign = 'left';
+  ctx.font = '900 58px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 56, 38);
+  ctx.fillText('VIETNAM', 56, 102);
+  ctx.font = '700 24px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('FUTURE STUDENT PASS', 646, 54);
+  ctx.fillStyle = 'rgba(240,245,242,0.76)';
+  ctx.font = '500 21px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Capture. Share. Belong.', 646, 92);
+  ctx.fillText('#GreenwichVietnam', 646, 128);
 
   const photos = S.photos;
-
-  // Draw all 4 photos in parallel
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
 
-  // Per-photo mini-frames
-  frames.forEach((frame, i) => drawPhotoFrame(ctx, frame, pos[i][0], pos[i][1], PH, PH));
+  pos.forEach(([x, y], i) => {
+    ctx.strokeStyle = '#17211c';
+    ctx.lineWidth = 6;
+    roundRect(ctx, x, y, PH, PH, 22);
+    ctx.stroke();
+    ctx.strokeStyle = '#ffcb2f';
+    ctx.lineWidth = 3;
+    roundRect(ctx, x + 12, y + 12, PH - 24, PH - 24, 14);
+    ctx.stroke();
+    ctx.fillStyle = '#e86f51';
+    ctx.font = '900 32px Sora, Arial, sans-serif';
+    ctx.fillText(`0${i + 1}`, x + 22, y + 20);
+  });
 
-  // Separator dots
-  const sepX = Math.round(HPAD + PH + GAP / 2);
-  const sepY = Math.round(BAR + VPAD + PH + GAP / 2);
-  ctx.fillStyle = theme.accent + 'CC';
-  for (let x = HPAD; x <= W - HPAD; x += 12) {
-    ctx.beginPath(); ctx.arc(x, sepY, 2.5, 0, Math.PI * 2); ctx.fill();
-  }
-  for (let y = BAR + VPAD; y <= BAR + VPAD + PH * 2 + GAP; y += 12) {
-    ctx.beginPath(); ctx.arc(sepX, y, 2.5, 0, Math.PI * 2); ctx.fill();
-  }
+  roundRect(ctx, 56, 1196, 610, 166, 24);
+  ctx.fillStyle = '#006b3f';
+  ctx.fill();
+  ctx.fillStyle = '#f0f5f2';
+  ctx.font = '900 42px Sora, Arial, sans-serif';
+  ctx.fillText("I'M GREENWICH READY", 88, 1230);
+  ctx.fillStyle = 'rgba(240,245,242,0.78)';
+  ctx.font = '600 25px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Future student - Greenwich Vietnam', 88, 1290);
+  ctx.fillText('#GreenwichVietnam', 88, 1324);
 
-  // Top + bottom bars
-  ctx.fillStyle = theme.barBg;
-  ctx.fillRect(0, 0, W, BAR);
-  ctx.fillRect(0, H - BAR, W, BAR);
+  roundRect(ctx, 704, 1196, 320, 166, 24);
+  ctx.fillStyle = '#f5eddc';
+  ctx.fill();
+  ctx.strokeStyle = '#17211c';
+  ctx.lineWidth = 5;
+  ctx.stroke();
+  await drawImg(ctx, mascotUrl, 724, 1214, 104, 130);
+  ctx.fillStyle = '#006b3f';
+  ctx.font = '800 19px Sora, Arial, sans-serif';
+  ctx.fillText('AMBASSADOR', 848, 1216);
+  ctx.fillStyle = '#17211c';
+  ctx.font = '900 24px Sora, Arial, sans-serif';
+  ctx.fillText('Your campus', 848, 1250);
+  ctx.fillText('guide', 848, 1280);
+  ctx.fillStyle = '#627067';
+  ctx.font = '600 17px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Share your', 848, 1322);
+  ctx.fillText('Greenwich moment.', 848, 1344);
 
-  // Outer border
-  ctx.strokeStyle = theme.accent;
-  ctx.lineWidth = 4;
-  ctx.setLineDash([]);
-  ctx.strokeRect(2, 2, W - 4, H - 4);
-
-  // Top-bar: Lion + text
-  await drawSvg(ctx, LION, 14, (BAR - 110) / 2, 110, 110);
-  ctx.textBaseline = 'top';
-  ctx.fillStyle = theme.textCol;
-  ctx.font = '900 50px "Arial Black", Arial, sans-serif';
-  ctx.fillText('GREENWICH BOOTH', 142, 22);
-  ctx.fillStyle = theme.accent;
-  ctx.font = '600 26px Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 142, 88);
-
-  // Bottom-bar: branding
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = theme.textCol;
-  ctx.font = '900 32px "Arial Black", Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', W / 2, (H - BAR) + BAR * 0.36);
-  ctx.fillStyle = 'rgba(240,245,242,0.72)';
-  ctx.font = '500 20px Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', W / 2, (H - BAR) + BAR * 0.72);
-  ctx.textAlign = 'left';
+  ctx.strokeStyle = '#17211c';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(20, 20, W - 40, H - 40);
 }
 
 function drawPhoto(ctx, url, x, y, w, h) {

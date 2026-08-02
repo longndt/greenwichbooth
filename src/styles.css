@@ -81,8 +81,14 @@ html, body {
 
 .hdr-brand { display: flex; align-items: center; gap: 12px; }
 
-.hdr-lion { width: 36px; height: 40px; flex-shrink: 0; }
-.hdr-lion svg { width: 100%; height: 100%; }
+.hdr-lion {
+  width: 36px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  object-fit: cover;
+  object-position: 50% 18%;
+}
 
 .hdr-text { display: flex; flex-direction: column; gap: 4px; }
 
