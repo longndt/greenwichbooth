@@ -326,8 +326,8 @@ async function buildPoster() {
     ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
   }
 
-  // ── Logo — transparent, no badge ──
-  const logoS = 64, logoX = (W - logoS) / 2, logoY = 70;
+  // ── Logo — transparent, no badge, positioned top-left ──
+  const logoS = 64, logoX = 80, logoY = 50;
   await drawImg(ctx, logoUrl, logoX, logoY, logoS, logoS);
 
   // ── Title ──
