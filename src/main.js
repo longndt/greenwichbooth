@@ -284,30 +284,43 @@ async function buildPoster() {
   ctx.fillStyle = '#17211c';
   ctx.fillRect(0, 0, W, 12);
 
-  ctx.textBaseline = 'top';
+  ctx.textBaseline = 'middle';
   ctx.textAlign = 'left';
-  roundRect(ctx, 38, 30, 114, 114, 57);
+
+  // Logo circle + image
+  roundRect(ctx, 32, 24, 126, 126, 63);
   ctx.fillStyle = '#ffcb2f';
   ctx.fill();
   ctx.strokeStyle = '#f8f2e4';
   ctx.lineWidth = 4;
   ctx.stroke();
-  await drawImg(ctx, lionUrl, 49, 39, 96, 96);
+  await drawImg(ctx, lionUrl, 43, 35, 104, 104);
+
+  // Main title + subtitle
   ctx.fillStyle = '#ffcb2f';
-  ctx.font = '900 56px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', 170, 36);
-  ctx.fillStyle = 'rgba(248,242,228,0.9)';
-  ctx.font = '700 22px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('FUTURE STUDENT PASS', 172, 104);
-  ctx.fillStyle = 'rgba(248,242,228,0.15)';
-  roundRect(ctx, 788, 42, 238, 66, 20);
+  ctx.font = '900 52px Sora, Arial, sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText('GREENWICH VIETNAM', 175, 55);
+
+  ctx.fillStyle = 'rgba(248,242,228,0.95)';
+  ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('FUTURE STUDENT PASS', 175, 95);
+
+  // Badge: OFFICIAL BOOTH (top right)
+  ctx.fillStyle = 'rgba(248,242,228,0.18)';
+  roundRect(ctx, 800, 30, 230, 70, 18);
   ctx.fill();
-  ctx.fillStyle = '#f8f2e4';
-  ctx.font = '800 18px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('OFFICIAL', 812, 57);
+  ctx.strokeStyle = 'rgba(248,242,228,0.35)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = 'rgba(248,242,228,0.85)';
+  ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('OFFICIAL', 915, 50);
   ctx.fillStyle = '#ffcb2f';
-  ctx.font = '900 24px Sora, Arial, sans-serif';
-  ctx.fillText('BOOTH', 900, 52);
+  ctx.font = '900 28px Sora, Arial, sans-serif';
+  ctx.fillText('BOOTH', 915, 80);
 
   pos.forEach(([x, y], i) => {
     ctx.save();
