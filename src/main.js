@@ -405,14 +405,25 @@ async function buildPoster() {
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
-  // Footer content — centered, no duplicate badge
+  // Footer content — dashed separator + hashtag only
   ctx.textAlign = 'center';
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 540, footerY + 58);
+  ctx.fillText('greenwich.edu.vn', 540, footerY + 50);
+
+  // Dashed separator line
+  ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+  ctx.setLineDash([6, 4]);
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(120, footerY + 72);
+  ctx.lineTo(960, footerY + 72);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
   ctx.fillStyle = '#FFD700';
-  ctx.font = '600 15px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('#GreenwichBooth  ·  #GreenwichVietnam', 540, footerY + 90);
+  ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('✦  #GreenwichVietnam  ✦', 540, footerY + 100);
 
   // Outer border: gold thick + purple thin inner (luxury frame)
   ctx.strokeStyle = '#FFD700';
