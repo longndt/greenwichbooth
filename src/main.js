@@ -372,11 +372,8 @@ async function buildPoster() {
   await drawImg(ctx, logoUrl, 722, footerY + 30, 70, 70);
   ctx.textAlign = 'center';
   ctx.fillStyle = '#005a33';
-  ctx.font = '800 18px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 890, footerY + 40);
-  ctx.fillStyle = '#17211c';
-  ctx.font = '600 12px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Official student booth', 890, footerY + 68);
+  ctx.font = '800 22px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 890, footerY + 50);
 
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 10;
