@@ -276,9 +276,9 @@ async function buildPoster() {
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
   const W = 1080, H = 1440;
-  const PAD = 54;
   const GAP = 22;
   const PH = 446;
+  const PAD = (W - (PH * 2 + GAP)) / 2; // = 83, centers the 2×2 grid
   const headerH = 260;
   const photosY = 276;
   const footerY = 1214;
