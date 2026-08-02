@@ -21,7 +21,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(0,107,63,0.4)', '#006b3f'], height: 14 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#D4AF37',
       shadow: { color: 'rgba(0,107,63,0.7)', blur: 20 },
@@ -67,7 +67,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(15,113,115,0.3)', '#0f7173'], height: 10 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(15,113,115,0.8)', blur: 18 },
@@ -113,7 +113,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(255,107,53,0.2)', '#FF6B35'], height: 10 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(255,107,53,0.5)', blur: 16 },
@@ -159,7 +159,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(107,75,160,0.4)', '#6B4BA0'], height: 12 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFD700',
       shadow: { color: 'rgba(107,75,160,0.5)', blur: 24 },
@@ -205,7 +205,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(144,200,172,0.3)', '#2D6A4F'], height: 10 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(45,106,79,0.8)', blur: 16 },
@@ -251,7 +251,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(255,107,53,0.2)', 'rgba(255,107,53,0.5)'], height: 8 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FF6B35',
       shadow: { color: 'rgba(255,107,53,0.7)', blur: 20 },
@@ -297,7 +297,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(255,203,47,0.3)', '#FFCB2F'], height: 10 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFCB2F',
       shadow: { color: 'rgba(0,0,0,0.5)', blur: 12 },
@@ -343,7 +343,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(15,81,50,0.1)', 'rgba(15,81,50,0.25)'], height: 8 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#0F5132',
       shadow: { color: 'rgba(0,0,0,0.1)', blur: 6 },
@@ -389,7 +389,7 @@ export const CONCEPTS = [
       bottomBar: null,
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#1B5E5E',
       shadow: { color: 'transparent', blur: 0 },
@@ -435,7 +435,7 @@ export const CONCEPTS = [
       bottomBar: { colors: ['rgba(27,94,94,0.15)', 'rgba(27,94,94,0.3)'], height: 8 },
     },
     title: {
-      text: 'GREENWICH PHOTOBOOTH',
+      text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#1B5E5E',
       shadow: { color: 'transparent', blur: 0 },
