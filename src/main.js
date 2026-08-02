@@ -1,6 +1,7 @@
 import QRCode from 'qrcode';
 import logoUrl from './assets/greenwich-logo.png';
 import './styles.css';
+import { randomConcept } from './concepts.js';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
 
@@ -268,7 +269,7 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
-// ── Poster composition (1080×1440) — Future Student Pass
+// ── Poster composition (1080×1440) — Random concept selection + rendering
 async function buildPoster() {
   await document.fonts.ready;
 
@@ -276,9 +277,13 @@ async function buildPoster() {
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
   const W = 1080, H = 1440;
+
+  // Select random concept
+  const theme = randomConcept();
+
   const GAP = 22;
   const PH = 446;
-  const PAD = (W - (PH * 2 + GAP)) / 2; // = 83, centers the 2×2 grid
+  const PAD = (W - (PH * 2 + GAP)) / 2;
   const headerH = 260;
   const photosY = 276;
   const footerY = 1214;
@@ -290,120 +295,125 @@ async function buildPoster() {
     [PAD + PH + GAP, photosY + PH + GAP],
   ];
 
-  // Pure black background (luxury editorial aesthetic)
-  ctx.fillStyle = '#000000';
+  // ── Background + texture ──
+  ctx.fillStyle = theme.bg.color;
   ctx.fillRect(0, 0, W, H);
 
-  // Subtle purple grid texture (reference to compass motif)
-  ctx.fillStyle = 'rgba(107, 75, 160, 0.08)';
-  for (let x = 0; x < W; x += 40) ctx.fillRect(x, 0, 1, H);
-  for (let y = 0; y < H; y += 40) ctx.fillRect(0, y, W, 1);
+  if (theme.bg.texture.type === 'grid') {
+    ctx.fillStyle = theme.bg.texture.color;
+    for (let x = 0; x < W; x += theme.bg.texture.step) ctx.fillRect(x, 0, 1, H);
+    for (let y = 0; y < H; y += theme.bg.texture.step) ctx.fillRect(0, y, W, 1);
+  } else if (theme.bg.texture.type === 'dots') {
+    ctx.fillStyle = theme.bg.texture.color;
+    const s = theme.bg.texture.step;
+    for (let x = 0; x < W; x += s) for (let y = 0; y < H; y += s) ctx.fillRect(x, y, 2, 2);
+  }
 
-  // Header: pure black with gold top + bottom bars
-  ctx.fillStyle = '#000000';
+  // ── Header background ──
+  ctx.fillStyle = theme.header.bg;
   ctx.fillRect(0, 0, W, headerH);
 
-  // Header top gold bar
-  ctx.fillStyle = '#FFD700';
-  ctx.fillRect(0, 0, W, 8);
+  // ── Header top bar ──
+  ctx.fillStyle = theme.header.topBar.color;
+  ctx.fillRect(0, 0, W, theme.header.topBar.height);
 
-  // Header bottom: purple gradient bar (brand color)
-  const headerBottomGrad = ctx.createLinearGradient(0, headerH - 12, 0, headerH);
-  headerBottomGrad.addColorStop(0, 'rgba(107, 75, 160, 0.4)');
-  headerBottomGrad.addColorStop(1, '#6B4BA0');
-  ctx.fillStyle = headerBottomGrad;
-  ctx.fillRect(0, headerH - 12, W, 12);
+  // ── Header bottom bar ──
+  if (theme.header.bottomBar) {
+    const grad = ctx.createLinearGradient(0, headerH - theme.header.bottomBar.height, 0, headerH);
+    grad.addColorStop(0, theme.header.bottomBar.colors[0]);
+    grad.addColorStop(1, theme.header.bottomBar.colors[1]);
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
+  }
 
-  // Official Greenwich compass logo — navy, centered top of header
-  await drawImg(ctx, logoUrl, 480, 20, 120, 120);
+  // ── Logo ──
+  await drawImg(ctx, logoUrl, theme.logo.x, theme.logo.y, theme.logo.size, theme.logo.size);
 
-  // Title — gold with purple glow, elegant editorial style
+  // ── Title ──
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = '900 62px Sora, Arial, sans-serif';
-  ctx.shadowColor = 'rgba(107, 75, 160, 0.5)';
-  ctx.shadowBlur = 24;
+  ctx.font = theme.title.font;
+  ctx.shadowColor = theme.title.shadow.color;
+  ctx.shadowBlur = theme.title.shadow.blur;
   ctx.shadowOffsetY = 0;
-  ctx.fillStyle = '#FFD700';
-  ctx.fillText('GREENWICH VIETNAM', 540, 155);
+  ctx.fillStyle = theme.title.color;
+  ctx.fillText(theme.title.text, 540, theme.title.y);
 
-  // Subtitle — gold text, elegant
-  ctx.shadowColor = 'rgba(107, 75, 160, 0.3)';
-  ctx.shadowBlur = 8;
-  ctx.fillStyle = '#FFD700';
-  ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('✦  SAY YOUR STORY  ✦', 540, 195);
-
-  // Date — dynamic current date, white on black
+  // ── Subtitle ──
   ctx.shadowColor = 'transparent';
-  ctx.fillStyle = '#FFFFFF';
+  ctx.fillStyle = theme.subtitle.color;
+  ctx.font = theme.subtitle.font;
+  ctx.fillText(theme.subtitle.text, 540, theme.subtitle.y);
+
+  // ── Date ──
+  ctx.fillStyle = theme.date.color;
   ctx.font = '500 15px "Space Grotesk", Arial, sans-serif';
   const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
-  ctx.fillText(today, 540, 230);
+  ctx.fillText(today, 540, theme.date.y);
 
-  // Photo slot frames: gold glow + dark background
-  pos.forEach(([x, y], i) => {
+  // ── Photo slot shadows ──
+  pos.forEach(([x, y]) => {
     ctx.save();
-    ctx.shadowColor = 'rgba(255, 215, 0, 0.15)';
-    ctx.shadowBlur = 28;
+    ctx.shadowColor = theme.photos.slotShadow;
+    ctx.shadowBlur = 24;
     ctx.shadowOffsetY = 0;
-    ctx.fillStyle = '#0a0a0a';
-    roundRect(ctx, x - 8, y - 8, PH + 16, PH + 16, 20);
+    ctx.fillStyle = theme.photos.slotBg;
+    roundRect(ctx, x - 8, y - 8, PH + 16, PH + 16, theme.photos.radius + 2);
     ctx.fill();
     ctx.restore();
   });
 
-  // Photo background
+  // ── Photo backgrounds ──
   pos.forEach(([x, y]) => {
-    ctx.fillStyle = '#0a0a0a';
-    roundRect(ctx, x, y, PH, PH, 16);
+    ctx.fillStyle = theme.photos.slotBg;
+    roundRect(ctx, x, y, PH, PH, theme.photos.radius);
     ctx.fill();
   });
 
+  // ── Draw photos ──
   const photos = S.photos;
-  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 8, pos[i][1] + 8, PH - 16, PH - 16, 12)));
+  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 8, pos[i][1] + 8, PH - 16, PH - 16, theme.photos.radius - 4)));
 
-  // Gold borders + purple corner accents (compass/brand reference)
-  pos.forEach(([x, y], i) => {
-    ctx.strokeStyle = '#FFD700';
-    ctx.lineWidth = 4;
-    roundRect(ctx, x, y, PH, PH, 16);
+  // ── Photo borders + corner accents ──
+  pos.forEach(([x, y]) => {
+    ctx.strokeStyle = theme.photos.borderColor;
+    ctx.lineWidth = theme.photos.borderWidth;
+    roundRect(ctx, x, y, PH, PH, theme.photos.radius);
     ctx.stroke();
-    drawCornerAccents(ctx, x, y, PH, PH, '#6B4BA0', 28, 3);
+    drawCornerAccents(ctx, x, y, PH, PH, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  // Emoji reactions on photos (top-right corner) — cheerful only
-  const emojis = ['😄', '❤️', '🥳', '✨'];
+  // ── Emojis ──
   pos.forEach(([x, y], i) => {
     ctx.font = 'bold 42px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(emojis[i], x + PH - 28, y + 28);
+    ctx.fillText(theme.photos.emojis[i], x + PH - 28, y + 28);
   });
 
-  // Footer container — black with gold accent
+  // ── Footer container ──
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
-  ctx.fillStyle = '#000000';
+  ctx.fillStyle = theme.footer.bg;
   ctx.fill();
 
-  // Footer top gold strip
-  ctx.fillStyle = '#FFD700';
+  // ── Footer top strip ──
+  ctx.fillStyle = theme.footer.topStrip;
   ctx.fillRect(36, footerY, 1008, 4);
 
-  // Footer border (purple)
-  ctx.strokeStyle = '#6B4BA0';
+  // ── Footer border ──
+  ctx.strokeStyle = theme.footer.borderColor;
   ctx.lineWidth = 3;
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
-  // Footer content — dashed separator + hashtag only
+  // ── Footer URL ──
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#FFFFFF';
+  ctx.fillStyle = theme.footer.url.color;
   ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 540, footerY + 50);
+  ctx.fillText(theme.footer.url.text, 540, footerY + 50);
 
-  // Dashed separator line
-  ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+  // ── Footer dashed separator ──
+  ctx.strokeStyle = `${theme.photos.borderColor}4d`;
   ctx.setLineDash([6, 4]);
   ctx.lineWidth = 1;
   ctx.beginPath();
@@ -412,16 +422,17 @@ async function buildPoster() {
   ctx.stroke();
   ctx.setLineDash([]);
 
-  ctx.fillStyle = '#FFD700';
+  // ── Footer hashtag ──
+  ctx.fillStyle = theme.footer.hashtag.color;
   ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('✦  #GreenwichVietnam  ✦', 540, footerY + 100);
+  ctx.fillText(theme.footer.hashtag.text, 540, footerY + 100);
 
-  // Outer border: gold thick + purple thin inner (luxury frame, centered)
-  ctx.strokeStyle = '#FFD700';
-  ctx.lineWidth = 8;
-  ctx.strokeRect(20, 20, W - 40, H - 40); // centered: offset 20 + 4 half-width
-  ctx.strokeStyle = '#6B4BA0';
-  ctx.lineWidth = 2;
+  // ── Outer frame borders ──
+  ctx.strokeStyle = theme.frame.outer;
+  ctx.lineWidth = theme.frame.outerW;
+  ctx.strokeRect(20, 20, W - 40, H - 40);
+  ctx.strokeStyle = theme.frame.inner;
+  ctx.lineWidth = theme.frame.innerW;
   ctx.strokeRect(32, 32, W - 64, H - 64);
 }
 
