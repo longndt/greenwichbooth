@@ -1008,7 +1008,7 @@ input[type="range"] {
   }
 
   .ctrl-col {
-    flex: 1;
+    flex: 0 0 auto;
     min-height: 0;
     gap: 8px;
     padding: 6px 12px 10px;
@@ -1021,10 +1021,11 @@ input[type="range"] {
   }
 
   .poster-shell {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-height: 0;
     width: 100%;
     padding: 8px;
+    max-height: 35vh;
   }
 
   /* Grid rows split available height evenly */
