@@ -221,9 +221,10 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: flex-start;
+  gap: 14px;
   padding: 10px 14px 10px 8px;
+  min-height: 0;
 }
 
 
@@ -239,6 +240,56 @@ html, body {
 }
 
 .ctrl-lbl strong { color: var(--gold); font-weight: 700; }
+
+/* ── Live poster preview ─────────────────────────────────── */
+.poster-shell {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background:
+    linear-gradient(180deg, rgba(13, 35, 24, 0.96) 0%, rgba(8, 19, 13, 0.98) 100%);
+  box-shadow:
+    0 0 0 1px rgba(0,107,63,0.16),
+    0 18px 42px rgba(0,0,0,0.4);
+}
+
+.poster-head,
+.poster-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-family: 'Sora', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.poster-kicker {
+  color: var(--color-accent);
+  font-weight: 800;
+}
+
+.poster-state {
+  color: var(--color-secondary);
+  font-weight: 700;
+  text-align: right;
+}
+
+.poster-foot {
+  color: var(--color-text-muted);
+}
+
+.poster-foot span:last-child {
+  color: rgba(240,245,242,0.76);
+}
 
 /* ── Delay slider ────────────────────────────────────────── */
 input[type="range"] {
@@ -276,6 +327,7 @@ input[type="range"] {
     inset 0 -20px 28px rgba(0,0,0,0.18);
   position: relative;
   overflow: hidden;
+  align-self: center;
 }
 
 .shoot-btn::before {
@@ -470,60 +522,74 @@ input[type="range"] {
 
 /* ── Photo preview grid (during shooting) ───────────────── */
 .photo-grid {
-  display: none;
+  display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 8px;
   width: 100%;
+  min-height: 0;
+  flex: 1;
 }
 
-.photo-grid.visible { display: grid; }
-
 .ctrl-col.shooting .shoot-btn { display: none; }
-.ctrl-col.shooting { justify-content: center; }
+.ctrl-col.shooting { justify-content: flex-start; }
 
 /* ── Photo slot — 2×2 grid item ─────────────────────────── */
 .pv-slot {
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
-  border: 1.5px dashed rgba(255,255,255,0.3);
-  background: rgba(255,255,255,0.07);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+    rgba(255,255,255,0.04);
   aspect-ratio: 1;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.04),
+    inset 0 -12px 18px rgba(0,0,0,0.15);
 }
 
 /* camera icon placeholder for empty slot */
 .pv-slot::before {
-  content: '📷';
+  content: attr(data-label);
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 22px;
-  opacity: 0.18;
+  font-family: 'Sora', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: rgba(240,245,242,0.18);
   pointer-events: none;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
-.pv-slot.filled::before { opacity: 0; }
+.pv-slot.filled::before {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.95);
+}
 
 /* green glow when filled */
 .pv-slot.filled {
-  border-style: solid;
   border-color: var(--emerald);
-  box-shadow: 0 0 14px rgba(45,215,122,0.22), inset 0 0 0 1px rgba(45,215,122,0.1);
+  box-shadow:
+    0 0 0 1px rgba(45,215,122,0.18),
+    0 0 16px rgba(45,215,122,0.22),
+    inset 0 0 0 1px rgba(45,215,122,0.08);
+  transform: translateY(-1px);
 }
 
 /* number badge — bottom-left corner */
 .pv-badge {
   position: absolute;
   bottom: 5px; left: 5px;
-  width: 20px; height: 20px;
+  width: 24px; height: 24px;
   border-radius: 50%;
-  background: rgba(0,0,0,0.52);
-  color: rgba(255,255,255,0.55);
-  font-family: 'DM Sans', sans-serif;
+  background: rgba(5,14,9,0.74);
+  color: rgba(255,255,255,0.62);
+  font-family: 'Sora', sans-serif;
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -544,7 +610,7 @@ input[type="range"] {
   object-fit: cover;
   display: block;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 .pv-slot.filled .pv {
@@ -698,10 +764,11 @@ input[type="range"] {
 /* ── Short landscape ─────────────────────────────────────── */
 @media (max-height: 600px) and (min-width: 681px) {
   .hdr { height: 42px; }
-  .ctrl-col { gap: 7px; padding: 8px 8px 8px 0; }
+  .ctrl-col { gap: 10px; padding: 8px 8px 8px 0; }
   .shoot-btn { width: 132px; }
   .s-text { font-size: 13px; }
   .s-text span:last-child { font-size: 15px; }
+  .poster-shell { padding: 10px; }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */
