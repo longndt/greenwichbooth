@@ -294,7 +294,7 @@ q('#app').innerHTML = `
       </div>
 
       <button class="shoot-btn" id="shoot-btn" aria-label="Chụp ảnh">
-        <span class="s-text">Chụp Ảnh</span>
+        <span class="s-text"><span>Chụp</span><span>ảnh</span></span>
       </button>
     </div>
   </div>
