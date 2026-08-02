@@ -349,14 +349,6 @@ async function buildPoster() {
     ctx.lineWidth = 2;
     roundRect(ctx, x + 10, y + 10, PH - 20, PH - 20, 14);
     ctx.stroke();
-    ctx.fillStyle = '#ffcb2f';
-    roundRect(ctx, x + 16, y + 16, 40, 40, 20);
-    ctx.fill();
-    ctx.fillStyle = '#17211c';
-    ctx.font = '900 20px Sora, Arial, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(`${i + 1}`, x + 36, y + 25);
-    ctx.textAlign = 'left';
   });
 
   ctx.save();
