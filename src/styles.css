@@ -575,16 +575,16 @@ input[type="range"] {
     align-items: stretch;
   }
 
-  .poster-shell {
-    min-height: 0;
-  }
+  /* shoot button above photo grid on mobile */
+  .shoot-btn { order: -1; }
+  .poster-shell { order: 1; flex: none; min-height: 0; }
 
   .cam-box {
     aspect-ratio: 4 / 3;
   }
 
   #cam {
-    object-fit: contain;
+    object-fit: cover;
   }
 
   .frame-ov::before {
@@ -595,8 +595,13 @@ input[type="range"] {
     inset: 18% 12%;
   }
 
+  /* shorter slots so grid doesn't push button off-screen */
+  .pv-slot {
+    aspect-ratio: 4 / 3;
+  }
+
   .shoot-btn {
-    width: min(72vw, 212px);
+    width: min(60vw, 160px);
   }
 }
 
@@ -628,7 +633,7 @@ input[type="range"] {
   }
 
   #cam {
-    object-fit: contain;
+    object-fit: cover;
   }
 
   .frame-ov::before {
@@ -640,19 +645,23 @@ input[type="range"] {
   }
 
   .photo-grid {
-    gap: 10px;
+    gap: 8px;
+  }
+
+  .pv-slot {
+    aspect-ratio: 4 / 3;
   }
 
   .shoot-btn {
-    width: min(68vw, 192px);
+    width: min(56vw, 148px);
   }
 
   .s-text {
-    font-size: 15px;
+    font-size: 14px;
   }
 
   .s-text span:last-child {
-    font-size: 16px;
+    font-size: 15px;
   }
 }
 
