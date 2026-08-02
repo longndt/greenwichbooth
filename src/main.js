@@ -280,17 +280,6 @@ q('#app').innerHTML = `
           <button id="retry-cam" class="btn-outline" aria-label="Thử kết nối camera lại">Thử lại</button>
         </div>
 
-        <div class="empty-state" id="empty-state">
-          <div class="empty-state-content">
-            <div class="empty-state-icon">🚀</div>
-            <h2 class="empty-state-title">Bắt đầu ngay!</h2>
-            <div class="empty-state-steps">
-              <div class="step-item"><span class="step-num">1</span> Chọn khung</div>
-              <div class="step-item"><span class="step-num">2</span> Chụp 4 ảnh</div>
-              <div class="step-item"><span class="step-num">3</span> Tải về</div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -316,8 +305,12 @@ q('#app').innerHTML = `
   <div class="result-card">
     <img class="poster-img" id="poster-img" alt="Bộ poster 4 ảnh được ghép lại"/>
     <div class="dl-row">
-      <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
+      <div class="qr-wrap">
+        <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
+      </div>
       <div class="dl-info">
+        <strong id="qr-title">Đang tạo link...</strong>
+        <span id="qr-sub">Chờ khoảng 8 giây...</span>
         <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải poster về máy">⬇ Tải về máy</a>
       </div>
     </div>
@@ -353,7 +346,6 @@ async function startCam() {
     cam.srcObject = S.stream;
     await new Promise(res => cam.addEventListener('loadedmetadata', res, { once: true }));
     q('#cerr').classList.add('hidden');
-    q('#empty-state').classList.add('hidden');
   } catch {
     q('#cerr').classList.remove('hidden');
   }
@@ -624,4 +616,5 @@ window.addEventListener('orientationchange', () => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+startCam();
 if (import.meta.env.DEV) window.__t = { S, buildPoster };
