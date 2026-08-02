@@ -365,11 +365,11 @@ async function buildPoster() {
   ctx.stroke();
 
   ctx.fillStyle = '#006b3f';
-  ctx.font = '800 18px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 76, footerY + 36);
+  ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn', 76, footerY + 32);
   ctx.fillStyle = '#17211c';
-  ctx.font = '700 18px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('#GreenwichVietnam', 76, footerY + 64);
+  ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('#GreenwichVietnam', 76, footerY + 60);
 
   roundRect(ctx, 702, footerY + 22, 286, 118, 22);
   ctx.fillStyle = '#fffaf0';
@@ -378,13 +378,13 @@ async function buildPoster() {
   ctx.lineWidth = 4;
   roundRect(ctx, 702, footerY + 22, 286, 118, 22);
   ctx.stroke();
-  await drawImg(ctx, logoUrl, 724, footerY + 36, 82, 82);
+  await drawImg(ctx, logoUrl, 722, footerY + 30, 70, 70);
   ctx.fillStyle = '#006b3f';
-  ctx.font = '900 22px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 818, footerY + 42);
+  ctx.font = '800 18px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 810, footerY + 40);
   ctx.fillStyle = '#17211c';
-  ctx.font = '700 17px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Official student booth', 818, footerY + 74);
+  ctx.font = '600 12px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Official student booth', 810, footerY + 68);
 
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 8;
