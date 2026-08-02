@@ -314,25 +314,17 @@ async function buildPoster() {
   ctx.fillStyle = headerBottomGrad;
   ctx.fillRect(0, headerH - 12, W, 12);
 
-  // Centered logo circle — shrunk to 88px to clear title below
-  const logoBg = ctx.createRadialGradient(540, 56, 14, 540, 56, 44);
-  logoBg.addColorStop(0, '#FF1493');
-  logoBg.addColorStop(1, '#C71585');
+  // Centered logo circle — purple fill + gold ring (brand colors)
+  const logoBg = ctx.createRadialGradient(540, 56, 10, 540, 56, 44);
+  logoBg.addColorStop(0, '#8B5CC9');
+  logoBg.addColorStop(1, '#4A2E80');
   roundRect(ctx, 496, 12, 88, 88, 44);
   ctx.fillStyle = logoBg;
   ctx.fill();
-  ctx.strokeStyle = '#00E5FF';
+  ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 3;
   ctx.stroke();
   await drawImg(ctx, logoUrl, 503, 19, 74, 74);
-
-  // Gold horizontal divider line below logo
-  ctx.strokeStyle = '#FFD700';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(150, 128);
-  ctx.lineTo(930, 128);
-  ctx.stroke();
 
   // Title — gold with purple glow, elegant editorial style
   ctx.textAlign = 'center';
@@ -351,11 +343,12 @@ async function buildPoster() {
   ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('✦  SAY YOUR STORY  ✦', 540, 195);
 
-  // Date — simple elegant text, white on black
+  // Date — dynamic current date, white on black
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '500 15px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Aug 15-20  •  Student Center  •  10am-4pm', 540, 230);
+  const today = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
+  ctx.fillText(today, 540, 230);
 
   // Photo slot frames: gold glow + dark background
   pos.forEach(([x, y], i) => {
@@ -412,32 +405,14 @@ async function buildPoster() {
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
-  // Left side: website + hashtag in white/gold
+  // Footer content — centered, no duplicate badge
   ctx.textAlign = 'center';
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 280, footerY + 28);
+  ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn', 540, footerY + 58);
   ctx.fillStyle = '#FFD700';
-  ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('#GreenwichBooth', 280, footerY + 52);
-
-  // Right badge: logo + text
-  ctx.fillStyle = 'rgba(107, 75, 160, 0.2)';
-  roundRect(ctx, 690, footerY + 14, 310, 134, 20);
-  ctx.fill();
-  ctx.strokeStyle = '#FFD700';
-  ctx.lineWidth = 3;
-  roundRect(ctx, 690, footerY + 14, 310, 134, 20);
-  ctx.stroke();
-
-  await drawImg(ctx, logoUrl, 710, footerY + 24, 80, 80);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#FFD700';
-  ctx.font = '800 26px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 900, footerY + 50);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('VIETNAM', 900, footerY + 75);
+  ctx.font = '600 15px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('#GreenwichBooth  ·  #GreenwichVietnam', 540, footerY + 90);
 
   // Outer border: gold thick + purple thin inner (luxury frame)
   ctx.strokeStyle = '#FFD700';
