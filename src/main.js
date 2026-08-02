@@ -253,91 +253,140 @@ async function buildPoster() {
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1440, GAP = 22;
+  const W = 1080, H = 1440;
+  const PAD = 54;
+  const GAP = 22;
   const PH = 446;
+  const headerH = 188;
+  const footerY = 1174;
+  const footerH = 188;
   const pos = [
-    [54,            220],
-    [54 + PH + GAP, 220],
-    [54,            220 + PH + GAP],
-    [54 + PH + GAP, 220 + PH + GAP],
+    [PAD,            228],
+    [PAD + PH + GAP, 228],
+    [PAD,            228 + PH + GAP],
+    [PAD + PH + GAP, 228 + PH + GAP],
   ];
 
-  ctx.fillStyle = '#fff9ef';
+  ctx.fillStyle = '#f8f2e4';
   ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0, 107, 63, 0.06)';
-  for (let x = 0; x < W; x += 36) ctx.fillRect(x, 0, 1, H);
-  for (let y = 0; y < H; y += 36) ctx.fillRect(0, y, W, 1);
+  ctx.fillStyle = 'rgba(0, 107, 63, 0.045)';
+  for (let x = 0; x < W; x += 34) ctx.fillRect(x, 0, 1, H);
+  for (let y = 0; y < H; y += 34) ctx.fillRect(0, y, W, 1);
 
-  ctx.fillStyle = '#006b3f';
-  ctx.fillRect(0, 0, W, 176);
+  const header = ctx.createLinearGradient(0, 0, W, 0);
+  header.addColorStop(0, '#004a32');
+  header.addColorStop(0.45, '#006b3f');
+  header.addColorStop(1, '#09764a');
+  ctx.fillStyle = header;
+  ctx.fillRect(0, 0, W, headerH);
   ctx.fillStyle = '#ffcb2f';
-  ctx.fillRect(0, 176, W, 10);
-  ctx.fillStyle = '#f0f5f2';
+  ctx.fillRect(0, headerH - 10, W, 10);
+  ctx.fillStyle = '#17211c';
+  ctx.fillRect(0, 0, W, 12);
+
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
-  roundRect(ctx, 38, 28, 116, 116, 58);
+  roundRect(ctx, 38, 30, 114, 114, 57);
   ctx.fillStyle = '#ffcb2f';
   ctx.fill();
-  ctx.strokeStyle = '#f0f5f2';
+  ctx.strokeStyle = '#f8f2e4';
   ctx.lineWidth = 4;
   ctx.stroke();
-  await drawImg(ctx, lionUrl, 48, 38, 96, 96);
-  ctx.font = '900 58px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', 170, 34);
-  ctx.font = '700 24px "Space Grotesk", Arial, sans-serif';
-  ctx.fillStyle = 'rgba(240,245,242,0.86)';
-  ctx.fillText('FUTURE STUDENT PASS', 172, 100);
+  await drawImg(ctx, lionUrl, 49, 39, 96, 96);
+  ctx.fillStyle = '#ffcb2f';
+  ctx.font = '900 56px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH VIETNAM', 170, 36);
+  ctx.fillStyle = 'rgba(248,242,228,0.9)';
+  ctx.font = '700 22px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('FUTURE STUDENT PASS', 172, 104);
+  ctx.fillStyle = 'rgba(248,242,228,0.15)';
+  roundRect(ctx, 788, 42, 238, 66, 20);
+  ctx.fill();
+  ctx.fillStyle = '#f8f2e4';
+  ctx.font = '800 18px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('OFFICIAL', 812, 57);
+  ctx.fillStyle = '#ffcb2f';
+  ctx.font = '900 24px Sora, Arial, sans-serif';
+  ctx.fillText('BOOTH', 900, 52);
+
+  pos.forEach(([x, y], i) => {
+    ctx.save();
+    ctx.shadowColor = 'rgba(23, 33, 28, 0.24)';
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetY = 6;
+    ctx.fillStyle = '#17211c';
+    roundRect(ctx, x - 7, y - 7, PH + 14, PH + 14, 24);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.fillStyle = '#f1e7d3';
+    roundRect(ctx, x, y, PH, PH, 18);
+    ctx.fill();
+  });
 
   const photos = S.photos;
-  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
+  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 10, pos[i][1] + 10, PH - 20, PH - 20, 14)));
 
   pos.forEach(([x, y], i) => {
     ctx.strokeStyle = '#17211c';
-    ctx.lineWidth = 5;
-    roundRect(ctx, x, y, PH, PH, 22);
+    ctx.lineWidth = 4;
+    roundRect(ctx, x, y, PH, PH, 18);
     ctx.stroke();
     ctx.strokeStyle = '#ffcb2f';
     ctx.lineWidth = 2;
-    roundRect(ctx, x + 12, y + 12, PH - 24, PH - 24, 12);
+    roundRect(ctx, x + 10, y + 10, PH - 20, PH - 20, 14);
     ctx.stroke();
-    ctx.fillStyle = '#e86f51';
-    ctx.font = '900 22px Sora, Arial, sans-serif';
-    ctx.fillText(`${i + 1}`, x + 18, y + 18);
+    ctx.fillStyle = '#ffcb2f';
+    roundRect(ctx, x + 16, y + 16, 40, 40, 20);
+    ctx.fill();
+    ctx.fillStyle = '#17211c';
+    ctx.font = '900 20px Sora, Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(`${i + 1}`, x + 36, y + 25);
+    ctx.textAlign = 'left';
   });
 
   ctx.save();
-  ctx.globalAlpha = 0.08;
-  await drawImg(ctx, lionUrl, 742, 1136, 230, 230);
+  ctx.globalAlpha = 0.06;
+  await drawImg(ctx, lionUrl, 746, 1110, 230, 230);
   ctx.restore();
 
-  ctx.fillStyle = '#006b3f';
-  ctx.font = '800 18px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 58, 1208);
-  ctx.fillStyle = '#17211c';
-  ctx.font = '700 19px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('#GreenwichVietnam', 58, 1234);
-
-  roundRect(ctx, 700, 1180, 300, 160, 26);
+  roundRect(ctx, 52, footerY, 976, footerH, 28);
   ctx.fillStyle = '#f5eddc';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 5;
-  roundRect(ctx, 700, 1180, 300, 160, 26);
+  ctx.lineWidth = 4;
+  roundRect(ctx, 52, footerY, 976, footerH, 28);
   ctx.stroke();
-  await drawImg(ctx, lionUrl, 722, 1200, 100, 100);
+
   ctx.fillStyle = '#006b3f';
-  ctx.font = '900 22px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 834, 1208);
+  ctx.font = '800 18px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn', 76, footerY + 36);
   ctx.fillStyle = '#17211c';
   ctx.font = '700 18px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Official student booth', 834, 1240);
+  ctx.fillText('#GreenwichVietnam', 76, footerY + 64);
+
+  roundRect(ctx, 702, footerY + 22, 286, 118, 22);
+  ctx.fillStyle = '#fffaf0';
+  ctx.fill();
+  ctx.strokeStyle = '#17211c';
+  ctx.lineWidth = 4;
+  roundRect(ctx, 702, footerY + 22, 286, 118, 22);
+  ctx.stroke();
+  await drawImg(ctx, lionUrl, 724, footerY + 36, 82, 82);
+  ctx.fillStyle = '#006b3f';
+  ctx.font = '900 22px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 818, footerY + 42);
+  ctx.fillStyle = '#17211c';
+  ctx.font = '700 17px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Official student booth', 818, footerY + 74);
 
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 8;
   ctx.strokeRect(20, 20, W - 40, H - 40);
 }
 
-function drawPhoto(ctx, url, x, y, w, h) {
+function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
   return new Promise((res, rej) => {
     const img = new Image();
     img.onload = () => {
@@ -345,7 +394,13 @@ function drawPhoto(ctx, url, x, y, w, h) {
         const scale = Math.max(w / img.width, h / img.height);
         const dw = img.width * scale, dh = img.height * scale;
         ctx.save();
-        ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip();
+        if (radius > 0) {
+          roundRect(ctx, x, y, w, h, radius);
+        } else {
+          ctx.beginPath();
+          ctx.rect(x, y, w, h);
+        }
+        ctx.clip();
         ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
         ctx.restore();
         res();
