@@ -584,6 +584,7 @@ input[type="range"] {
 
   .cam-box {
     aspect-ratio: 4 / 3;
+    max-height: 45vh;
   }
 
   #cam {
@@ -968,6 +969,73 @@ input[type="range"] {
   .cam-box { aspect-ratio: 4 / 3; }
   .s-text { font-size: 13px; }
   .s-text span:last-child { font-size: 15px; }
+}
+
+/* ── Mobile portrait — lock 100dvh, distribute proportionally ─── */
+@media (max-width: 768px) {
+  body { overflow: hidden; }
+
+  .app {
+    height: 100dvh;
+  }
+
+  .hdr {
+    height: 58px;
+    padding: 0 12px;
+  }
+  .hdr-lion { width: 44px; height: 44px; }
+  .hdr-name { font-size: 17px; }
+
+  /* Switch grid → flex column so rows distribute by dvh proportion */
+  .main {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .cam-col {
+    flex-shrink: 0;
+    padding: 8px 12px 4px;
+  }
+
+  /* Camera: fixed dvh height, no aspect-ratio fighting */
+  .cam-box {
+    aspect-ratio: unset;
+    max-height: unset;
+    height: 27dvh;
+  }
+
+  .ctrl-col {
+    flex: 1;
+    min-height: 0;
+    gap: 8px;
+    padding: 6px 12px 10px;
+    align-items: center;
+  }
+
+  .shoot-btn {
+    flex-shrink: 0;
+    width: clamp(100px, 28vw, 126px);
+  }
+
+  .poster-shell {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    padding: 8px;
+  }
+
+  /* Grid rows split available height evenly */
+  .photo-grid {
+    flex: 1;
+    height: 100%;
+    grid-template-rows: 1fr 1fr;
+  }
+
+  /* Let grid control slot height — no aspect-ratio override */
+  .pv-slot {
+    aspect-ratio: unset;
+  }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */
