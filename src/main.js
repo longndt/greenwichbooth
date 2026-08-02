@@ -27,7 +27,7 @@ q('#app').innerHTML = `
     <div class="hdr-brand">
       <img class="hdr-lion" src="${logoUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
-        <span class="hdr-name">Greenwich Booth</span>
+        <span class="hdr-name">Greenwich Vietnam</span>
       </div>
     </div>
   </header>
@@ -290,11 +290,11 @@ async function buildPoster() {
     [PAD + PH + GAP, photosY + PH + GAP],
   ];
 
-  // Dark gradient background
+  // Neon gradient background (black → deep purple → dark cyan)
   const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-  bgGrad.addColorStop(0, '#0c1a16');
-  bgGrad.addColorStop(0.5, '#0a1610');
-  bgGrad.addColorStop(1, '#060e09');
+  bgGrad.addColorStop(0, '#0a0015');
+  bgGrad.addColorStop(0.5, '#1a0033');
+  bgGrad.addColorStop(1, '#001a2e');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
@@ -303,26 +303,26 @@ async function buildPoster() {
   for (let x = 0; x < W; x += 34) ctx.fillRect(x, 0, 1, H);
   for (let y = 0; y < H; y += 34) ctx.fillRect(0, y, W, 1);
 
-  // Header gradient (horizontal)
+  // Header gradient (neon: purple → dark cyan)
   const headerGrad = ctx.createLinearGradient(0, 0, W, 0);
-  headerGrad.addColorStop(0, '#003822');
-  headerGrad.addColorStop(0.5, '#00512e');
-  headerGrad.addColorStop(1, '#003822');
+  headerGrad.addColorStop(0, '#1a0033');
+  headerGrad.addColorStop(0.5, '#001a3f');
+  headerGrad.addColorStop(1, '#1a0033');
   ctx.fillStyle = headerGrad;
   ctx.fillRect(0, 0, W, headerH);
 
-  // Header top cyan bar
-  ctx.fillStyle = '#00E5FF';
+  // Header top hot pink bar
+  ctx.fillStyle = '#FF1493';
   ctx.fillRect(0, 0, W, 5);
 
-  // Header bottom gold bar
-  ctx.fillStyle = '#FFD700';
+  // Header bottom cyan bar
+  ctx.fillStyle = '#00E5FF';
   ctx.fillRect(0, headerH - 6, W, 6);
 
-  // Centered logo circle (radial gradient)
+  // Centered logo circle (radial gradient — hot pink neon)
   const logoBg = ctx.createRadialGradient(540, 68, 20, 540, 68, 52);
-  logoBg.addColorStop(0, '#FFE066');
-  logoBg.addColorStop(1, '#FFD700');
+  logoBg.addColorStop(0, '#FF1493');
+  logoBg.addColorStop(1, '#C71585');
   roundRect(ctx, 488, 16, 104, 104, 52);
   ctx.fillStyle = logoBg;
   ctx.fill();
@@ -331,21 +331,26 @@ async function buildPoster() {
   ctx.stroke();
   await drawImg(ctx, logoUrl, 495, 23, 90, 90);
 
-  // Title with cyan glow shadow
+  // Title with hot pink glow — GREENWICH VIETNAM (larger)
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.shadowColor = 'rgba(0, 229, 255, 0.5)';
-  ctx.shadowBlur = 16;
+  ctx.shadowColor = 'rgba(255, 20, 147, 0.6)';
+  ctx.shadowBlur = 20;
   ctx.shadowOffsetY = 0;
-  ctx.fillStyle = '#FFD700';
-  ctx.font = '900 58px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH BOOTH', 540, 145);
-
-  // Subtitle with symbols
-  ctx.shadowColor = 'transparent';
   ctx.fillStyle = '#00E5FF';
-  ctx.font = '700 21px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('✦  FUTURE STUDENT PASS  ✦', 540, 185);
+  ctx.font = '900 68px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH VIETNAM', 540, 145);
+
+  // Subtitle — new tagline (more engaging)
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = '#FF1493';
+  ctx.font = '700 22px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('✦  CREATE YOUR MEMORIES  ✦', 540, 185);
+
+  // Date/time/location info
+  ctx.fillStyle = '#00E5FF';
+  ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('📅 Aug 15-20  |  📍 Student Center  |  ⏰ 10am-4pm', 540, 215);
 
   // Photo slot frames: glow shadow + frame + corner accents
   pos.forEach(([x, y], i) => {
@@ -369,62 +374,71 @@ async function buildPoster() {
   const photos = S.photos;
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 8, pos[i][1] + 8, PH - 16, PH - 16, 12)));
 
-  // Gold borders + cyan L-corner accents
+  // Hot pink borders + cyan L-corner accents
   pos.forEach(([x, y], i) => {
-    ctx.strokeStyle = '#FFD700';
+    ctx.strokeStyle = '#FF1493';
     ctx.lineWidth = 4;
     roundRect(ctx, x, y, PH, PH, 16);
     ctx.stroke();
     drawCornerAccents(ctx, x, y, PH, PH, '#00E5FF', 28, 3);
   });
 
-  // Footer container — dark gradient matching header
+  // Emoji reactions on photos (top-right corner)
+  const emojis = ['😂', '❤️', '🎉', '✨'];
+  pos.forEach(([x, y], i) => {
+    ctx.font = 'bold 42px Arial, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(emojis[i], x + PH - 28, y + 28);
+  });
+
+  // Footer container — neon gradient
   const footerGrad = ctx.createLinearGradient(0, footerY, 0, footerY + footerH);
-  footerGrad.addColorStop(0, '#00512e');
-  footerGrad.addColorStop(1, '#003822');
+  footerGrad.addColorStop(0, '#001a3f');
+  footerGrad.addColorStop(1, '#1a0033');
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.fillStyle = footerGrad;
   ctx.fill();
 
-  // Footer top cyan strip
-  ctx.fillStyle = '#00E5FF';
+  // Footer top hot pink strip
+  ctx.fillStyle = '#FF1493';
   ctx.fillRect(36, footerY, 1008, 3);
 
-  // Footer border (gold)
-  ctx.strokeStyle = '#FFD700';
+  // Footer border (cyan)
+  ctx.strokeStyle = '#00E5FF';
   ctx.lineWidth = 3;
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
   // Left side: website + hashtag
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#00E5FF';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn', 280, footerY + 28);
-  ctx.fillStyle = '#00E5FF';
+  ctx.fillStyle = '#FF1493';
   ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('#GreenwichBooth', 280, footerY + 52);
 
   // Right badge: logo + text
-  ctx.fillStyle = '#1a2820';
+  ctx.fillStyle = '#0a0015';
   roundRect(ctx, 690, footerY + 14, 310, 134, 20);
   ctx.fill();
-  ctx.strokeStyle = '#FFD700';
+  ctx.strokeStyle = '#00E5FF';
   ctx.lineWidth = 3;
   roundRect(ctx, 690, footerY + 14, 310, 134, 20);
   ctx.stroke();
 
   await drawImg(ctx, logoUrl, 710, footerY + 24, 80, 80);
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#FFD700';
+  ctx.fillStyle = '#00E5FF';
   ctx.font = '800 26px Sora, Arial, sans-serif';
   ctx.fillText('GREENWICH', 900, footerY + 50);
-  ctx.fillStyle = '#00E5FF';
+  ctx.fillStyle = '#FF1493';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('BOOTH', 900, footerY + 75);
+  ctx.fillText('VIETNAM', 900, footerY + 75);
 
-  // Outer border: gold thick + cyan thin inner
-  ctx.strokeStyle = '#FFD700';
+  // Outer border: hot pink thick + cyan thin inner
+  ctx.strokeStyle = '#FF1493';
   ctx.lineWidth = 8;
   ctx.strokeRect(16, 16, W - 32, H - 32);
   ctx.strokeStyle = '#00E5FF';
