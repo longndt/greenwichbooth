@@ -27,7 +27,7 @@ q('#app').innerHTML = `
     <div class="hdr-brand">
       <img class="hdr-lion" src="${logoUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
-        <span class="hdr-name">Greenwich Vietnam Booth</span>
+        <span class="hdr-name">Greenwich Booth</span>
       </div>
     </div>
   </header>
@@ -305,7 +305,7 @@ async function buildPoster() {
   ctx.textAlign = 'center';
   ctx.fillStyle = '#ffd700';
   ctx.font = '900 48px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', 540, 55);
+  ctx.fillText('GREENWICH BOOTH', 540, 55);
 
   ctx.fillStyle = 'rgba(248,242,228,0.95)';
   ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';

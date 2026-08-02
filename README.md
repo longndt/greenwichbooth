@@ -1,6 +1,6 @@
 # greenwichbooth
 
-Greenwich Vietnam themed camera booth for prospective high-school students.
+Interactive photo booth for prospective high-school students at Greenwich.
 
 ## Run
 
