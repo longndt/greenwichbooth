@@ -248,7 +248,6 @@ html, body {
   min-height: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   padding: 12px;
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.1);
@@ -257,38 +256,6 @@ html, body {
   box-shadow:
     0 0 0 1px rgba(0,107,63,0.16),
     0 18px 42px rgba(0,0,0,0.4);
-}
-
-.poster-head,
-.poster-foot {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-family: 'Sora', sans-serif;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0;
-  line-height: 1.2;
-}
-
-.poster-kicker {
-  color: var(--color-accent);
-  font-weight: 800;
-}
-
-.poster-state {
-  color: var(--color-secondary);
-  font-weight: 700;
-  text-align: right;
-}
-
-.poster-foot {
-  color: var(--color-text-muted);
-}
-
-.poster-foot span:last-child {
-  color: rgba(240,245,242,0.76);
 }
 
 /* ── Delay slider ────────────────────────────────────────── */
@@ -550,25 +517,6 @@ input[type="range"] {
 }
 
 /* camera icon placeholder for empty slot */
-.pv-slot::before {
-  content: attr(data-label);
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Sora', sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: 0;
-  color: rgba(240,245,242,0.18);
-  pointer-events: none;
-  transition: opacity 0.2s, transform 0.2s;
-}
-
-.pv-slot.filled::before {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.95);
-}
-
 /* green glow when filled */
 .pv-slot.filled {
   border-color: var(--emerald);

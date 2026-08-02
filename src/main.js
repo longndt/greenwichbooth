@@ -286,21 +286,11 @@ q('#app').innerHTML = `
     <!-- Controls -->
     <div class="ctrl-col">
       <section class="poster-shell" aria-label="Poster preview">
-        <div class="poster-head">
-          <span class="poster-kicker">GREENWICH BOOTH</span>
-          <span class="poster-state" id="poster-state">Ảnh 0 / 4</span>
-        </div>
-
         <div class="photo-grid" id="photo-grid">
-          <div class="pv-slot" data-label="Ô 1" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
-          <div class="pv-slot" data-label="Ô 2" id="pvs1"><img class="pv" id="pv1" alt="Ảnh 2 được chụp"/><span class="pv-badge">2</span></div>
-          <div class="pv-slot" data-label="Ô 3" id="pvs2"><img class="pv" id="pv2" alt="Ảnh 3 được chụp"/><span class="pv-badge">3</span></div>
-          <div class="pv-slot" data-label="Ô 4" id="pvs3"><img class="pv" id="pv3" alt="Ảnh 4 được chụp"/><span class="pv-badge">4</span></div>
-        </div>
-
-        <div class="poster-foot">
-          <span>Poster 2x2</span>
-          <span>Chụp 4 ảnh để ghép</span>
+          <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
+          <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt="Ảnh 2 được chụp"/><span class="pv-badge">2</span></div>
+          <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt="Ảnh 3 được chụp"/><span class="pv-badge">3</span></div>
+          <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt="Ảnh 4 được chụp"/><span class="pv-badge">4</span></div>
         </div>
       </section>
 
@@ -374,8 +364,8 @@ async function shoot() {
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
-  q('#poster-state').textContent = 'Ảnh 0 / 4';
   q('.ctrl-col').classList.add('shooting');
+  q('#cov').classList.remove('hidden');
 
   for (let i = 0; i < 4; i++) {
     for (let c = S.interval; c > 0; c--) {
@@ -395,12 +385,12 @@ async function shoot() {
 
     q(`#pv${i}`).src = S.photos[i];
     q(`#pvs${i}`).classList.add('filled');
-    q('#poster-state').textContent = `Ảnh ${i + 1} / 4`;
 
     q(`#d${i}`).classList.add('done');
     if (i < 3) await sleep(380);
   }
 
+  q('#cov').classList.add('hidden');
   q('#shoot-btn').disabled = false;
   q('#proc-sub').textContent = 'Đang tạo poster...';
   q('#proc-ov').classList.remove('hidden');
@@ -608,7 +598,6 @@ function retake() {
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
-  q('#poster-state').textContent = 'Ảnh 0 / 4';
   q('#shoot-btn').disabled = false;
   qa('.dot').forEach(d => d.classList.remove('done'));
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
