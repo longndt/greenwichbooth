@@ -314,17 +314,8 @@ async function buildPoster() {
   ctx.fillStyle = headerBottomGrad;
   ctx.fillRect(0, headerH - 12, W, 12);
 
-  // Centered logo circle — purple fill + gold ring (brand colors)
-  const logoBg = ctx.createRadialGradient(540, 56, 10, 540, 56, 44);
-  logoBg.addColorStop(0, '#8B5CC9');
-  logoBg.addColorStop(1, '#4A2E80');
-  roundRect(ctx, 496, 12, 88, 88, 44);
-  ctx.fillStyle = logoBg;
-  ctx.fill();
-  ctx.strokeStyle = '#FFD700';
-  ctx.lineWidth = 3;
-  ctx.stroke();
-  await drawImg(ctx, logoUrl, 503, 19, 74, 74);
+  // ponytail: logo circle removed — logo not official Greenwich branding
+  // placeholder for future official logo integration
 
   // Title — gold with purple glow, elegant editorial style
   ctx.textAlign = 'center';
@@ -381,8 +372,8 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, PH, PH, '#6B4BA0', 28, 3);
   });
 
-  // Emoji reactions on photos (top-right corner)
-  const emojis = ['😂', '❤️', '🎉', '✨'];
+  // Emoji reactions on photos (top-right corner) — cheerful only
+  const emojis = ['😄', '❤️', '🥳', '✨'];
   pos.forEach(([x, y], i) => {
     ctx.font = 'bold 42px Arial, sans-serif';
     ctx.textAlign = 'center';
@@ -425,13 +416,13 @@ async function buildPoster() {
   ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('✦  #GreenwichVietnam  ✦', 540, footerY + 100);
 
-  // Outer border: gold thick + purple thin inner (luxury frame)
+  // Outer border: gold thick + purple thin inner (luxury frame, centered)
   ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 8;
-  ctx.strokeRect(16, 16, W - 32, H - 32);
+  ctx.strokeRect(20, 20, W - 40, H - 40); // centered: offset 20 + 4 half-width
   ctx.strokeStyle = '#6B4BA0';
   ctx.lineWidth = 2;
-  ctx.strokeRect(28, 28, W - 56, H - 56);
+  ctx.strokeRect(32, 32, W - 64, H - 64);
 }
 
 function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
