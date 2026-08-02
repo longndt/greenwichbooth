@@ -5,12 +5,15 @@ import './styles.css';
 // Face detection removed — simplified accessory positioning (fixed positioning)
 
 // ── State ─────────────────────────────────────────────────────────────────────
+const isMobile = () => window.innerWidth <= 768;
+
 const S = {
   mode: 'ready',
   interval: 3,
   photos: [],
   stream: null,
   posterUrl: null,
+  showPosterPreview: !isMobile(),
 };
 
 const q  = s => document.querySelector(s);
@@ -151,10 +154,12 @@ async function shoot() {
   if (!cam.srcObject || cam.videoWidth === 0) return;
 
   S.mode = 'shooting';
+  S.showPosterPreview = true;
   q('#shoot-btn').disabled = true;
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
+  q('.ctrl-col').classList.remove('hide-preview');
   q('.ctrl-col').classList.add('shooting');
   q('#cov').classList.remove('hidden');
 
@@ -469,6 +474,9 @@ function retake() {
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
   q('#cov').classList.add('hidden');
+  q('.ctrl-col').classList.remove('shooting');
+  S.showPosterPreview = !isMobile();
+  if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 }
 
 function printPoster() {
@@ -505,5 +513,6 @@ window.addEventListener('orientationchange', () => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
+if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 startCam();
 if (import.meta.env.DEV) window.__t = { S, buildPoster };

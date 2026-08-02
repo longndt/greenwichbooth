@@ -1036,6 +1036,10 @@ input[type="range"] {
   .pv-slot {
     aspect-ratio: unset;
   }
+
+  /* Default: hide poster grid, show only camera + shoot button */
+  .ctrl-col.hide-preview .poster-shell { display: none; }
+  .ctrl-col.hide-preview { justify-content: center; }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */
