@@ -1036,6 +1036,13 @@ input[type="range"] {
   /* Default: hide poster grid, show only camera + shoot button */
   .ctrl-col.hide-preview .poster-shell { display: none; }
   .ctrl-col.hide-preview { justify-content: center; }
+
+  /* Countdown: smaller for 27dvh camera box */
+  .cnt-num-wrap { width: 52px; height: 52px; }
+  .cnt-n { font-size: 24px; }
+  .cnt-lbl { font-size: 11px; }
+  .dot { width: 7px; height: 7px; }
+  .dot-strip { gap: 5px; }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */
