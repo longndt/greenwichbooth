@@ -173,19 +173,20 @@ html, body {
 /* ── Countdown overlay ───────────────────────────────────── */
 .cnt-ov {
   position: absolute;
-  inset: 0;
-  background: transparent;
+  top: 12px;
+  right: 12px;
+  background: rgba(5,14,9,0.72);
+  backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 8px;
   z-index: 10;
-}
-
-/* Wrap số đếm trong badge nổi — không che camera */
-.cnt-num-wrap {
-  filter: drop-shadow(0 0 12px rgba(0,0,0,0.8));
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
 }
 
 .cnt-ov.hidden { display: none; }
