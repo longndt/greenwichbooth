@@ -280,7 +280,7 @@ async function buildPoster() {
   ctx.fillStyle = header;
   ctx.fillRect(0, 0, W, headerH);
   ctx.fillStyle = '#ffd700';
-  ctx.fillRect(0, headerH - 12, W, 12);
+  ctx.fillRect(0, headerH - 14, W, 14);
   ctx.fillStyle = '#17211c';
   ctx.fillRect(0, 0, W, 12);
 
@@ -296,21 +296,15 @@ async function buildPoster() {
   ctx.stroke();
   await drawImg(ctx, logoUrl, 43, 35, 104, 104);
 
-  // Main title + subtitle
+  // Main title + subtitle — centered
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#ffd700';
   ctx.font = '900 48px Sora, Arial, sans-serif';
-  ctx.textAlign = 'left';
-  ctx.fillText('GREENWICH VIETNAM', 175, 55);
+  ctx.fillText('GREENWICH VIETNAM', 540, 55);
 
   ctx.fillStyle = 'rgba(248,242,228,0.95)';
   ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('FUTURE STUDENT PASS', 175, 95);
-
-  // Top-right corner: GREENWICH text only
-  ctx.textAlign = 'right';
-  ctx.fillStyle = '#ffd700';
-  ctx.font = '900 36px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 1020, 70);
+  ctx.fillText('FUTURE STUDENT PASS', 540, 95);
 
   pos.forEach(([x, y], i) => {
     ctx.save();
@@ -347,33 +341,33 @@ async function buildPoster() {
   ctx.restore();
 
   roundRect(ctx, 52, footerY, 976, footerH, 28);
-  ctx.fillStyle = '#f5eddc';
+  ctx.fillStyle = '#ede2cc';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 5;
   roundRect(ctx, 52, footerY, 976, footerH, 28);
   ctx.stroke();
 
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
   ctx.fillStyle = '#005a33';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 76, footerY + 32);
+  ctx.fillText('greenwich.edu.vn', 280, footerY + 28);
   ctx.fillStyle = '#17211c';
   ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('#GreenwichVietnam', 76, footerY + 60);
+  ctx.fillText('#GreenwichVietnam', 280, footerY + 52);
 
-  roundRect(ctx, 702, footerY + 22, 286, 118, 22);
+  roundRect(ctx, 690, footerY + 14, 310, 134, 24);
   ctx.fillStyle = '#fffaf0';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 5;
-  roundRect(ctx, 702, footerY + 22, 286, 118, 22);
+  ctx.lineWidth = 6;
+  roundRect(ctx, 690, footerY + 14, 310, 134, 24);
   ctx.stroke();
-  await drawImg(ctx, logoUrl, 722, footerY + 30, 70, 70);
+  await drawImg(ctx, logoUrl, 710, footerY + 24, 80, 80);
   ctx.textAlign = 'center';
   ctx.fillStyle = '#005a33';
-  ctx.font = '800 22px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 890, footerY + 50);
+  ctx.font = '800 24px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 900, footerY + 55);
 
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 10;
