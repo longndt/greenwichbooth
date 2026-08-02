@@ -1021,7 +1021,7 @@ input[type="range"] {
   }
 
   .poster-shell {
-    flex: 1;
+    flex: 0 1 auto;
     min-height: 0;
     width: 100%;
     padding: 8px;
