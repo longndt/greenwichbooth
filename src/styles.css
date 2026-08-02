@@ -82,19 +82,23 @@ html, body {
 .hdr-brand { display: flex; align-items: center; gap: 12px; }
 
 .hdr-lion {
-  width: 44px;
-  height: 44px;
+  width: 52px;
+  height: 52px;
   flex-shrink: 0;
-  border-radius: 6px;
+  padding: 5px;
+  border-radius: 9999px;
+  background: rgba(255,203,47,0.14);
+  border: 1px solid rgba(255,203,47,0.36);
   object-fit: contain;
   object-position: center;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
 }
 
 .hdr-text { display: flex; flex-direction: column; gap: 4px; }
 
 .hdr-name {
   font-family: 'Sora', sans-serif;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 900;
   color: var(--color-accent);
   letter-spacing: 0;
@@ -567,12 +571,12 @@ input[type="range"] {
   }
 
   .hdr-name {
-    font-size: 16px;
+    font-size: 17px;
   }
 
   .hdr-lion {
-    width: 44px;
-    height: 44px;
+    width: 48px;
+    height: 48px;
   }
 
   .cam-col,

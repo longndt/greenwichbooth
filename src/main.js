@@ -1,6 +1,5 @@
 import QRCode from 'qrcode';
 import lionUrl from './assets/lion-new.svg';
-import mascotUrl from './assets/greenwich-mascot.png';
 import './styles.css';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
@@ -254,13 +253,13 @@ async function buildPoster() {
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1440, GAP = 24;
-  const PH = 450;
+  const W = 1080, H = 1440, GAP = 22;
+  const PH = 446;
   const pos = [
-    [52,            224],
-    [52 + PH + GAP, 224],
-    [52,            224 + PH + GAP],
-    [52 + PH + GAP, 224 + PH + GAP],
+    [54,            220],
+    [54 + PH + GAP, 220],
+    [54,            220 + PH + GAP],
+    [54 + PH + GAP, 220 + PH + GAP],
   ];
 
   ctx.fillStyle = '#fff9ef';
@@ -270,18 +269,24 @@ async function buildPoster() {
   for (let y = 0; y < H; y += 36) ctx.fillRect(0, y, W, 1);
 
   ctx.fillStyle = '#006b3f';
-  ctx.fillRect(0, 0, W, 168);
+  ctx.fillRect(0, 0, W, 176);
   ctx.fillStyle = '#ffcb2f';
-  ctx.fillRect(0, 168, W, 12);
+  ctx.fillRect(0, 176, W, 10);
   ctx.fillStyle = '#f0f5f2';
   ctx.textBaseline = 'top';
   ctx.textAlign = 'left';
-  await drawImg(ctx, lionUrl, 44, 20, 106, 106);
+  roundRect(ctx, 38, 28, 116, 116, 58);
+  ctx.fillStyle = '#ffcb2f';
+  ctx.fill();
+  ctx.strokeStyle = '#f0f5f2';
+  ctx.lineWidth = 4;
+  ctx.stroke();
+  await drawImg(ctx, lionUrl, 48, 38, 96, 96);
   ctx.font = '900 58px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', 162, 34);
+  ctx.fillText('GREENWICH VIETNAM', 170, 34);
   ctx.font = '700 24px "Space Grotesk", Arial, sans-serif';
-  ctx.fillStyle = 'rgba(240,245,242,0.82)';
-  ctx.fillText('FUTURE STUDENT PASS', 164, 98);
+  ctx.fillStyle = 'rgba(240,245,242,0.86)';
+  ctx.fillText('FUTURE STUDENT PASS', 172, 100);
 
   const photos = S.photos;
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0], pos[i][1], PH, PH)));
@@ -300,17 +305,32 @@ async function buildPoster() {
     ctx.fillText(`${i + 1}`, x + 18, y + 18);
   });
 
-  roundRect(ctx, 694, 1174, 332, 196, 24);
+  ctx.save();
+  ctx.globalAlpha = 0.08;
+  await drawImg(ctx, lionUrl, 742, 1136, 230, 230);
+  ctx.restore();
+
+  ctx.fillStyle = '#006b3f';
+  ctx.font = '800 18px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn', 58, 1208);
+  ctx.fillStyle = '#17211c';
+  ctx.font = '700 19px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('#GreenwichVietnam', 58, 1234);
+
+  roundRect(ctx, 700, 1180, 300, 160, 26);
   ctx.fillStyle = '#f5eddc';
   ctx.fill();
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 5;
-  roundRect(ctx, 694, 1174, 332, 196, 24);
+  roundRect(ctx, 700, 1180, 300, 160, 26);
   ctx.stroke();
-  ctx.fillStyle = '#ffcb2f';
-  ctx.font = '800 20px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('AMBASSADOR', 718, 1198);
-  await drawImg(ctx, mascotUrl, 718, 1216, 250, 142);
+  await drawImg(ctx, lionUrl, 722, 1200, 100, 100);
+  ctx.fillStyle = '#006b3f';
+  ctx.font = '900 22px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 834, 1208);
+  ctx.fillStyle = '#17211c';
+  ctx.font = '700 18px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Official student booth', 834, 1240);
 
   ctx.strokeStyle = '#17211c';
   ctx.lineWidth = 8;
