@@ -313,6 +313,7 @@ q('#app').innerHTML = `
         <strong id="qr-title">Đang tạo link...</strong>
         <span id="qr-sub">Chờ khoảng 8 giây...</span>
         <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải poster về máy">⬇ Tải về máy</a>
+        <button id="print-btn" class="btn-primary" type="button" aria-label="In poster ra máy in">🖨 In ảnh</button>
       </div>
     </div>
     <button id="retake-btn" class="btn-sec btn-full" aria-label="Chụp lại bộ ảnh mới">↩ Chụp lại</button>
@@ -340,7 +341,7 @@ q('#app').innerHTML = `
 async function startCam() {
   try {
     S.stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1920 }, height: { ideal: 1080 } },
+      video: { facingMode: 'user', aspectRatio: 4 / 3, width: { ideal: 1920 }, height: { ideal: 1440 } },
       audio: false,
     });
     const cam = q('#cam');
@@ -428,10 +429,12 @@ function capFrame(cam) {
   const raw = document.createElement('canvas');
   raw.width = sz; raw.height = sz;
   const rx = raw.getContext('2d');
+  rx.imageSmoothingEnabled = true;
+  rx.imageSmoothingQuality = 'high';
   rx.translate(sz, 0); rx.scale(-1, 1);
   rx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
 
-  return raw.toDataURL('image/jpeg', 0.9);
+  return raw.toDataURL('image/jpeg', 0.98);
 }
 
 // ── Poster composition (1080×1440) — 2×2 grid, randomized theme + per-photo frames
@@ -605,10 +608,33 @@ function retake() {
   q('#cov').classList.add('hidden');
 }
 
+function printPoster() {
+  if (!S.posterUrl) return;
+  const printWindow = window.open('', '_blank', 'width=900,height=1200');
+  if (!printWindow) return;
+  printWindow.document.write(`<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <title>In Greenwich Booth</title>
+  <style>
+    @page { margin: 0; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #fff; }
+    img { width: 100%; max-width: 1080px; height: auto; display: block; }
+  </style>
+</head>
+<body>
+  <img src="${S.posterUrl}" alt="Greenwich Booth poster" onload="window.focus(); window.print();">
+</body>
+</html>`);
+  printWindow.document.close();
+}
+
 // ── Events ────────────────────────────────────────────────────────────────────
 q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
+q('#print-btn').addEventListener('click', printPoster);
 
 // ── Mobile orientation ───────────────────────────────────────────────────────
 window.addEventListener('orientationchange', () => {
