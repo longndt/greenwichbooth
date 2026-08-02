@@ -19,7 +19,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 16, size: 120 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '900 58px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#D4AF37',
       shadow: { color: 'rgba(0,107,63,0.7)', blur: 20 },
@@ -66,7 +66,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 18, size: 116 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '800 54px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(15,113,115,0.8)', blur: 18 },
@@ -113,7 +113,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 18, size: 116 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '900 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(255,107,53,0.5)', blur: 16 },
@@ -160,7 +160,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 20, size: 120 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '900 62px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFD700',
       shadow: { color: 'rgba(107,75,160,0.5)', blur: 24 },
@@ -207,7 +207,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 18, size: 116 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '800 54px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(45,106,79,0.8)', blur: 16 },
@@ -301,7 +301,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 18, size: 116 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '900 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFCB2F',
       shadow: { color: 'rgba(0,0,0,0.5)', blur: 12 },
@@ -348,7 +348,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 18, size: 116 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '800 52px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#0F5132',
       shadow: { color: 'rgba(0,0,0,0.1)', blur: 6 },
@@ -395,7 +395,7 @@ export const CONCEPTS = [
     },
     logo: { x: 484, y: 22, size: 108 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '700 50px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#1B5E5E',
       shadow: { color: 'transparent', blur: 0 },
@@ -442,7 +442,7 @@ export const CONCEPTS = [
     },
     logo: { x: 480, y: 18, size: 116 },
     title: {
-      text: 'GREENWICH VIETNAM',
+      text: 'GREENWICH PHOTOBOOTH',
       font: '800 52px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#1B5E5E',
       shadow: { color: 'transparent', blur: 0 },

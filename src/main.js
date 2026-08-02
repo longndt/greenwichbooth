@@ -419,7 +419,7 @@ async function buildPoster() {
   // Line 1: wordmark
   ctx.fillStyle = theme.footer.url.color;
   ctx.font = '800 18px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('GREENWICH VIETNAM', 540, footerY + 42);
+  ctx.fillText('GREENWICH PHOTOBOOTH', 540, footerY + 42);
 
   // Line 2: campus info
   ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
