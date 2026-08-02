@@ -290,34 +290,29 @@ async function buildPoster() {
     [PAD + PH + GAP, photosY + PH + GAP],
   ];
 
-  // Neon gradient background (black → deep purple → dark cyan)
-  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
-  bgGrad.addColorStop(0, '#0a0015');
-  bgGrad.addColorStop(0.5, '#1a0033');
-  bgGrad.addColorStop(1, '#001a2e');
-  ctx.fillStyle = bgGrad;
+  // Pure black background (luxury editorial aesthetic)
+  ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, W, H);
 
-  // Subtle cyan grid texture
-  ctx.fillStyle = 'rgba(0, 229, 255, 0.035)';
-  for (let x = 0; x < W; x += 34) ctx.fillRect(x, 0, 1, H);
-  for (let y = 0; y < H; y += 34) ctx.fillRect(0, y, W, 1);
+  // Subtle purple grid texture (reference to compass motif)
+  ctx.fillStyle = 'rgba(107, 75, 160, 0.08)';
+  for (let x = 0; x < W; x += 40) ctx.fillRect(x, 0, 1, H);
+  for (let y = 0; y < H; y += 40) ctx.fillRect(0, y, W, 1);
 
-  // Header gradient (neon: purple → dark cyan)
-  const headerGrad = ctx.createLinearGradient(0, 0, W, 0);
-  headerGrad.addColorStop(0, '#1a0033');
-  headerGrad.addColorStop(0.5, '#001a3f');
-  headerGrad.addColorStop(1, '#1a0033');
-  ctx.fillStyle = headerGrad;
+  // Header: pure black with gold top + bottom bars
+  ctx.fillStyle = '#000000';
   ctx.fillRect(0, 0, W, headerH);
 
-  // Header top hot pink bar
-  ctx.fillStyle = '#FF1493';
-  ctx.fillRect(0, 0, W, 5);
+  // Header top gold bar
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(0, 0, W, 8);
 
-  // Header bottom cyan bar
-  ctx.fillStyle = '#00E5FF';
-  ctx.fillRect(0, headerH - 6, W, 6);
+  // Header bottom: purple gradient bar (brand color)
+  const headerBottomGrad = ctx.createLinearGradient(0, headerH - 12, 0, headerH);
+  headerBottomGrad.addColorStop(0, 'rgba(107, 75, 160, 0.4)');
+  headerBottomGrad.addColorStop(1, '#6B4BA0');
+  ctx.fillStyle = headerBottomGrad;
+  ctx.fillRect(0, headerH - 12, W, 12);
 
   // Centered logo circle — shrunk to 88px to clear title below
   const logoBg = ctx.createRadialGradient(540, 56, 14, 540, 56, 44);
@@ -331,59 +326,52 @@ async function buildPoster() {
   ctx.stroke();
   await drawImg(ctx, logoUrl, 503, 19, 74, 74);
 
-  // Title — stroke first (dark outline) then fill (cyan) for crisp neon edge
+  // Gold horizontal divider line below logo
+  ctx.strokeStyle = '#FFD700';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(150, 128);
+  ctx.lineTo(930, 128);
+  ctx.stroke();
+
+  // Title — gold with purple glow, elegant editorial style
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = '900 60px Sora, Arial, sans-serif';
-  ctx.shadowColor = 'rgba(255, 20, 147, 0.8)';
-  ctx.shadowBlur = 28;
+  ctx.font = '900 62px Sora, Arial, sans-serif';
+  ctx.shadowColor = 'rgba(107, 75, 160, 0.5)';
+  ctx.shadowBlur = 24;
   ctx.shadowOffsetY = 0;
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
-  ctx.lineWidth = 5;
-  ctx.lineJoin = 'round';
-  ctx.strokeText('GREENWICH VIETNAM', 540, 140);
-  ctx.fillStyle = '#00E5FF';
-  ctx.fillText('GREENWICH VIETNAM', 540, 140);
+  ctx.fillStyle = '#FFD700';
+  ctx.fillText('GREENWICH VIETNAM', 540, 155);
 
-  // Subtitle — white stroke + hot pink fill for contrast on any background
-  ctx.shadowColor = 'rgba(255, 20, 147, 0.5)';
-  ctx.shadowBlur = 12;
-  ctx.font = '700 22px "Space Grotesk", Arial, sans-serif';
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
-  ctx.lineWidth = 3;
-  ctx.strokeText('✦  CREATE YOUR MEMORIES  ✦', 540, 190);
-  ctx.fillStyle = '#FF1493';
-  ctx.fillText('✦  CREATE YOUR MEMORIES  ✦', 540, 190);
+  // Subtitle — gold text, elegant
+  ctx.shadowColor = 'rgba(107, 75, 160, 0.3)';
+  ctx.shadowBlur = 8;
+  ctx.fillStyle = '#FFD700';
+  ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('✦  SAY YOUR STORY  ✦', 540, 195);
 
-  // Date — pill background + white text (most readable on dark bg)
+  // Date — simple elegant text, white on black
   ctx.shadowColor = 'transparent';
-  ctx.font = '600 16px "Space Grotesk", Arial, sans-serif';
-  const dateText = '📅 Aug 15-20  |  📍 Student Center  |  ⏰ 10am-4pm';
-  const dateW = ctx.measureText(dateText).width;
-  roundRect(ctx, 540 - dateW / 2 - 18, 215, dateW + 36, 28, 14);
-  ctx.fillStyle = 'rgba(0, 229, 255, 0.13)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(0, 229, 255, 0.35)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
   ctx.fillStyle = '#FFFFFF';
-  ctx.fillText(dateText, 540, 228);
+  ctx.font = '500 15px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('Aug 15-20  •  Student Center  •  10am-4pm', 540, 230);
 
-  // Photo slot frames: glow shadow + frame + corner accents
+  // Photo slot frames: gold glow + dark background
   pos.forEach(([x, y], i) => {
     ctx.save();
-    ctx.shadowColor = 'rgba(0, 229, 255, 0.2)';
-    ctx.shadowBlur = 32;
+    ctx.shadowColor = 'rgba(255, 215, 0, 0.15)';
+    ctx.shadowBlur = 28;
     ctx.shadowOffsetY = 0;
-    ctx.fillStyle = '#1a2820';
+    ctx.fillStyle = '#0a0a0a';
     roundRect(ctx, x - 8, y - 8, PH + 16, PH + 16, 20);
     ctx.fill();
     ctx.restore();
   });
 
-  // Photo background + draw photos
+  // Photo background
   pos.forEach(([x, y]) => {
-    ctx.fillStyle = '#1a2820';
+    ctx.fillStyle = '#0a0a0a';
     roundRect(ctx, x, y, PH, PH, 16);
     ctx.fill();
   });
@@ -391,13 +379,13 @@ async function buildPoster() {
   const photos = S.photos;
   await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 8, pos[i][1] + 8, PH - 16, PH - 16, 12)));
 
-  // Hot pink borders + cyan L-corner accents
+  // Gold borders + purple corner accents (compass/brand reference)
   pos.forEach(([x, y], i) => {
-    ctx.strokeStyle = '#FF1493';
+    ctx.strokeStyle = '#FFD700';
     ctx.lineWidth = 4;
     roundRect(ctx, x, y, PH, PH, 16);
     ctx.stroke();
-    drawCornerAccents(ctx, x, y, PH, PH, '#00E5FF', 28, 3);
+    drawCornerAccents(ctx, x, y, PH, PH, '#6B4BA0', 28, 3);
   });
 
   // Emoji reactions on photos (top-right corner)
@@ -409,56 +397,53 @@ async function buildPoster() {
     ctx.fillText(emojis[i], x + PH - 28, y + 28);
   });
 
-  // Footer container — neon gradient
-  const footerGrad = ctx.createLinearGradient(0, footerY, 0, footerY + footerH);
-  footerGrad.addColorStop(0, '#001a3f');
-  footerGrad.addColorStop(1, '#1a0033');
+  // Footer container — black with gold accent
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
-  ctx.fillStyle = footerGrad;
+  ctx.fillStyle = '#000000';
   ctx.fill();
 
-  // Footer top hot pink strip
-  ctx.fillStyle = '#FF1493';
-  ctx.fillRect(36, footerY, 1008, 3);
+  // Footer top gold strip
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(36, footerY, 1008, 4);
 
-  // Footer border (cyan)
-  ctx.strokeStyle = '#00E5FF';
+  // Footer border (purple)
+  ctx.strokeStyle = '#6B4BA0';
   ctx.lineWidth = 3;
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
-  // Left side: website + hashtag
+  // Left side: website + hashtag in white/gold
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#00E5FF';
+  ctx.fillStyle = '#FFFFFF';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn', 280, footerY + 28);
-  ctx.fillStyle = '#FF1493';
+  ctx.fillStyle = '#FFD700';
   ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('#GreenwichBooth', 280, footerY + 52);
 
   // Right badge: logo + text
-  ctx.fillStyle = '#0a0015';
+  ctx.fillStyle = 'rgba(107, 75, 160, 0.2)';
   roundRect(ctx, 690, footerY + 14, 310, 134, 20);
   ctx.fill();
-  ctx.strokeStyle = '#00E5FF';
+  ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 3;
   roundRect(ctx, 690, footerY + 14, 310, 134, 20);
   ctx.stroke();
 
   await drawImg(ctx, logoUrl, 710, footerY + 24, 80, 80);
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#00E5FF';
+  ctx.fillStyle = '#FFD700';
   ctx.font = '800 26px Sora, Arial, sans-serif';
   ctx.fillText('GREENWICH', 900, footerY + 50);
-  ctx.fillStyle = '#FF1493';
+  ctx.fillStyle = '#FFFFFF';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('VIETNAM', 900, footerY + 75);
 
-  // Outer border: hot pink thick + cyan thin inner
-  ctx.strokeStyle = '#FF1493';
+  // Outer border: gold thick + purple thin inner (luxury frame)
+  ctx.strokeStyle = '#FFD700';
   ctx.lineWidth = 8;
   ctx.strokeRect(16, 16, W - 32, H - 32);
-  ctx.strokeStyle = '#00E5FF';
+  ctx.strokeStyle = '#6B4BA0';
   ctx.lineWidth = 2;
   ctx.strokeRect(28, 28, W - 56, H - 56);
 }
