@@ -310,8 +310,25 @@ q('#app').innerHTML = `
         <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
       </div>
       <div class="dl-info">
-        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải ảnh về máy">⬇ Tải ảnh</a>
-        <button id="print-btn" class="btn-primary" type="button" aria-label="In poster ra máy in">🖨 In ảnh</button>
+        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải ảnh về máy">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" focusable="false" aria-hidden="true">
+              <path d="M12 3.5v9.2l3.2-3.2 1.8 1.8-6 6-6-6 1.8-1.8 3.2 3.2V3.5h2z"></path>
+              <path d="M5 19.5h14v2H5z"></path>
+            </svg>
+          </span>
+          <span>Tải ảnh</span>
+        </a>
+        <button id="print-btn" class="btn-primary" type="button" aria-label="In poster ra máy in">
+          <span class="btn-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" role="img" focusable="false" aria-hidden="true">
+              <path d="M7 7V3.5h10V7H7z"></path>
+              <path d="M7 17.5h10V21H7z"></path>
+              <path d="M6 9h12a3 3 0 0 1 3 3v4h-3v-3H6v3H3v-4a3 3 0 0 1 3-3zm1.5 2.2h9v1.8h-9z"></path>
+            </svg>
+          </span>
+          <span>In ảnh</span>
+        </button>
       </div>
     </div>
     <button id="retake-btn" class="btn-sec btn-full" aria-label="Chụp lại bộ ảnh mới">↩ Chụp lại</button>
