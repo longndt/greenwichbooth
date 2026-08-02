@@ -326,13 +326,8 @@ async function buildPoster() {
     ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
   }
 
-  // ── Logo — white badge removes PNG white bg clash on dark headers ──
-  const logoS = 64, logoX = (W - logoS) / 2, logoY = 14;
-  roundRect(ctx, logoX - 10, logoY - 10, logoS + 20, logoS + 20, 16);
-  ctx.fillStyle = 'rgba(255,255,255,0.92)';
-  ctx.shadowColor = 'rgba(0,0,0,0.2)'; ctx.shadowBlur = 12;
-  ctx.fill();
-  ctx.shadowColor = 'transparent'; ctx.shadowBlur = 0;
+  // ── Logo — transparent, no badge ──
+  const logoS = 64, logoX = (W - logoS) / 2, logoY = 48;
   await drawImg(ctx, logoUrl, logoX, logoY, logoS, logoS);
 
   // ── Title ──

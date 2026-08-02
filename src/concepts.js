@@ -23,7 +23,7 @@ export const CONCEPTS = [
       font: '900 58px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#D4AF37',
       shadow: { color: 'rgba(0,107,63,0.7)', blur: 20 },
-      y: 155,
+      y: 189,
     },
     subtitle: {
       text: '✦  DẪNĐẦU TƯƠNG LAI  ✦',
@@ -70,7 +70,7 @@ export const CONCEPTS = [
       font: '800 54px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(15,113,115,0.8)', blur: 18 },
-      y: 158,
+      y: 192,
     },
     subtitle: {
       text: '── BOARDING TO YOUR FUTURE ──',
@@ -117,7 +117,7 @@ export const CONCEPTS = [
       font: '900 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(255,107,53,0.5)', blur: 16 },
-      y: 156,
+      y: 190,
     },
     subtitle: {
       text: '🎉  OPEN DAY  🎉',
@@ -164,7 +164,7 @@ export const CONCEPTS = [
       font: '900 62px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFD700',
       shadow: { color: 'rgba(107,75,160,0.5)', blur: 24 },
-      y: 155,
+      y: 189,
     },
     subtitle: {
       text: '✦  SAY YOUR STORY  ✦',
@@ -211,7 +211,7 @@ export const CONCEPTS = [
       font: '800 54px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFFFFF',
       shadow: { color: 'rgba(45,106,79,0.8)', blur: 16 },
-      y: 156,
+      y: 190,
     },
     subtitle: {
       text: '🌍  GO GLOBAL  🌍',
@@ -258,7 +258,7 @@ export const CONCEPTS = [
       font: '800 46px "Space Grotesk", monospace',
       color: '#FF6B35',
       shadow: { color: 'rgba(255,107,53,0.7)', blur: 20 },
-      y: 155,
+      y: 189,
     },
     subtitle: {
       text: '// BUILD YOUR FUTURE_',
@@ -305,7 +305,7 @@ export const CONCEPTS = [
       font: '900 56px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#FFCB2F',
       shadow: { color: 'rgba(0,0,0,0.5)', blur: 12 },
-      y: 155,
+      y: 189,
     },
     subtitle: {
       text: '🦁  NĂNG ĐỘNG · VUI NHỘN  🦁',
@@ -352,7 +352,7 @@ export const CONCEPTS = [
       font: '800 52px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#0F5132',
       shadow: { color: 'rgba(0,0,0,0.1)', blur: 6 },
-      y: 156,
+      y: 190,
     },
     subtitle: {
       text: '── Greetings from Greenwich ──',
@@ -399,7 +399,7 @@ export const CONCEPTS = [
       font: '700 50px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#1B5E5E',
       shadow: { color: 'transparent', blur: 0 },
-      y: 158,
+      y: 192,
     },
     subtitle: {
       text: 'Premium · Minimal · Prestige',
@@ -446,7 +446,7 @@ export const CONCEPTS = [
       font: '800 52px "Plus Jakarta Sans", Arial, sans-serif',
       color: '#1B5E5E',
       shadow: { color: 'transparent', blur: 0 },
-      y: 156,
+      y: 190,
     },
     subtitle: {
       text: '📱  SHARE YOUR MOMENT  📱',
