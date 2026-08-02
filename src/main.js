@@ -327,7 +327,7 @@ async function buildPoster() {
   }
 
   // ── Logo — transparent, no badge ──
-  const logoS = 64, logoX = (W - logoS) / 2, logoY = 48;
+  const logoS = 64, logoX = (W - logoS) / 2, logoY = 70;
   await drawImg(ctx, logoUrl, logoX, logoY, logoS, logoS);
 
   // ── Title ──
