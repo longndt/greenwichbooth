@@ -2,12 +2,22 @@ import { put } from '@vercel/blob';
 
 export const config = {
   api: {
-    bodyParser: { sizeLimit: '10mb' },
+    bodyParser: false,
   },
 };
 
-const DATA_URL_PREFIX = 'data:image/jpeg;base64,';
 const MAX_BYTES = 10 * 1024 * 1024;
+
+async function readBody(req) {
+  const chunks = [];
+  let size = 0;
+  for await (const chunk of req) {
+    size += chunk.length;
+    if (size > MAX_BYTES) return null;
+    chunks.push(chunk);
+  }
+  return Buffer.concat(chunks);
+}
 
 // ponytail: same-origin gate + strict data-URL validation. NOT a true rate limiter
 // (serverless instances share no state). For real rate limiting add Upstash Redis
@@ -26,12 +36,11 @@ export default async function handler(req, res) {
   catch { return res.status(403).json({ error: 'Bad origin' }); }
 
   try {
-    const { image } = req.body || {};
-    if (typeof image !== 'string' || !image.startsWith(DATA_URL_PREFIX)) {
+    if (!String(req.headers['content-type'] || '').startsWith('image/jpeg')) {
       return res.status(400).json({ error: 'Invalid image' });
     }
-    const buf = Buffer.from(image.slice(DATA_URL_PREFIX.length), 'base64');
-    if (buf.length === 0 || buf.length > MAX_BYTES) {
+    const buf = await readBody(req);
+    if (!buf || buf.length === 0) {
       return res.status(413).json({ error: 'Image too large or empty' });
     }
     const { url } = await put(`booth/${Date.now()}.jpg`, buf, {

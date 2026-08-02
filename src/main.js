@@ -404,8 +404,10 @@ async function shoot() {
   }
   S.mode = 'done';
   let posterDataUrl;
+  let uploadBlob;
   try {
     posterDataUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
+    uploadBlob = await canvasToBlob(q('#cvs'), 0.76);
   } catch (err) {
     // ponytail: canvas taint (SVG/CORS) → degrade gracefully
     console.error('toDataURL failed:', err);
@@ -415,9 +417,15 @@ async function shoot() {
     return;
   }
   S.posterUrl = posterDataUrl;
-  const uploadP = uploadPoster(S.posterUrl);
+  const uploadP = uploadPoster(uploadBlob);
   q('#proc-ov').classList.add('hidden');
   showResult(uploadP);
+}
+
+function canvasToBlob(canvas, quality) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/jpeg', quality);
+  });
 }
 
 function capFrame(cam) {
@@ -566,15 +574,15 @@ function showResult(uploadP) {
   });
 }
 
-async function uploadPoster(dataUrl) {
+async function uploadPoster(blob) {
   const TIMEOUT_MS = 8000;
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
   try {
     const res = await fetch('/api/upload', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: dataUrl }),
+      headers: { 'Content-Type': 'image/jpeg' },
+      body: blob,
       signal: controller.signal,
     });
     if (!res.ok) return null;
