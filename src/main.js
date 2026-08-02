@@ -1,5 +1,5 @@
 import QRCode from 'qrcode';
-import logoUrl from './assets/greenwich-logo.svg';
+import logoUrl from './assets/greenwich-logo.png';
 import './styles.css';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
@@ -314,8 +314,8 @@ async function buildPoster() {
   ctx.fillStyle = headerBottomGrad;
   ctx.fillRect(0, headerH - 12, W, 12);
 
-  // ponytail: logo circle removed — logo not official Greenwich branding
-  // placeholder for future official logo integration
+  // Official Greenwich compass logo — navy, centered top of header
+  await drawImg(ctx, logoUrl, 480, 20, 120, 120);
 
   // Title — gold with purple glow, elegant editorial style
   ctx.textAlign = 'center';
