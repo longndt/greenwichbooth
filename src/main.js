@@ -310,9 +310,7 @@ q('#app').innerHTML = `
         <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
       </div>
       <div class="dl-info">
-        <strong id="qr-title">Đang tạo link...</strong>
-        <span id="qr-sub">Chờ khoảng 8 giây...</span>
-        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải poster về máy">⬇ Tải về máy</a>
+        <a id="dl-link" class="btn-primary" download="greenwichbooth.jpg" aria-label="Tải ảnh về máy">⬇ Tải ảnh</a>
         <button id="print-btn" class="btn-primary" type="button" aria-label="In poster ra máy in">🖨 In ảnh</button>
       </div>
     </div>
@@ -552,15 +550,11 @@ function showResult(uploadP) {
   q('#dl-link').href   = S.posterUrl;
   q('#qr-img').src     = '';
   q('.qr-wrap').classList.add('qr-loading');
-  q('#qr-title').textContent = 'Đang tạo link...';
-  q('#qr-sub').textContent = 'Chờ khoảng 8 giây...';
   q('#rov').classList.remove('hidden');
 
   uploadP.then(dlUrl => {
     q('.qr-wrap').classList.remove('qr-loading');
     if (!dlUrl) {
-      q('#qr-title').textContent = 'Không tạo được link';
-      q('#qr-sub').textContent = 'Vui lòng tải về máy thay thế (nút dưới)';
       return;
     }
     // Wrap image URL in display page with download button
@@ -568,8 +562,6 @@ function showResult(uploadP) {
     QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
       .then(qr => {
         q('#qr-img').src = qr;
-        q('#qr-title').textContent = '✓ Sẵn sàng · 📱 Quét để tải về';
-        q('#qr-sub').textContent = 'Dùng camera điện thoại để quét';
       });
   });
 }

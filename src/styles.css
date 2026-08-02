@@ -421,6 +421,27 @@ input[type="range"] {
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
 }
 
+.qr-wrap.qr-loading {
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.qr-wrap.qr-loading::before {
+  content: '';
+  width: 48px;
+  height: 48px;
+  border: 4px solid rgba(255,255,255,0.18);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.qr-wrap.qr-loading #qr-img {
+  display: none;
+}
+
 #qr-img {
   width: 100%;
   height: 100%;
@@ -432,19 +453,6 @@ input[type="range"] {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-
-#qr-title {
-  color: var(--color-accent);
-  font-size: 14px;
-  line-height: 1.35;
-  font-family: 'Sora', sans-serif;
-}
-
-#qr-sub {
-  color: var(--color-text-muted);
-  font-size: 12px;
-  line-height: 1.45;
 }
 
 .btn-full { width: 100%; }
