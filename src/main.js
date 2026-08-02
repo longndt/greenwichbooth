@@ -1,5 +1,5 @@
 import QRCode from 'qrcode';
-import lionUrl from './assets/lion-new.svg';
+import logoUrl from './assets/greenwich-logo.svg';
 import './styles.css';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
