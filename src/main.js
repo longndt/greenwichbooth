@@ -251,6 +251,23 @@ function roundRect(ctx, x, y, w, h, r) {
   ctx.closePath();
 }
 
+function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lw;
+  ctx.lineCap = 'square';
+  ctx.lineJoin = 'miter';
+  // TL
+  ctx.beginPath(); ctx.moveTo(x + size, y); ctx.lineTo(x, y); ctx.lineTo(x, y + size); ctx.stroke();
+  // TR
+  ctx.beginPath(); ctx.moveTo(x + w - size, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + size); ctx.stroke();
+  // BL
+  ctx.beginPath(); ctx.moveTo(x, y + h - size); ctx.lineTo(x, y + h); ctx.lineTo(x + size, y + h); ctx.stroke();
+  // BR
+  ctx.beginPath(); ctx.moveTo(x + w - size, y + h); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w, y + h - size); ctx.stroke();
+  ctx.restore();
+}
+
 // ── Poster composition (1080×1440) — Future Student Pass
 async function buildPoster() {
   await document.fonts.ready;
@@ -262,121 +279,157 @@ async function buildPoster() {
   const PAD = 54;
   const GAP = 22;
   const PH = 446;
-  const headerH = 188;
+  const headerH = 220;
+  const photosY = 236;
   const footerY = 1174;
   const footerH = 188;
   const pos = [
-    [PAD,            228],
-    [PAD + PH + GAP, 228],
-    [PAD,            228 + PH + GAP],
-    [PAD + PH + GAP, 228 + PH + GAP],
+    [PAD,            photosY],
+    [PAD + PH + GAP, photosY],
+    [PAD,            photosY + PH + GAP],
+    [PAD + PH + GAP, photosY + PH + GAP],
   ];
 
-  ctx.fillStyle = '#f8f2e4';
+  // Dark gradient background
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  bgGrad.addColorStop(0, '#0c1a16');
+  bgGrad.addColorStop(0.5, '#0a1610');
+  bgGrad.addColorStop(1, '#060e09');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
-  ctx.fillStyle = 'rgba(0, 107, 63, 0.045)';
+
+  // Subtle cyan grid texture
+  ctx.fillStyle = 'rgba(0, 229, 255, 0.035)';
   for (let x = 0; x < W; x += 34) ctx.fillRect(x, 0, 1, H);
   for (let y = 0; y < H; y += 34) ctx.fillRect(0, y, W, 1);
 
-  const header = ctx.createLinearGradient(0, 0, W, 0);
-  header.addColorStop(0, '#003d2e');
-  header.addColorStop(0.45, '#005a33');
-  header.addColorStop(1, '#0d6b38');
-  ctx.fillStyle = header;
+  // Header gradient (horizontal)
+  const headerGrad = ctx.createLinearGradient(0, 0, W, 0);
+  headerGrad.addColorStop(0, '#003822');
+  headerGrad.addColorStop(0.5, '#00512e');
+  headerGrad.addColorStop(1, '#003822');
+  ctx.fillStyle = headerGrad;
   ctx.fillRect(0, 0, W, headerH);
-  ctx.fillStyle = '#ffd700';
-  ctx.fillRect(0, headerH - 14, W, 14);
-  ctx.fillStyle = '#17211c';
-  ctx.fillRect(0, 0, W, 12);
 
-  ctx.textBaseline = 'middle';
-  ctx.textAlign = 'left';
+  // Header top cyan bar
+  ctx.fillStyle = '#00E5FF';
+  ctx.fillRect(0, 0, W, 5);
 
-  // Logo circle + image
-  roundRect(ctx, 32, 24, 126, 126, 63);
-  ctx.fillStyle = '#ffd700';
+  // Header bottom gold bar
+  ctx.fillStyle = '#FFD700';
+  ctx.fillRect(0, headerH - 6, W, 6);
+
+  // Centered logo circle (radial gradient)
+  const logoBg = ctx.createRadialGradient(540, 68, 20, 540, 68, 52);
+  logoBg.addColorStop(0, '#FFE066');
+  logoBg.addColorStop(1, '#FFD700');
+  roundRect(ctx, 488, 16, 104, 104, 52);
+  ctx.fillStyle = logoBg;
   ctx.fill();
-  ctx.strokeStyle = '#f8f2e4';
-  ctx.lineWidth = 5;
+  ctx.strokeStyle = '#00E5FF';
+  ctx.lineWidth = 3;
   ctx.stroke();
-  await drawImg(ctx, logoUrl, 43, 35, 104, 104);
+  await drawImg(ctx, logoUrl, 495, 23, 90, 90);
 
-  // Main title + subtitle — centered
+  // Title with cyan glow shadow
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#ffd700';
-  ctx.font = '900 48px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH BOOTH', 540, 55);
+  ctx.textBaseline = 'middle';
+  ctx.shadowColor = 'rgba(0, 229, 255, 0.5)';
+  ctx.shadowBlur = 16;
+  ctx.shadowOffsetY = 0;
+  ctx.fillStyle = '#FFD700';
+  ctx.font = '900 58px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH BOOTH', 540, 145);
 
-  ctx.fillStyle = 'rgba(248,242,228,0.95)';
-  ctx.font = '700 20px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('FUTURE STUDENT PASS', 540, 95);
+  // Subtitle with symbols
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = '#00E5FF';
+  ctx.font = '700 21px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('✦  FUTURE STUDENT PASS  ✦', 540, 185);
 
+  // Photo slot frames: glow shadow + frame + corner accents
   pos.forEach(([x, y], i) => {
     ctx.save();
-    ctx.shadowColor = 'rgba(23, 33, 28, 0.4)';
-    ctx.shadowBlur = 28;
-    ctx.shadowOffsetY = 8;
-    ctx.fillStyle = '#0d1811';
-    roundRect(ctx, x - 7, y - 7, PH + 14, PH + 14, 24);
+    ctx.shadowColor = 'rgba(0, 229, 255, 0.2)';
+    ctx.shadowBlur = 32;
+    ctx.shadowOffsetY = 0;
+    ctx.fillStyle = '#1a2820';
+    roundRect(ctx, x - 8, y - 8, PH + 16, PH + 16, 20);
     ctx.fill();
     ctx.restore();
+  });
 
-    ctx.fillStyle = '#f1e7d3';
-    roundRect(ctx, x, y, PH, PH, 18);
+  // Photo background + draw photos
+  pos.forEach(([x, y]) => {
+    ctx.fillStyle = '#1a2820';
+    roundRect(ctx, x, y, PH, PH, 16);
     ctx.fill();
   });
 
   const photos = S.photos;
-  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 10, pos[i][1] + 10, PH - 20, PH - 20, 14)));
+  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 8, pos[i][1] + 8, PH - 16, PH - 16, 12)));
 
+  // Gold borders + cyan L-corner accents
   pos.forEach(([x, y], i) => {
-    ctx.strokeStyle = '#17211c';
-    ctx.lineWidth = 5;
-    roundRect(ctx, x, y, PH, PH, 18);
+    ctx.strokeStyle = '#FFD700';
+    ctx.lineWidth = 4;
+    roundRect(ctx, x, y, PH, PH, 16);
     ctx.stroke();
-    ctx.strokeStyle = '#ffd700';
-    ctx.lineWidth = 3;
-    roundRect(ctx, x + 10, y + 10, PH - 20, PH - 20, 14);
-    ctx.stroke();
+    drawCornerAccents(ctx, x, y, PH, PH, '#00E5FF', 28, 3);
   });
 
-  ctx.save();
-  ctx.globalAlpha = 0.06;
-  await drawImg(ctx, logoUrl, 746, 1110, 230, 230);
-  ctx.restore();
-
-  roundRect(ctx, 52, footerY, 976, footerH, 28);
-  ctx.fillStyle = '#ede2cc';
+  // Footer container — dark gradient matching header
+  const footerGrad = ctx.createLinearGradient(0, footerY, 0, footerY + footerH);
+  footerGrad.addColorStop(0, '#00512e');
+  footerGrad.addColorStop(1, '#003822');
+  roundRect(ctx, 36, footerY, 1008, footerH, 28);
+  ctx.fillStyle = footerGrad;
   ctx.fill();
-  ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 5;
-  roundRect(ctx, 52, footerY, 976, footerH, 28);
+
+  // Footer top cyan strip
+  ctx.fillStyle = '#00E5FF';
+  ctx.fillRect(36, footerY, 1008, 3);
+
+  // Footer border (gold)
+  ctx.strokeStyle = '#FFD700';
+  ctx.lineWidth = 3;
+  roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
+  // Left side: website + hashtag
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#005a33';
+  ctx.fillStyle = '#FFD700';
   ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn', 280, footerY + 28);
-  ctx.fillStyle = '#17211c';
+  ctx.fillStyle = '#00E5FF';
   ctx.font = '600 14px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('#GreenwichVietnam', 280, footerY + 52);
+  ctx.fillText('#GreenwichBooth', 280, footerY + 52);
 
-  roundRect(ctx, 690, footerY + 14, 310, 134, 24);
-  ctx.fillStyle = '#fffaf0';
+  // Right badge: logo + text
+  ctx.fillStyle = '#1a2820';
+  roundRect(ctx, 690, footerY + 14, 310, 134, 20);
   ctx.fill();
-  ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 6;
-  roundRect(ctx, 690, footerY + 14, 310, 134, 24);
+  ctx.strokeStyle = '#FFD700';
+  ctx.lineWidth = 3;
+  roundRect(ctx, 690, footerY + 14, 310, 134, 20);
   ctx.stroke();
+
   await drawImg(ctx, logoUrl, 710, footerY + 24, 80, 80);
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#005a33';
-  ctx.font = '800 24px Sora, Arial, sans-serif';
-  ctx.fillText('GREENWICH', 900, footerY + 55);
+  ctx.fillStyle = '#FFD700';
+  ctx.font = '800 26px Sora, Arial, sans-serif';
+  ctx.fillText('GREENWICH', 900, footerY + 50);
+  ctx.fillStyle = '#00E5FF';
+  ctx.font = '700 14px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('BOOTH', 900, footerY + 75);
 
-  ctx.strokeStyle = '#17211c';
-  ctx.lineWidth = 10;
-  ctx.strokeRect(20, 20, W - 40, H - 40);
+  // Outer border: gold thick + cyan thin inner
+  ctx.strokeStyle = '#FFD700';
+  ctx.lineWidth = 8;
+  ctx.strokeRect(16, 16, W - 32, H - 32);
+  ctx.strokeStyle = '#00E5FF';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(28, 28, W - 56, H - 56);
 }
 
 function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
