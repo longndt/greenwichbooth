@@ -12,6 +12,7 @@ const isMobile = () => window.innerWidth <= 768;
 const S = {
   mode: 'ready',
   interval: 3,
+  studentName: localStorage.getItem('greenwichbooth.studentName') || '',
   photos: [],
   stream: null,
   posterUrl: null,
@@ -21,9 +22,9 @@ const S = {
 };
 
 const THEME_OPTIONS = [
-  { label: 'Premium', detail: 'Tinh tế' },
-  { label: 'Festival', detail: 'Nổi bật' },
-  { label: 'Share', detail: 'Dễ đăng' },
+  { label: 'Campus Glow', detail: 'Elegant and clean' },
+  { label: 'Festival Pulse', detail: 'Bold and energetic' },
+  { label: 'Share Spark', detail: 'Built for sharing' },
 ];
 const INTERVAL_OPTIONS = [3, 4, 5];
 
@@ -70,6 +71,21 @@ function setIntervalSeconds(nextInterval) {
   const seconds = Number(nextInterval) || 3;
   S.interval = INTERVAL_OPTIONS.includes(seconds) ? seconds : 3;
   syncIntervalPicker();
+}
+
+function syncStudentNameField() {
+  const input = q('#student-name');
+  if (!input) return;
+  input.value = S.studentName;
+  input.disabled = S.mode !== 'ready';
+}
+
+function setStudentName(nextName) {
+  if (S.mode !== 'ready') return;
+  const name = String(nextName || '').trim().replace(/\s+/g, ' ').slice(0, 32);
+  S.studentName = name;
+  localStorage.setItem('greenwichbooth.studentName', name);
+  syncStudentNameField();
 }
 
 // ── Mount HTML ────────────────────────────────────────────────────────────────
@@ -145,6 +161,20 @@ q('#app').innerHTML = `
             <span class="theme-chip-label">${seconds}s</span>
           </button>
         `).join('')}
+      </div>
+
+      <div class="name-field">
+        <label class="name-label" for="student-name">Student Name</label>
+        <input
+          id="student-name"
+          class="name-input"
+          type="text"
+          inputmode="text"
+          maxlength="32"
+          placeholder="Optional personalization"
+          aria-label="Enter student name for poster personalization"
+        >
+        <div class="name-hint">Adds a small byline on the poster footer.</div>
       </div>
 
       <section class="poster-shell" aria-label="Poster preview">
@@ -242,6 +272,7 @@ async function shoot() {
   q('#shoot-btn').disabled = true;
   syncThemePicker();
   syncIntervalPicker();
+  syncStudentNameField();
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
@@ -289,6 +320,7 @@ async function shoot() {
     S.lockedThemeIndex = null;
     syncThemePicker();
     syncIntervalPicker();
+    syncStudentNameField();
     return;
   }
   let posterDataUrl;
@@ -305,9 +337,11 @@ async function shoot() {
     S.lockedThemeIndex = null;
     syncThemePicker();
     syncIntervalPicker();
+    syncStudentNameField();
     return;
   }
   S.mode = 'done';
+  syncStudentNameField();
   S.posterUrl = posterDataUrl;
   const uploadP = uploadPoster(uploadBlob);
   q('#proc-ov').classList.add('hidden');
@@ -543,6 +577,19 @@ async function buildPoster() {
   roundRect(ctx, 210, 1256, 660, 84, 20);
   ctx.fill();
 
+  const studentName = (S.studentName || '').trim();
+  if (studentName) {
+    ctx.save();
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.font = '700 15px "Be Vietnam Pro", Arial, sans-serif';
+    ctx.fillStyle = 'rgba(255,255,255,0.88)';
+    ctx.shadowColor = 'rgba(0,0,0,0.28)';
+    ctx.shadowBlur = 8;
+    ctx.fillText(studentName.length > 26 ? `${studentName.slice(0, 25)}…` : studentName, 540, 1261);
+    ctx.restore();
+  }
+
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
@@ -647,6 +694,7 @@ function retake() {
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
   syncThemePicker();
   syncIntervalPicker();
+  syncStudentNameField();
 }
 
 function printPoster() {
@@ -676,6 +724,8 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 q('#print-btn').addEventListener('click', printPoster);
+q('#student-name').value = S.studentName;
+q('#student-name').addEventListener('input', e => setStudentName(e.target.value));
 qa('.theme-chip[data-theme-index]').forEach(btn => {
   btn.addEventListener('click', () => setThemeIndex(btn.dataset.themeIndex));
 });
@@ -692,5 +742,6 @@ window.addEventListener('orientationchange', () => {
 if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 syncThemePicker();
 syncIntervalPicker();
+syncStudentNameField();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setIntervalSeconds };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setIntervalSeconds, setStudentName };
