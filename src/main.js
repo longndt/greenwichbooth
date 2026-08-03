@@ -536,15 +536,21 @@ async function buildPoster() {
   ctx.strokeStyle = theme.footer.borderColor;
   ctx.lineWidth = 2;
   ctx.stroke();
-  ctx.fillStyle = theme.footer.topStrip;
-  roundRect(ctx, 86, 1262, 132, 10, 5);
+  const footerGlow = ctx.createRadialGradient(540, 1294, 40, 540, 1294, 280);
+  footerGlow.addColorStop(0, 'rgba(214,178,65,0.18)');
+  footerGlow.addColorStop(1, 'rgba(214,178,65,0)');
+  ctx.fillStyle = footerGlow;
+  roundRect(ctx, 210, 1256, 660, 84, 20);
   ctx.fill();
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
+  ctx.shadowColor = 'rgba(214,178,65,0.34)';
+  ctx.shadowBlur = 14;
   ctx.font = '900 32px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillText(theme.footer.hashtag.text, 540, 1290);
+  ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.footer.url.color;
   ctx.font = '800 19px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn', 540, 1330);

@@ -45,7 +45,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: 'rgba(0,23,15,0.94)',
-      topStrip: '#00C875',
       borderColor: '#00C875',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#D6B241' },
@@ -91,7 +90,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#12122a',
-      topStrip: '#0f7173',
       borderColor: '#0f7173',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#0f7173' },
@@ -137,7 +135,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#071F1C',
-      topStrip: '#FF6B35',
       borderColor: '#FF6B35',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#FF6B35' },
@@ -183,7 +180,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#000000',
-      topStrip: '#FFD700',
       borderColor: '#6B4BA0',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#FFD700' },
@@ -229,7 +225,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#093622',
-      topStrip: '#90C8AC',
       borderColor: '#2D6A4F',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#90C8AC' },
@@ -275,7 +270,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#020a04',
-      topStrip: '#FF6B35',
       borderColor: 'rgba(255,107,53,0.4)',
       url: { text: 'greenwich.edu.vn', color: 'rgba(255,255,255,0.7)' },
       hashtag: { text: '#GreenwichVietnam', color: '#FF6B35' },
@@ -321,7 +315,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#0F3A3A',
-      topStrip: '#FFCB2F',
       borderColor: '#FFCB2F',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#FFCB2F' },
@@ -367,7 +360,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#0F5132',
-      topStrip: '#FFCB2F',
       borderColor: '#6B4226',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#FFCB2F' },
@@ -413,7 +405,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#F9F6F0',
-      topStrip: '#1B5E5E',
       borderColor: '#C9A961',
       url: { text: 'greenwich.edu.vn', color: '#1B5E5E' },
       hashtag: { text: '#GreenwichVietnam', color: '#C9A961' },
@@ -459,7 +450,6 @@ export const CONCEPTS = [
     },
     footer: {
       bg: '#1B5E5E',
-      topStrip: '#FF6B35',
       borderColor: '#FF6B35',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: '#GreenwichVietnam', color: '#FF6B35' },
