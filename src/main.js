@@ -1,7 +1,7 @@
 import QRCode from 'qrcode';
 import logoUrl from './assets/greenwich-logo.png';
 import './styles.css';
-import { randomConcept } from './concepts.js';
+import { getConcept } from './concepts.js';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
 
@@ -200,10 +200,21 @@ async function shoot() {
     S.mode = 'ready';
     return;
   }
-  S.mode = 'done';
   let posterDataUrl;
   let uploadBlob;
+  let embeddedQr = null;
   try {
+    const draftBlob = await canvasToBlob(q('#cvs'), 0.74);
+    const draftUrl = await uploadPoster(draftBlob);
+    if (draftUrl) {
+      const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(draftUrl)}`;
+      embeddedQr = await QRCode.toDataURL(displayUrl, {
+        margin: 1,
+        width: 280,
+        color: { dark: '#001f14', light: '#ffffff' },
+      });
+      await buildPoster(embeddedQr);
+    }
     posterDataUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
     uploadBlob = await canvasToBlob(q('#cvs'), 0.76);
   } catch (err) {
@@ -214,6 +225,7 @@ async function shoot() {
     S.mode = 'ready';
     return;
   }
+  S.mode = 'done';
   S.posterUrl = posterDataUrl;
   const uploadP = uploadPoster(uploadBlob);
   q('#proc-ov').classList.add('hidden');
@@ -270,7 +282,7 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
 }
 
 // ── Poster composition (1080×1440) — Random concept selection + rendering
-async function buildPoster() {
+async function buildPoster(qrDataUrl = null) {
   await document.fonts.ready;
 
   const cvs = q('#cvs');
@@ -278,25 +290,27 @@ async function buildPoster() {
   const ctx = cvs.getContext('2d');
   const W = 1080, H = 1440;
 
-  // Select random concept
-  const theme = randomConcept();
+  const theme = getConcept(1);
 
-  const GAP = 22;
-  const PH = 446;
-  const PAD = (W - (PH * 2 + GAP)) / 2;
-  const headerH = 260;
-  const photosY = 276;
-  const footerY = 1214;
-  const footerH = 188;
+  const headerH = 246;
+  const footerY = 1200;
+  const footerH = 192;
   const pos = [
-    [PAD,            photosY],
-    [PAD + PH + GAP, photosY],
-    [PAD,            photosY + PH + GAP],
-    [PAD + PH + GAP, photosY + PH + GAP],
+    { x: 64, y: 294, w: 620, h: 620, hero: true },
+    { x: 734, y: 294, w: 282, h: 282 },
+    { x: 734, y: 594, w: 282, h: 282 },
+    { x: 734, y: 894, w: 282, h: 282 },
   ];
 
   // ── Background + texture ──
   ctx.fillStyle = theme.bg.color;
+  ctx.fillRect(0, 0, W, H);
+
+  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+  bgGrad.addColorStop(0, 'rgba(0, 200, 117, 0.12)');
+  bgGrad.addColorStop(0.45, 'rgba(0, 31, 20, 0)');
+  bgGrad.addColorStop(1, 'rgba(214, 178, 65, 0.09)');
+  ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
 
   if (theme.bg.texture.type === 'grid') {
@@ -354,44 +368,68 @@ async function buildPoster() {
   ctx.fillText(today, 540, theme.date.y);
 
   // ── Photo slot shadows ──
-  pos.forEach(([x, y]) => {
+  pos.forEach(({ x, y, w, h, hero }) => {
     ctx.save();
     ctx.shadowColor = theme.photos.slotShadow;
-    ctx.shadowBlur = 24;
+    ctx.shadowBlur = hero ? 34 : 22;
     ctx.shadowOffsetY = 0;
     ctx.fillStyle = theme.photos.slotBg;
-    roundRect(ctx, x - 8, y - 8, PH + 16, PH + 16, theme.photos.radius + 2);
+    roundRect(ctx, x - 8, y - 8, w + 16, h + 16, theme.photos.radius + 2);
     ctx.fill();
     ctx.restore();
   });
 
   // ── Photo backgrounds ──
-  pos.forEach(([x, y]) => {
+  pos.forEach(({ x, y, w, h }) => {
     ctx.fillStyle = theme.photos.slotBg;
-    roundRect(ctx, x, y, PH, PH, theme.photos.radius);
+    roundRect(ctx, x, y, w, h, theme.photos.radius);
     ctx.fill();
   });
 
   // ── Draw photos ──
   const photos = S.photos;
-  await Promise.all(photos.map((p, i) => drawPhoto(ctx, p, pos[i][0] + 8, pos[i][1] + 8, PH - 16, PH - 16, theme.photos.radius - 4)));
+  await Promise.all(photos.map((p, i) => {
+    const slot = pos[i];
+    return drawPhoto(ctx, p, slot.x + 8, slot.y + 8, slot.w - 16, slot.h - 16, theme.photos.radius - 4);
+  }));
+
+  pos.forEach(({ x, y, w, h }) => {
+    ctx.save();
+    roundRect(ctx, x + 8, y + 8, w - 16, h - 16, theme.photos.radius - 4);
+    ctx.clip();
+    ctx.fillStyle = 'rgba(0,31,20,0.09)';
+    ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
+    ctx.restore();
+  });
 
   // ── Photo borders + corner accents ──
-  pos.forEach(([x, y]) => {
+  pos.forEach(({ x, y, w, h, hero }) => {
     ctx.strokeStyle = theme.photos.borderColor;
-    ctx.lineWidth = theme.photos.borderWidth;
-    roundRect(ctx, x, y, PH, PH, theme.photos.radius);
+    ctx.lineWidth = hero ? theme.photos.borderWidth + 1 : theme.photos.borderWidth;
+    roundRect(ctx, x, y, w, h, theme.photos.radius);
     ctx.stroke();
-    drawCornerAccents(ctx, x, y, PH, PH, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
+    drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  // ── Emojis ──
-  pos.forEach(([x, y], i) => {
-    ctx.font = 'bold 42px Arial, sans-serif';
+  // ── Small social stamps ──
+  pos.slice(0, 2).forEach(({ x, y, w }, i) => {
+    ctx.font = 'bold 38px Arial, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText(theme.photos.emojis[i], x + PH - 28, y + 28);
+    ctx.fillText(theme.photos.emojis[i], x + w - 30, y + 30);
   });
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  roundRect(ctx, 90, 884, 268, 44, 22);
+  ctx.fillStyle = 'rgba(0, 31, 20, 0.78)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(0, 200, 117, 0.7)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = '#D6B241';
+  ctx.font = '800 18px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('CLASS OF 2026', 116, 907);
 
   // ── Footer container ──
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
@@ -408,39 +446,53 @@ async function buildPoster() {
   roundRect(ctx, 36, footerY, 1008, footerH, 28);
   ctx.stroke();
 
-  // ── Footer content — brand card ──
-  ctx.textAlign = 'center';
+  // ── Footer content — brand + download CTA ──
+  ctx.textAlign = 'left';
 
   // Line 1: wordmark
   ctx.fillStyle = theme.footer.url.color;
-  ctx.font = '800 18px "Plus Jakarta Sans", Arial, sans-serif';
-  ctx.fillText('GREENWICH PHOTOBOOTH', 540, footerY + 42);
+  ctx.font = '800 24px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('GREENWICH PHOTOBOOTH', 86, footerY + 48);
 
   // Line 2: campus info
   ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
     ? 'rgba(255,255,255,0.65)'
     : 'rgba(0,0,0,0.5)';
-  ctx.font = '500 13px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('FPT University · University of Greenwich (UK)', 540, footerY + 72);
+  ctx.font = '600 15px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('FPT University · University of Greenwich (UK)', 86, footerY + 78);
 
   // Line 3: campus cities
   ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
     ? 'rgba(255,255,255,0.5)'
     : 'rgba(0,0,0,0.4)';
-  ctx.font = '400 12px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('Hà Nội  ·  TP.HCM  ·  Đà Nẵng  ·  Cần Thơ', 540, footerY + 96);
-
-  // Thin separator
-  ctx.strokeStyle = theme.footer.topStrip + '55';
-  ctx.setLineDash([4, 4]);
-  ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(160, footerY + 114); ctx.lineTo(920, footerY + 114); ctx.stroke();
-  ctx.setLineDash([]);
+  ctx.font = '500 14px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('Hà Nội  ·  TP.HCM  ·  Đà Nẵng  ·  Cần Thơ', 86, footerY + 106);
 
   // Line 4: website + hashtag
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.font = '600 13px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', 540, footerY + 138);
+  ctx.font = '800 15px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', 86, footerY + 152);
+
+  ctx.strokeStyle = theme.footer.topStrip + '66';
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(620, footerY + 36); ctx.lineTo(620, footerY + footerH - 36); ctx.stroke();
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '800 20px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('SCAN TO DOWNLOAD', 820, footerY + 42);
+  ctx.fillStyle = 'rgba(255,255,255,0.72)';
+  ctx.font = '600 13px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('Quét mã để tải ảnh', 820, footerY + 66);
+
+  roundRect(ctx, 764, footerY + 78, 112, 112, 10);
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fill();
+  if (qrDataUrl) {
+    await drawImg(ctx, qrDataUrl, 772, footerY + 86, 96, 96);
+  } else {
+    drawQrPlaceholder(ctx, 772, footerY + 86, 96);
+  }
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -449,6 +501,18 @@ async function buildPoster() {
   ctx.strokeStyle = theme.frame.inner;
   ctx.lineWidth = theme.frame.innerW;
   ctx.strokeRect(32, 32, W - 64, H - 64);
+}
+
+function drawQrPlaceholder(ctx, x, y, size) {
+  ctx.fillStyle = '#001f14';
+  const cell = size / 9;
+  const blocks = [
+    [0,0],[1,0],[2,0],[0,1],[2,1],[0,2],[1,2],[2,2],
+    [6,0],[7,0],[8,0],[6,1],[8,1],[6,2],[7,2],[8,2],
+    [0,6],[1,6],[2,6],[0,7],[2,7],[0,8],[1,8],[2,8],
+    [4,1],[4,3],[6,4],[3,5],[5,5],[7,6],[4,7],[6,8],
+  ];
+  blocks.forEach(([cx, cy]) => ctx.fillRect(x + cx * cell, y + cy * cell, cell * 0.82, cell * 0.82));
 }
 
 function drawPhoto(ctx, url, x, y, w, h, radius = 0) {

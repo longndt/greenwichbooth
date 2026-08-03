@@ -32,12 +32,12 @@
   --space-2xl:  48px;
 
   /* Typography */
-  --type-hero:  800 32px / 1.15 'Sora', sans-serif;
-  --type-lg:    800 20px / 1.25 'Sora', sans-serif;
-  --type-md:    700 16px / 1.4 'Space Grotesk', sans-serif;
-  --type-sm:    600 13px / 1.45 'Space Grotesk', sans-serif;
-  --type-body:  400 14px / 1.55 'Space Grotesk', sans-serif;
-  --type-hint:  500 12px / 1.5 'Space Grotesk', sans-serif;
+  --type-hero:  800 32px / 1.15 'Be Vietnam Pro', sans-serif;
+  --type-lg:    800 20px / 1.25 'Be Vietnam Pro', sans-serif;
+  --type-md:    700 16px / 1.4 'Be Vietnam Pro', sans-serif;
+  --type-sm:    600 13px / 1.45 'Be Vietnam Pro', sans-serif;
+  --type-body:  400 14px / 1.55 'Be Vietnam Pro', sans-serif;
+  --type-hint:  500 12px / 1.5 'Be Vietnam Pro', sans-serif;
 
   /* Rounded corners */
   --radius-sm:   6px;
@@ -46,7 +46,7 @@
   --radius-full: 9999px;
 
   /* Font */
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: 'Be Vietnam Pro', 'Space Grotesk', system-ui, sans-serif;
 }
 
 html, body {
@@ -97,7 +97,7 @@ html, body {
 .hdr-text { display: flex; flex-direction: column; gap: 4px; }
 
 .hdr-name {
-  font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
+  font-family: 'Be Vietnam Pro', 'Space Grotesk', sans-serif;
   font-size: 20px;
   font-weight: 900;
   color: var(--color-accent);
@@ -197,7 +197,7 @@ html, body {
 }
 
 .cnt-n {
-  font-family: 'Unbounded', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 30px;
   font-weight: 900;
   color: white;
@@ -313,7 +313,7 @@ input[type="range"] {
     radial-gradient(circle at 50% 58%, rgba(255,255,255,0.06), transparent 44%),
     linear-gradient(145deg, #0c7b49 0%, #006b3f 44%, #26cb72 100%);
   color: white;
-  font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
+  font-family: 'Be Vietnam Pro', 'Space Grotesk', sans-serif;
   cursor: pointer;
   display: flex;
   flex-direction: column;
@@ -511,7 +511,7 @@ input[type="range"] {
   flex: 1;
   padding: 13px 12px;
   border-radius: 10px;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
@@ -767,7 +767,7 @@ input[type="range"] {
   border-radius: 50%;
   background: rgba(5,14,9,0.8);
   color: rgba(255,255,255,0.7);
-  font-family: 'Plus Jakarta Sans', 'Space Grotesk', sans-serif;
+  font-family: 'Be Vietnam Pro', 'Space Grotesk', sans-serif;
   font-size: 11px;
   font-weight: 800;
   display: flex;
@@ -850,7 +850,7 @@ input[type="range"] {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 .proc-txt {
-  font-family: 'Unbounded', sans-serif;
+  font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 16px;
   font-weight: 900;
   color: var(--color-accent);

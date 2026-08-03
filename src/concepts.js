@@ -1,4 +1,4 @@
-// 10 Poster Concepts — Greenwich Vietnam Photobooth
+// Poster concepts — Greenwich Vietnam Photobooth
 // Layout constants (same for all concepts):
 //   title.font  = '800 56px "Plus Jakarta Sans"', y = 150
 //   subtitle.font = '600 16px "Space Grotesk"',   y = 205
@@ -10,47 +10,47 @@ export const CONCEPTS = [
   // ── 01. Lion Pride Campus ────────────────────────────────────────────────
   {
     id: 1,
-    name: 'Lion Pride Campus',
+    name: 'Premium Senior Moment',
     bg: {
-      color: '#0C2210',
-      texture: { type: 'grid', color: 'rgba(45,215,122,0.05)', step: 48 },
+      color: '#001F14',
+      texture: { type: 'grid', color: 'rgba(0,200,117,0.045)', step: 42 },
     },
     header: {
-      bg: '#081809',
-      topBar: { color: '#D4AF37', height: 8 },
-      bottomBar: { colors: ['rgba(0,107,63,0.4)', '#006b3f'], height: 14 },
+      bg: '#00170F',
+      topBar: { color: '#D6B241', height: 8 },
+      bottomBar: { colors: ['rgba(0,200,117,0.18)', 'rgba(0,200,117,0.7)'], height: 12 },
     },
     title: {
       text: 'GREENWICH VIETNAM',
-      font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
-      color: '#D4AF37',
-      shadow: { color: 'rgba(0,107,63,0.7)', blur: 20 },
-      y: 150,
+      font: '800 58px "Be Vietnam Pro", Arial, sans-serif',
+      color: '#D6B241',
+      shadow: { color: 'rgba(0,200,117,0.45)', blur: 18 },
+      y: 140,
     },
     subtitle: {
-      text: '✦  DẪN ĐẦU TƯƠNG LAI  ✦',
-      font: '600 16px "Space Grotesk", Arial, sans-serif',
-      color: '#90C878',
-      y: 205,
+      text: 'YOUR GREENWICH MOMENT',
+      font: '800 18px "Be Vietnam Pro", Arial, sans-serif',
+      color: '#00C875',
+      y: 198,
     },
-    date: { color: 'rgba(255,255,255,0.7)', y: 238 },
+    date: { color: 'rgba(255,255,255,0.68)', y: 226 },
     photos: {
-      slotShadow: 'rgba(212,175,55,0.2)',
-      slotBg: '#050e08',
-      borderColor: '#D4AF37',
-      borderWidth: 4,
+      slotShadow: 'rgba(0,200,117,0.24)',
+      slotBg: '#03150d',
+      borderColor: '#D6B241',
+      borderWidth: 3,
       radius: 18,
-      cornerAccent: { color: '#2DD77A', size: 32, lw: 3 },
-      emojis: ['🦁', '🎓', '🌟', '💚'],
+      cornerAccent: { color: '#00C875', size: 34, lw: 3 },
+      emojis: ['🎓', '💚', '', ''],
     },
     footer: {
-      bg: '#081809',
-      topStrip: '#D4AF37',
-      borderColor: '#2DD77A',
+      bg: 'rgba(0,23,15,0.94)',
+      topStrip: '#00C875',
+      borderColor: '#00C875',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
-      hashtag: { text: '✦  #GreenwichVietnam  ✦', color: '#D4AF37' },
+      hashtag: { text: '#GreenwichVN', color: '#D6B241' },
     },
-    frame: { outer: '#D4AF37', outerW: 8, inner: '#2DD77A', innerW: 2 },
+    frame: { outer: '#D6B241', outerW: 7, inner: '#00C875', innerW: 2 },
   },
 
   // ── 02. Future Passport ─────────────────────────────────────────────────
