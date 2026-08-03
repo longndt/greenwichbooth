@@ -397,6 +397,37 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
+function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
+  const text = String(name || '').trim();
+  if (!text) return;
+
+  ctx.save();
+  ctx.shadowColor = 'rgba(0, 31, 20, 0.55)';
+  ctx.shadowBlur = 24;
+  ctx.fillStyle = 'rgba(0, 31, 20, 0.74)';
+  roundRect(ctx, x, y, w, h, 24);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = theme.photos.cornerAccent.color;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  const maxWidth = w - 96;
+  let fontSize = 44;
+  do {
+    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
+    fontSize -= 2;
+  } while (ctx.measureText(text).width > maxWidth && fontSize >= 30);
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = 'rgba(255,255,255,0.96)';
+  ctx.shadowColor = 'rgba(214,178,65,0.34)';
+  ctx.shadowBlur = 10;
+  ctx.fillText(text, x + w / 2, y + h / 2 + 1, maxWidth);
+  ctx.restore();
+}
+
 // ── Poster composition (1080×1440) — Selected concept + rendering
 async function buildPoster() {
   await document.fonts.ready;
@@ -560,6 +591,8 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
+  drawStudentNameBadge(ctx, S.studentName, 236, 816, 608, 76, theme);
+
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
   roundRect(ctx, 64, 1240, 952, 126, 22);
@@ -573,19 +606,6 @@ async function buildPoster() {
   ctx.fillStyle = footerGlow;
   roundRect(ctx, 210, 1256, 660, 84, 20);
   ctx.fill();
-
-  const studentName = (S.studentName || '').trim();
-  if (studentName) {
-    ctx.save();
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.font = '700 15px "Be Vietnam Pro", Arial, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.88)';
-    ctx.shadowColor = 'rgba(0,0,0,0.28)';
-    ctx.shadowBlur = 8;
-    ctx.fillText(studentName.length > 26 ? `${studentName.slice(0, 25)}…` : studentName, 540, 1261);
-    ctx.restore();
-  }
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
