@@ -24,15 +24,26 @@ const THEME_OPTIONS = [
   { label: 'Festival', detail: 'Nổi bật' },
   { label: 'Share', detail: 'Dễ đăng' },
 ];
+const INTERVAL_OPTIONS = [3, 4, 5];
 
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 function syncThemePicker() {
-  qa('.theme-chip').forEach(btn => {
+  qa('.theme-chip[data-theme-index]').forEach(btn => {
     const index = Number(btn.dataset.themeIndex || 0);
     const active = index === S.themeIndex;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+    btn.disabled = S.mode !== 'ready';
+  });
+}
+
+function syncIntervalPicker() {
+  qa('.time-chip').forEach(btn => {
+    const seconds = Number(btn.dataset.interval || 3);
+    const active = seconds === S.interval;
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
     btn.disabled = S.mode !== 'ready';
@@ -45,6 +56,13 @@ function setThemeIndex(nextIndex) {
   S.themeIndex = index;
   localStorage.setItem('greenwichbooth.themeIndex', String(index));
   syncThemePicker();
+}
+
+function setIntervalSeconds(nextInterval) {
+  if (S.mode !== 'ready') return;
+  const seconds = Number(nextInterval) || 3;
+  S.interval = INTERVAL_OPTIONS.includes(seconds) ? seconds : 3;
+  syncIntervalPicker();
 }
 
 // ── Mount HTML ────────────────────────────────────────────────────────────────
@@ -104,6 +122,20 @@ q('#app').innerHTML = `
               <span class="theme-chip-label">${theme.label}</span>
               <span class="theme-chip-detail">${theme.detail}</span>
             </span>
+          </button>
+        `).join('')}
+      </div>
+      <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
+        ${INTERVAL_OPTIONS.map(seconds => `
+          <button
+            class="time-chip"
+            type="button"
+            data-interval="${seconds}"
+            aria-pressed="${seconds === S.interval}"
+            aria-label="Chọn ${seconds} giây"
+          >
+            <span class="theme-chip-dot" aria-hidden="true"></span>
+            <span class="theme-chip-label">${seconds}s</span>
           </button>
         `).join('')}
       </div>
@@ -201,6 +233,8 @@ async function shoot() {
   S.mode = 'shooting';
   S.showPosterPreview = true;
   q('#shoot-btn').disabled = true;
+  syncThemePicker();
+  syncIntervalPicker();
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
@@ -237,6 +271,7 @@ async function shoot() {
   q('#proc-ov').classList.remove('hidden');
   S.lockedThemeIndex = S.themeIndex;
   syncThemePicker();
+  syncIntervalPicker();
   try {
     await buildPoster();
   } catch (err) {
@@ -246,6 +281,7 @@ async function shoot() {
     S.mode = 'ready';
     S.lockedThemeIndex = null;
     syncThemePicker();
+    syncIntervalPicker();
     return;
   }
   let posterDataUrl;
@@ -261,6 +297,7 @@ async function shoot() {
     S.mode = 'ready';
     S.lockedThemeIndex = null;
     syncThemePicker();
+    syncIntervalPicker();
     return;
   }
   S.mode = 'done';
@@ -270,6 +307,7 @@ async function shoot() {
   showResult(uploadP);
   S.lockedThemeIndex = null;
   syncThemePicker();
+  syncIntervalPicker();
 }
 
 function canvasToBlob(canvas, quality) {
@@ -332,12 +370,12 @@ async function buildPoster() {
 
   const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 
-  const headerH = 184;
+  const headerH = 250;
   const pos = [
-    { x: 64, y: 216, w: 952, h: 640, hero: true },
-    { x: 64, y: 890, w: 300, h: 300 },
-    { x: 390, y: 890, w: 300, h: 300 },
-    { x: 716, y: 890, w: 300, h: 300 },
+    { x: 64, y: 286, w: 952, h: 576, hero: true },
+    { x: 64, y: 894, w: 300, h: 300 },
+    { x: 390, y: 894, w: 300, h: 300 },
+    { x: 716, y: 894, w: 300, h: 300 },
   ];
 
   // ── Background + texture ──
@@ -364,6 +402,16 @@ async function buildPoster() {
   // ── Header background ──
   ctx.fillStyle = theme.header.bg;
   ctx.fillRect(0, 0, W, headerH);
+  ctx.fillStyle = theme.title.color;
+  ctx.globalAlpha = 0.08;
+  ctx.beginPath();
+  ctx.moveTo(705, 0);
+  ctx.lineTo(W, 0);
+  ctx.lineTo(W, headerH);
+  ctx.lineTo(610, headerH);
+  ctx.closePath();
+  ctx.fill();
+  ctx.globalAlpha = 1;
 
   // ── Header top bar ──
   ctx.fillStyle = theme.header.topBar.color;
@@ -378,28 +426,40 @@ async function buildPoster() {
     ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
   }
 
-  // ── Title ──
-  ctx.textAlign = 'center';
+  // ── Brand + slogan ──
+  ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.font = '900 70px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.font = '800 28px "Space Grotesk", Arial, sans-serif';
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = theme.subtitle.color;
+  ctx.fillText('GREENWICH PHOTOBOOTH', 72, 54);
+
+  ctx.font = '900 74px "Be Vietnam Pro", Arial, sans-serif';
   ctx.shadowColor = theme.title.shadow.color;
   ctx.shadowBlur = theme.title.shadow.blur;
   ctx.shadowOffsetY = 0;
   ctx.fillStyle = theme.title.color;
-  ctx.fillText('CLASS OF 2026', 540, 88);
+  ctx.fillText('CHANGE STARTS', 72, 126);
+  ctx.font = '900 96px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('HERE', 72, 205);
 
-  // ── Subtitle ──
+  // ── Date badge ──
   ctx.shadowColor = 'transparent';
-  ctx.fillStyle = theme.subtitle.color;
-  ctx.font = '800 24px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('YOUR MOMENT, YOUR STORY', 540, 142);
-
-  // ── Date ──
-  ctx.fillStyle = theme.date.color;
-  ctx.font = '500 15px "Space Grotesk", Arial, sans-serif';
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  ctx.fillText(today, 540, 170);
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  roundRect(ctx, 784, 54, 224, 82, 16);
+  ctx.fill();
+  ctx.strokeStyle = theme.photos.borderColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.textAlign = 'center';
+  ctx.fillStyle = theme.date.color;
+  ctx.font = '700 18px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText('TODAY', 896, 82);
+  ctx.fillStyle = theme.title.color;
+  ctx.font = '900 27px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText(today, 896, 113);
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -445,17 +505,25 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  // ── Minimal sharing mark ──
+  // ── Footer statement ──
+  ctx.fillStyle = theme.footer.bg;
+  roundRect(ctx, 64, 1240, 952, 126, 22);
+  ctx.fill();
+  ctx.strokeStyle = theme.footer.borderColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.fillStyle = theme.footer.topStrip;
+  roundRect(ctx, 86, 1262, 132, 10, 5);
+  ctx.fill();
+
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.font = '800 24px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('#GreenwichVN', 540, 1302);
-  ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
-    ? 'rgba(255,255,255,0.42)'
-    : 'rgba(0,31,20,0.42)';
-  ctx.font = '600 14px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('Save it. Share it. Own the moment.', 540, 1340);
+  ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('#GreenwichVN', 540, 1290);
+  ctx.fillStyle = theme.footer.url.color;
+  ctx.font = '800 19px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('greenwich.edu.vn  /  change starts here', 540, 1330);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -548,6 +616,7 @@ function retake() {
   S.showPosterPreview = !isMobile();
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
   syncThemePicker();
+  syncIntervalPicker();
 }
 
 function printPoster() {
@@ -577,8 +646,11 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 q('#print-btn').addEventListener('click', printPoster);
-qa('.theme-chip').forEach(btn => {
+qa('.theme-chip[data-theme-index]').forEach(btn => {
   btn.addEventListener('click', () => setThemeIndex(btn.dataset.themeIndex));
+});
+qa('.time-chip').forEach(btn => {
+  btn.addEventListener('click', () => setIntervalSeconds(btn.dataset.interval));
 });
 
 // ── Mobile orientation ───────────────────────────────────────────────────────
@@ -589,5 +661,6 @@ window.addEventListener('orientationchange', () => {
 // ── Init ──────────────────────────────────────────────────────────────────────
 if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 syncThemePicker();
+syncIntervalPicker();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setIntervalSeconds };
