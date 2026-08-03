@@ -302,7 +302,7 @@ async function shoot() {
 
   q('#cov').classList.add('hidden');
   q('#shoot-btn').disabled = false;
-  q('#proc-sub').textContent = 'Đang tạo poster...';
+  q('#proc-sub').textContent = 'Vui lòng chờ';
   q('#proc-ov').classList.remove('hidden');
   S.lockedThemeIndex = S.themeIndex;
   syncThemePicker();
@@ -623,10 +623,15 @@ async function buildPoster() {
   ctx.shadowBlur = 14;
   ctx.font = '900 32px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillText(theme.footer.hashtag.text, 540, 1290);
-  ctx.shadowColor = 'transparent';
+  ctx.shadowColor = 'rgba(0,0,0,0.45)';
+  ctx.shadowBlur = 10;
+  ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = 'rgba(0,0,0,0.38)';
+  ctx.strokeText(theme.footer.url.text, 540, 1336);
   ctx.fillStyle = theme.footer.url.color;
-  ctx.font = '800 19px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn', 540, 1330);
+  ctx.fillText(theme.footer.url.text, 540, 1336);
+  ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
