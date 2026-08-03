@@ -1,6 +1,6 @@
 import QRCode from 'qrcode';
 import logoUrl from './assets/greenwich-logo.png';
-import lionUrl from './assets/lion-new.svg';
+import mascotUrl from './assets/greenwich-lion-mascot.jpg';
 import './styles.css';
 import { POSTER_THEMES } from './concepts.js';
 
@@ -369,7 +369,7 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
 // ── Poster composition (1080×1440) — Selected concept + rendering
 async function buildPoster() {
   await document.fonts.ready;
-  const lion = await loadImage(lionUrl);
+  const mascot = await loadImage(mascotUrl);
 
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
@@ -440,21 +440,21 @@ async function buildPoster() {
   ctx.font = '800 30px "Space Grotesk", Arial, sans-serif';
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('GREENWICH VIETNAM', 168, 56);
+  ctx.fillText('GREENWICH VIETNAM', 168, 70);
   ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
-  ctx.fillText('CHANGE STARTS HERE', 168, 90);
+  ctx.fillText('CHANGE STARTS HERE', 168, 104);
 
   ctx.save();
   ctx.beginPath();
-  ctx.arc(102, 74, 42, 0, Math.PI * 2);
+  ctx.arc(102, 88, 42, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(255,255,255,0.07)';
   ctx.fill();
   ctx.strokeStyle = 'rgba(255,203,47,0.55)';
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.clip();
-  ctx.drawImage(lion, 72, 44, 60, 60);
+  ctx.drawImage(mascot, 68, 54, 68, 68);
   ctx.restore();
 
   // ── Date badge ──
@@ -544,7 +544,7 @@ async function buildPoster() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
   ctx.font = '900 32px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('#GreenwichVN', 540, 1290);
+  ctx.fillText(theme.footer.hashtag.text, 540, 1290);
   ctx.fillStyle = theme.footer.url.color;
   ctx.font = '800 19px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillText('greenwich.edu.vn', 540, 1330);
