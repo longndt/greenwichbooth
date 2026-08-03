@@ -22,9 +22,9 @@ const S = {
 };
 
 const THEME_OPTIONS = [
-  { label: 'Campus Glow', detail: 'Elegant and clean' },
-  { label: 'Festival Pulse', detail: 'Bold and energetic' },
-  { label: 'Share Spark', detail: 'Built for sharing' },
+  { label: 'Campus Glow' },
+  { label: 'Festival Pulse' },
+  { label: 'Share Spark' },
 ];
 const INTERVAL_OPTIONS = [3, 4, 5];
 
@@ -82,7 +82,7 @@ function syncStudentNameField() {
 
 function setStudentName(nextName) {
   if (S.mode !== 'ready') return;
-  const name = String(nextName || '').trim().replace(/\s+/g, ' ').slice(0, 32);
+  const name = String(nextName || '').replace(/\s+/g, ' ').slice(0, 32);
   S.studentName = name;
   localStorage.setItem('greenwichbooth.studentName', name);
   syncStudentNameField();
@@ -143,7 +143,6 @@ q('#app').innerHTML = `
             <span class="theme-chip-dot" aria-hidden="true"></span>
             <span class="theme-chip-text">
               <span class="theme-chip-label">${theme.label}</span>
-              <span class="theme-chip-detail">${theme.detail}</span>
             </span>
           </button>
         `).join('')}
@@ -164,17 +163,15 @@ q('#app').innerHTML = `
       </div>
 
       <div class="name-field">
-        <label class="name-label" for="student-name">Student Name</label>
         <input
           id="student-name"
           class="name-input"
           type="text"
           inputmode="text"
           maxlength="32"
-          placeholder="Optional personalization"
+          placeholder="Enter name (optional)"
           aria-label="Enter student name for poster personalization"
         >
-        <div class="name-hint">Adds a small byline on the poster footer.</div>
       </div>
 
       <section class="poster-shell" aria-label="Poster preview">

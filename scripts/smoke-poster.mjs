@@ -30,6 +30,8 @@ async function main() {
     throw new Error(`Expected Festival Pulse theme active, got ${activeTheme}`);
   }
 
+  await page.evaluate(() => window.__t?.setStudentName?.('Nguyen '));
+  await page.waitForFunction(() => window.__t?.S?.studentName === 'Nguyen ');
   await page.evaluate(() => window.__t?.setStudentName?.('Nguyen Van A'));
   await page.waitForFunction(() => window.__t?.S?.studentName === 'Nguyen Van A');
 
