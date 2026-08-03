@@ -1,5 +1,6 @@
 import QRCode from 'qrcode';
 import logoUrl from './assets/greenwich-logo.png';
+import lionUrl from './assets/lion-new.svg';
 import './styles.css';
 import { POSTER_THEMES } from './concepts.js';
 
@@ -29,6 +30,12 @@ const INTERVAL_OPTIONS = [3, 4, 5];
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const loadImage = url => new Promise((resolve, reject) => {
+  const img = new Image();
+  img.onload = () => resolve(img);
+  img.onerror = reject;
+  img.src = url;
+});
 
 function syncThemePicker() {
   qa('.theme-chip[data-theme-index]').forEach(btn => {
@@ -362,6 +369,7 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
 // ── Poster composition (1080×1440) — Selected concept + rendering
 async function buildPoster() {
   await document.fonts.ready;
+  const lion = await loadImage(lionUrl);
 
   const cvs = q('#cvs');
   cvs.width = 1080; cvs.height = 1440;
@@ -370,12 +378,12 @@ async function buildPoster() {
 
   const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 
-  const headerH = 250;
+  const headerH = 230;
   const pos = [
-    { x: 64, y: 286, w: 952, h: 576, hero: true },
-    { x: 64, y: 894, w: 300, h: 300 },
-    { x: 390, y: 894, w: 300, h: 300 },
-    { x: 716, y: 894, w: 300, h: 300 },
+    { x: 64, y: 262, w: 952, h: 596, hero: true },
+    { x: 64, y: 884, w: 300, h: 300 },
+    { x: 390, y: 884, w: 300, h: 300 },
+    { x: 716, y: 884, w: 300, h: 300 },
   ];
 
   // ── Background + texture ──
@@ -429,37 +437,53 @@ async function buildPoster() {
   // ── Brand + slogan ──
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.font = '800 28px "Space Grotesk", Arial, sans-serif';
+  ctx.font = '800 30px "Space Grotesk", Arial, sans-serif';
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('GREENWICH PHOTOBOOTH', 72, 54);
+  ctx.fillText('GREENWICH VIETNAM', 168, 56);
+  ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillText('CHANGE STARTS HERE', 168, 90);
 
-  ctx.font = '900 74px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.shadowColor = theme.title.shadow.color;
-  ctx.shadowBlur = theme.title.shadow.blur;
-  ctx.shadowOffsetY = 0;
-  ctx.fillStyle = theme.title.color;
-  ctx.fillText('CHANGE STARTS', 72, 126);
-  ctx.font = '900 96px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('HERE', 72, 205);
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(102, 74, 42, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.07)';
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,203,47,0.55)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.clip();
+  ctx.drawImage(lion, 72, 44, 60, 60);
+  ctx.restore();
 
   // ── Date badge ──
   ctx.shadowColor = 'transparent';
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  ctx.fillStyle = 'rgba(255,255,255,0.08)';
-  roundRect(ctx, 784, 54, 224, 82, 16);
+  ctx.fillStyle = 'rgba(255,255,255,0.06)';
+  roundRect(ctx, 804, 54, 204, 72, 16);
   ctx.fill();
   ctx.strokeStyle = theme.photos.borderColor;
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.textAlign = 'center';
   ctx.fillStyle = theme.date.color;
-  ctx.font = '700 18px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText('TODAY', 896, 82);
-  ctx.fillStyle = theme.title.color;
-  ctx.font = '900 27px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText(today, 896, 113);
+  ctx.font = '900 26px "Space Grotesk", Arial, sans-serif';
+  ctx.fillText(today, 906, 96);
+
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.strokeStyle = theme.title.color;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(770, 24);
+  ctx.lineTo(770, headerH - 24);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(770, headerH / 2, 10, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -519,11 +543,11 @@ async function buildPoster() {
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.font = '900 32px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillText('#GreenwichVN', 540, 1290);
   ctx.fillStyle = theme.footer.url.color;
   ctx.font = '800 19px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn  /  change starts here', 540, 1330);
+  ctx.fillText('greenwich.edu.vn', 540, 1330);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
