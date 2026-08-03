@@ -17,14 +17,14 @@ npm run build
 
 ## Features
 
-- ✅ 15 themed frames (navy, burgundy, gold, premium decorative styles)
-- ✅ 6 color filters (vivid, warm, cool, B&W, vintage)
-- ✅ 8 stickers (emojis, spark effects)
-- ✅ 2×2 square grid layout (full-body photo booth format)
+- ✅ 3 curated poster themes with a live selector
+- ✅ 2×2 capture grid during shooting, then a hero-style final poster
+- ✅ Greenwich brand system with premium green/gold styling
 - ✅ Direct download via data URL (works offline)
-- ✅ QR code linking (requires Vercel Blob token in production)
+- ✅ QR code linking to the uploaded poster URL
 - ✅ Countdown overlay + flash effect
 - ✅ Responsive mobile UI
+- ✅ Browser smoke test for poster/QR rendering
 
 ## QR Code & Upload (Production Deployment)
 
@@ -51,8 +51,16 @@ Photos are uploaded to **Vercel Blob Storage**. QR codes on photos link to the h
 ### Local Development
 
 - **Download button:** Always works via data URL (no upload)
-- **QR code:** Shows "Đang tạo link..." with graceful fallback
-- Add `.env.local` with placeholder token to avoid errors
+- **QR code:** Appears after upload; falls back gracefully if upload fails
+- Add `BLOB_READ_WRITE_TOKEN` for production upload + QR flow
+
+### Smoke Test
+
+```bash
+npm run test:smoke
+```
+
+This checks the theme selector, poster render, and QR area in a real browser.
 
 ### No Token / Offline Mode
 

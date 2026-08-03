@@ -1,7 +1,7 @@
 import QRCode from 'qrcode';
 import logoUrl from './assets/greenwich-logo.png';
 import './styles.css';
-import { getConcept } from './concepts.js';
+import { POSTER_THEMES } from './concepts.js';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
 
@@ -14,12 +14,38 @@ const S = {
   photos: [],
   stream: null,
   posterUrl: null,
+  themeIndex: Number(localStorage.getItem('greenwichbooth.themeIndex') || 0) || 0,
+  lockedThemeIndex: null,
   showPosterPreview: !isMobile(),
 };
+
+const THEME_OPTIONS = [
+  { label: 'Premium', detail: 'Tinh tế' },
+  { label: 'Festival', detail: 'Nổi bật' },
+  { label: 'Share', detail: 'Dễ đăng' },
+];
 
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+function syncThemePicker() {
+  qa('.theme-chip').forEach(btn => {
+    const index = Number(btn.dataset.themeIndex || 0);
+    const active = index === S.themeIndex;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+    btn.disabled = S.mode !== 'ready';
+  });
+}
+
+function setThemeIndex(nextIndex) {
+  if (S.mode !== 'ready') return;
+  const index = Math.max(0, Math.min(POSTER_THEMES.length - 1, Number(nextIndex) || 0));
+  S.themeIndex = index;
+  localStorage.setItem('greenwichbooth.themeIndex', String(index));
+  syncThemePicker();
+}
 
 // ── Mount HTML ────────────────────────────────────────────────────────────────
 q('#app').innerHTML = `
@@ -64,6 +90,24 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
+      <div class="theme-picker" aria-label="Chọn phong cách poster">
+        ${THEME_OPTIONS.map((theme, index) => `
+          <button
+            class="theme-chip"
+            type="button"
+            data-theme-index="${index}"
+            aria-pressed="${index === S.themeIndex}"
+            aria-label="Chọn phong cách ${theme.label}"
+          >
+            <span class="theme-chip-dot" aria-hidden="true"></span>
+            <span class="theme-chip-text">
+              <span class="theme-chip-label">${theme.label}</span>
+              <span class="theme-chip-detail">${theme.detail}</span>
+            </span>
+          </button>
+        `).join('')}
+      </div>
+
       <section class="poster-shell" aria-label="Poster preview">
         <div class="photo-grid" id="photo-grid">
           <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
@@ -191,6 +235,8 @@ async function shoot() {
   q('#shoot-btn').disabled = false;
   q('#proc-sub').textContent = 'Đang tạo poster...';
   q('#proc-ov').classList.remove('hidden');
+  S.lockedThemeIndex = S.themeIndex;
+  syncThemePicker();
   try {
     await buildPoster();
   } catch (err) {
@@ -198,17 +244,18 @@ async function shoot() {
     q('#proc-sub').textContent = 'Không thể tạo poster, hãy chụp lại.';
     q('#proc-ov').classList.add('hidden');
     S.mode = 'ready';
+    S.lockedThemeIndex = null;
+    syncThemePicker();
     return;
   }
   let posterDataUrl;
   let uploadBlob;
-  let embeddedQr = null;
   try {
     const draftBlob = await canvasToBlob(q('#cvs'), 0.74);
     const draftUrl = await uploadPoster(draftBlob);
     if (draftUrl) {
       const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(draftUrl)}`;
-      embeddedQr = await QRCode.toDataURL(displayUrl, {
+      const embeddedQr = await QRCode.toDataURL(displayUrl, {
         margin: 1,
         width: 280,
         color: { dark: '#001f14', light: '#ffffff' },
@@ -223,6 +270,8 @@ async function shoot() {
     q('#proc-sub').textContent = 'Không thể xuất ảnh, hãy chụp lại.';
     q('#proc-ov').classList.add('hidden');
     S.mode = 'ready';
+    S.lockedThemeIndex = null;
+    syncThemePicker();
     return;
   }
   S.mode = 'done';
@@ -230,6 +279,8 @@ async function shoot() {
   const uploadP = uploadPoster(uploadBlob);
   q('#proc-ov').classList.add('hidden');
   showResult(uploadP);
+  S.lockedThemeIndex = null;
+  syncThemePicker();
 }
 
 function canvasToBlob(canvas, quality) {
@@ -281,7 +332,7 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
-// ── Poster composition (1080×1440) — Random concept selection + rendering
+// ── Poster composition (1080×1440) — Selected concept + rendering
 async function buildPoster(qrDataUrl = null) {
   await document.fonts.ready;
 
@@ -290,7 +341,7 @@ async function buildPoster(qrDataUrl = null) {
   const ctx = cvs.getContext('2d');
   const W = 1080, H = 1440;
 
-  const theme = getConcept(1);
+  const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 
   const headerH = 246;
   const footerY = 1200;
@@ -602,7 +653,7 @@ async function uploadPoster(blob) {
 }
 
 function retake() {
-  S.mode = 'ready'; S.photos = []; S.posterUrl = null;
+  S.mode = 'ready'; S.photos = []; S.posterUrl = null; S.lockedThemeIndex = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
   q('#shoot-btn').disabled = false;
@@ -613,6 +664,7 @@ function retake() {
   q('.ctrl-col').classList.remove('shooting');
   S.showPosterPreview = !isMobile();
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
+  syncThemePicker();
 }
 
 function printPoster() {
@@ -642,6 +694,9 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 q('#print-btn').addEventListener('click', printPoster);
+qa('.theme-chip').forEach(btn => {
+  btn.addEventListener('click', () => setThemeIndex(btn.dataset.themeIndex));
+});
 
 // ── Mobile orientation ───────────────────────────────────────────────────────
 window.addEventListener('orientationchange', () => {
@@ -650,5 +705,6 @@ window.addEventListener('orientationchange', () => {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
+syncThemePicker();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex };

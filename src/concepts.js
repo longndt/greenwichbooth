@@ -468,5 +468,7 @@ export const CONCEPTS = [
   },
 ];
 
+export const POSTER_THEMES = CONCEPTS.slice(0, 3);
+
 export const randomConcept = () => CONCEPTS[Math.floor(Math.random() * CONCEPTS.length)];
 export const getConcept   = n  => CONCEPTS[(n - 1) % CONCEPTS.length];
