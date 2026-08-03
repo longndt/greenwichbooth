@@ -600,7 +600,7 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  drawStudentNameBadge(ctx, S.studentName, 64, 122, 440, 50, theme);
+  drawStudentNameBadge(ctx, S.studentName, 656, 154, 360, 50, theme);
 
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
