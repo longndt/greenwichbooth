@@ -19,16 +19,16 @@ npm run build
 
 - ✅ 3 curated poster themes with a live selector
 - ✅ 2×2 capture grid during shooting, then a hero-style final poster
-- ✅ Greenwich brand system with premium green/gold styling
+- ✅ Clean shareable poster with subtle Greenwich styling
 - ✅ Direct download via data URL (works offline)
-- ✅ QR code linking to the uploaded poster URL
+- ✅ Result-screen QR code linking to the uploaded poster URL
 - ✅ Countdown overlay + flash effect
 - ✅ Responsive mobile UI
-- ✅ Browser smoke test for poster/QR rendering
+- ✅ Browser smoke test for poster rendering and QR-free final export
 
 ## QR Code & Upload (Production Deployment)
 
-Photos are uploaded to **Vercel Blob Storage**. QR codes on photos link to the hosted image.
+Photos are uploaded to **Vercel Blob Storage**. The QR code appears on the result screen only, so the shared poster stays clean.
 
 ### Setup Production Deployment
 
@@ -60,7 +60,7 @@ Photos are uploaded to **Vercel Blob Storage**. QR codes on photos link to the h
 npm run test:smoke
 ```
 
-This checks the theme selector, poster render, and QR area in a real browser.
+This checks the theme selector, poster render, and verifies the final poster does not contain an embedded QR block.
 
 ### No Token / Offline Mode
 

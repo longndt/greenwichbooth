@@ -251,17 +251,6 @@ async function shoot() {
   let posterDataUrl;
   let uploadBlob;
   try {
-    const draftBlob = await canvasToBlob(q('#cvs'), 0.74);
-    const draftUrl = await uploadPoster(draftBlob);
-    if (draftUrl) {
-      const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(draftUrl)}`;
-      const embeddedQr = await QRCode.toDataURL(displayUrl, {
-        margin: 1,
-        width: 280,
-        color: { dark: '#001f14', light: '#ffffff' },
-      });
-      await buildPoster(embeddedQr);
-    }
     posterDataUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
     uploadBlob = await canvasToBlob(q('#cvs'), 0.76);
   } catch (err) {
@@ -333,7 +322,7 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
 }
 
 // ── Poster composition (1080×1440) — Selected concept + rendering
-async function buildPoster(qrDataUrl = null) {
+async function buildPoster() {
   await document.fonts.ready;
 
   const cvs = q('#cvs');
@@ -343,14 +332,12 @@ async function buildPoster(qrDataUrl = null) {
 
   const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 
-  const headerH = 246;
-  const footerY = 1200;
-  const footerH = 192;
+  const headerH = 184;
   const pos = [
-    { x: 64, y: 294, w: 620, h: 620, hero: true },
-    { x: 734, y: 294, w: 282, h: 282 },
-    { x: 734, y: 594, w: 282, h: 282 },
-    { x: 734, y: 894, w: 282, h: 282 },
+    { x: 64, y: 216, w: 952, h: 640, hero: true },
+    { x: 64, y: 890, w: 300, h: 300 },
+    { x: 390, y: 890, w: 300, h: 300 },
+    { x: 716, y: 890, w: 300, h: 300 },
   ];
 
   // ── Background + texture ──
@@ -391,32 +378,28 @@ async function buildPoster(qrDataUrl = null) {
     ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
   }
 
-  // ── Logo — transparent, no badge, positioned top-left ──
-  const logoS = 64, logoX = 80, logoY = 50;
-  await drawImg(ctx, logoUrl, logoX, logoY, logoS, logoS);
-
   // ── Title ──
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.font = theme.title.font;
+  ctx.font = '900 70px "Be Vietnam Pro", Arial, sans-serif';
   ctx.shadowColor = theme.title.shadow.color;
   ctx.shadowBlur = theme.title.shadow.blur;
   ctx.shadowOffsetY = 0;
   ctx.fillStyle = theme.title.color;
-  ctx.fillText(theme.title.text, 540, theme.title.y);
+  ctx.fillText('CLASS OF 2026', 540, 88);
 
   // ── Subtitle ──
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.font = theme.subtitle.font;
-  ctx.fillText(theme.subtitle.text, 540, theme.subtitle.y);
+  ctx.font = '800 24px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('YOUR MOMENT, YOUR STORY', 540, 142);
 
   // ── Date ──
   ctx.fillStyle = theme.date.color;
   ctx.font = '500 15px "Space Grotesk", Arial, sans-serif';
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  ctx.fillText(today, 540, theme.date.y);
+  ctx.fillText(today, 540, 170);
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -462,88 +445,17 @@ async function buildPoster(qrDataUrl = null) {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  // ── Small social stamps ──
-  pos.slice(0, 2).forEach(({ x, y, w }, i) => {
-    ctx.font = 'bold 38px Arial, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(theme.photos.emojis[i], x + w - 30, y + 30);
-  });
-
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  roundRect(ctx, 90, 884, 268, 44, 22);
-  ctx.fillStyle = 'rgba(0, 31, 20, 0.78)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(0, 200, 117, 0.7)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.fillStyle = '#D6B241';
-  ctx.font = '800 18px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('CLASS OF 2026', 116, 907);
-
-  // ── Footer container ──
-  roundRect(ctx, 36, footerY, 1008, footerH, 28);
-  ctx.fillStyle = theme.footer.bg;
-  ctx.fill();
-
-  // ── Footer top strip ──
-  ctx.fillStyle = theme.footer.topStrip;
-  ctx.fillRect(36, footerY, 1008, 4);
-
-  // ── Footer border ──
-  ctx.strokeStyle = theme.footer.borderColor;
-  ctx.lineWidth = 3;
-  roundRect(ctx, 36, footerY, 1008, footerH, 28);
-  ctx.stroke();
-
-  // ── Footer content — brand + download CTA ──
-  ctx.textAlign = 'left';
-
-  // Line 1: wordmark
-  ctx.fillStyle = theme.footer.url.color;
-  ctx.font = '800 24px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('GREENWICH PHOTOBOOTH', 86, footerY + 48);
-
-  // Line 2: campus info
-  ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
-    ? 'rgba(255,255,255,0.65)'
-    : 'rgba(0,0,0,0.5)';
-  ctx.font = '600 15px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('FPT University · University of Greenwich (UK)', 86, footerY + 78);
-
-  // Line 3: campus cities
-  ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
-    ? 'rgba(255,255,255,0.5)'
-    : 'rgba(0,0,0,0.4)';
-  ctx.font = '500 14px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('Hà Nội  ·  TP.HCM  ·  Đà Nẵng  ·  Cần Thơ', 86, footerY + 106);
-
-  // Line 4: website + hashtag
-  ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.font = '800 15px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('greenwich.edu.vn  ·  #GreenwichVN', 86, footerY + 152);
-
-  ctx.strokeStyle = theme.footer.topStrip + '66';
-  ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.moveTo(620, footerY + 36); ctx.lineTo(620, footerY + footerH - 36); ctx.stroke();
-
+  // ── Minimal sharing mark ──
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#FFFFFF';
-  ctx.font = '800 20px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('SCAN TO DOWNLOAD', 820, footerY + 42);
-  ctx.fillStyle = 'rgba(255,255,255,0.72)';
-  ctx.font = '600 13px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText('Quét mã để tải ảnh', 820, footerY + 66);
-
-  roundRect(ctx, 764, footerY + 78, 112, 112, 10);
-  ctx.fillStyle = '#FFFFFF';
-  ctx.fill();
-  if (qrDataUrl) {
-    await drawImg(ctx, qrDataUrl, 772, footerY + 86, 96, 96);
-  } else {
-    drawQrPlaceholder(ctx, 772, footerY + 86, 96);
-  }
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = theme.footer.hashtag.color;
+  ctx.font = '800 24px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('#GreenwichVN', 540, 1302);
+  ctx.fillStyle = theme.footer.url.color === '#FFFFFF'
+    ? 'rgba(255,255,255,0.42)'
+    : 'rgba(0,31,20,0.42)';
+  ctx.font = '600 14px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText('Save it. Share it. Own the moment.', 540, 1340);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -552,18 +464,6 @@ async function buildPoster(qrDataUrl = null) {
   ctx.strokeStyle = theme.frame.inner;
   ctx.lineWidth = theme.frame.innerW;
   ctx.strokeRect(32, 32, W - 64, H - 64);
-}
-
-function drawQrPlaceholder(ctx, x, y, size) {
-  ctx.fillStyle = '#001f14';
-  const cell = size / 9;
-  const blocks = [
-    [0,0],[1,0],[2,0],[0,1],[2,1],[0,2],[1,2],[2,2],
-    [6,0],[7,0],[8,0],[6,1],[8,1],[6,2],[7,2],[8,2],
-    [0,6],[1,6],[2,6],[0,7],[2,7],[0,8],[1,8],[2,8],
-    [4,1],[4,3],[6,4],[3,5],[5,5],[7,6],[4,7],[6,8],
-  ];
-  blocks.forEach(([cx, cy]) => ctx.fillRect(x + cx * cell, y + cy * cell, cell * 0.82, cell * 0.82));
 }
 
 function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
@@ -589,23 +489,6 @@ function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
     img.onerror = rej;
     img.src = url;
   });
-}
-
-function drawImg(ctx, url, x, y, w, h) {
-  return new Promise((res, rej) => {
-    const img = new Image();
-    img.onload = () => {
-      try { ctx.drawImage(img, x, y, w, h); res(); }
-      catch (e) { rej(e); }
-    };
-    img.onerror = rej;
-    img.src = url;
-  });
-}
-
-function drawSvg(ctx, svg, x, y, w, h) {
-  // ponytail: data URL avoids Blob URL canvas-taint in Firefox/Safari
-  return drawImg(ctx, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg), x, y, w, h);
 }
 
 // ── Result screen ─────────────────────────────────────────────────────────────

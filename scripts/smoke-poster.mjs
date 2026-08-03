@@ -74,18 +74,18 @@ async function main() {
     throw new Error(`Poster PNG too small (${metrics.pngLength})`);
   }
 
-  const qrBrightPixels = await page.evaluate(() => {
+  const oldQrWhitePixels = await page.evaluate(() => {
     const canvas = document.querySelector('#cvs');
     const ctx = canvas.getContext('2d');
-    const { data } = ctx.getImageData(780, 1260, 96, 96);
+    const { data } = ctx.getImageData(764, 1278, 112, 112);
     let count = 0;
     for (let i = 0; i < data.length; i += 4) {
       if (data[i] > 220 && data[i + 1] > 220 && data[i + 2] > 220 && data[i + 3] > 0) count += 1;
     }
     return count;
   });
-  if (qrBrightPixels < 1000) {
-    throw new Error(`QR area not rendered correctly (${qrBrightPixels} bright pixels)`);
+  if (oldQrWhitePixels > 900) {
+    throw new Error(`Final poster still appears to contain a QR block (${oldQrWhitePixels} white pixels)`);
   }
 
   if (consoleErrors.length || pageErrors.length) {
