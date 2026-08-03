@@ -1133,18 +1133,21 @@ input[type="range"] {
     display: flex;
     flex-direction: column;
     gap: 0;
+    align-items: center;
   }
 
   .cam-col {
     flex-shrink: 0;
     padding: 8px 12px 4px;
+    width: min(100%, 560px);
   }
 
   /* Camera: fixed dvh height, no aspect-ratio fighting */
   .cam-box {
-    aspect-ratio: unset;
-    max-height: unset;
-    height: 33dvh;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    max-height: 34dvh;
+    height: auto;
   }
 
   .ctrl-col {
@@ -1152,8 +1155,9 @@ input[type="range"] {
     min-height: 0;
     gap: 8px;
     padding: 6px 12px calc(12px + env(safe-area-inset-bottom, 0px));
-    align-items: stretch;
+    align-items: center;
     justify-content: flex-start;
+    width: min(100%, 560px);
   }
 
   .theme-picker { order: -2; }
@@ -1173,7 +1177,8 @@ input[type="range"] {
 
   .poster-shell {
     flex: 0 0 auto;
-    min-height: 0;
+    height: clamp(120px, 22dvh, 220px);
+    min-height: 120px;
     width: 100%;
     padding: 8px;
     max-height: 35vh;
@@ -1186,9 +1191,8 @@ input[type="range"] {
     grid-template-rows: 1fr 1fr;
   }
 
-  /* Let grid control slot height — no aspect-ratio override */
   .pv-slot {
-    aspect-ratio: unset;
+    aspect-ratio: 4 / 3;
   }
 
   /* Default: hide poster grid, show only camera + shoot button */
