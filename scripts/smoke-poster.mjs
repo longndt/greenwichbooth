@@ -49,12 +49,24 @@ async function main() {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   const layoutRects = await page.evaluate(() => {
+    const grid = document.querySelector('#photo-grid').getBoundingClientRect();
     const a = document.querySelector('#pvs0').getBoundingClientRect();
     const b = document.querySelector('#pvs1').getBoundingClientRect();
-    return { a: { x: a.x, width: a.width, height: a.height }, b: { x: b.x, width: b.width, height: b.height } };
+    return {
+      grid: { width: grid.width, height: grid.height },
+      a: { x: a.x, width: a.width, height: a.height },
+      b: { x: b.x, width: b.width, height: b.height },
+    };
   });
   if (!(layoutRects.a.height > layoutRects.b.height * 2 && layoutRects.a.x < layoutRects.b.x)) {
     throw new Error(`Preview layout 2 geometry is wrong: ${JSON.stringify(layoutRects)}`);
+  }
+  const close = (actual, expected) => Math.abs(actual - expected) < 0.08;
+  if (!close(layoutRects.grid.width / layoutRects.grid.height, 952 / 922)) {
+    throw new Error(`Preview grid aspect is wrong: ${JSON.stringify(layoutRects)}`);
+  }
+  if (!close(layoutRects.a.width / layoutRects.a.height, 626 / 922) || !close(layoutRects.b.width / layoutRects.b.height, 300 / 296)) {
+    throw new Error(`Preview slot ratios do not match poster canvas: ${JSON.stringify(layoutRects)}`);
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
