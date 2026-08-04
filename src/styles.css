@@ -333,7 +333,7 @@ html, body {
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-width: 0;
   transition: transform 0.18s, border-color 0.18s, background 0.18s, box-shadow 0.18s;
   box-shadow:
@@ -390,9 +390,10 @@ html, body {
 
 .theme-chip-label {
   font-family: 'Be Vietnam Pro', sans-serif;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   line-height: 1;
+  white-space: nowrap;
 }
 
 

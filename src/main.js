@@ -23,9 +23,9 @@ const S = {
 };
 
 const THEME_OPTIONS = [
-  { label: 'Campus Glow' },
-  { label: 'Festival Pulse' },
-  { label: 'Share Spark' },
+  { label: 'Năng động' },
+  { label: 'Trẻ trung' },
+  { label: 'Hiện đại' },
 ];
 const INTERVAL_OPTIONS = [3, 4, 5];
 
