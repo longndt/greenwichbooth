@@ -371,6 +371,28 @@ html, body {
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
+.layout-chip.is-active {
+  background:
+    radial-gradient(circle at 24% 24%, rgba(148,210,189,0.24), transparent 38%),
+    linear-gradient(145deg, rgba(0,106,127,0.92), rgba(33,59,66,0.96));
+  border-color: rgba(148,210,189,0.58);
+  box-shadow:
+    0 0 0 1px rgba(148,210,189,0.12),
+    0 0 18px rgba(0,106,127,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.time-chip.is-active {
+  background:
+    radial-gradient(circle at 24% 24%, rgba(255,209,102,0.28), transparent 38%),
+    linear-gradient(145deg, rgba(122,74,33,0.92), rgba(7,59,76,0.96));
+  border-color: rgba(255,209,102,0.66);
+  box-shadow:
+    0 0 0 1px rgba(255,209,102,0.14),
+    0 0 18px rgba(214,167,44,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
 .theme-chip:disabled,
 .layout-chip:disabled,
 .time-chip:disabled {

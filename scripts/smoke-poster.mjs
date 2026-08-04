@@ -93,6 +93,13 @@ async function main() {
   }
   await page.click('.time-chip[data-interval="5"]');
   await page.waitForFunction(() => window.__t?.S?.interval === 5);
+  const activeChipStyles = await page.$$eval(
+    '.theme-chip.is-active, .layout-chip.is-active, .time-chip.is-active',
+    nodes => nodes.map(node => getComputedStyle(node).backgroundImage)
+  );
+  if (new Set(activeChipStyles).size !== 3) {
+    throw new Error(`Active chip rows should use distinct backgrounds: ${activeChipStyles.join(' | ')}`);
+  }
   const layoutRects = await page.evaluate(() => {
     const grid = document.querySelector('#photo-grid').getBoundingClientRect();
     const a = document.querySelector('#pvs0').getBoundingClientRect();
