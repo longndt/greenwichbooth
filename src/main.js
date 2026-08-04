@@ -748,35 +748,14 @@ async function buildPoster() {
   drawEventNameBadge(ctx, S.eventName, badgeLeftX, badgeRowY, badgeLeftW, 50, theme);
   drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
 
-  // ── Footer statement ──
-  const footerW = 720;
-  const footerH = 68;
-  const footerY = 1300;
-  const footerX = (W - footerW) / 2;
-  ctx.save();
-  ctx.shadowColor = theme.photos.slotShadow;
-  ctx.shadowBlur = 12;
-  ctx.shadowOffsetY = 4;
-  ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, footerX, footerY, footerW, footerH, 16);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = theme.footer.borderColor;
-  ctx.globalAlpha = 0.32;
-  ctx.lineWidth = 1;
-  roundRect(ctx, footerX, footerY, footerW, footerH, 16);
-  ctx.stroke();
-  ctx.globalAlpha = 1;
-
+  // ── Footer signature ──
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.shadowColor = 'rgba(0,0,0,0.18)';
-  ctx.shadowBlur = 6;
-  ctx.font = '900 34px "Lato", "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, footerY + footerH / 2 + 1);
+  ctx.shadowColor = 'rgba(0,0,0,0.12)';
+  ctx.shadowBlur = 4;
+  ctx.font = '800 34px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1326);
   ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
