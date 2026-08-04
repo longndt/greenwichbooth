@@ -197,8 +197,8 @@ q('#app').innerHTML = `
           type="text"
           inputmode="text"
           maxlength="32"
-          placeholder="Tên sinh viên"
-          aria-label="Tên sinh viên để hiển thị trên poster"
+          placeholder="Tên địa điểm"
+          aria-label="Tên địa điểm để hiển thị trên poster"
         >
       </div>
 
@@ -444,14 +444,9 @@ function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(x + 32, y + h / 2, 8, 0, Math.PI * 2);
-  ctx.fillStyle = theme.photos.cornerAccent.color;
-  ctx.fill();
-
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  const maxWidth = w - 84;
+  const maxWidth = w - 40;
   let fontSize = 34;
   do {
     ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
@@ -461,7 +456,7 @@ function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
   ctx.fillStyle = 'rgba(255,255,255,0.96)';
   ctx.shadowColor = 'rgba(214,178,65,0.34)';
   ctx.shadowBlur = 10;
-  ctx.fillText(text, x + 52, y + h / 2 + 1, maxWidth);
+  ctx.fillText(text, x + 20, y + h / 2 + 1, maxWidth);
   ctx.restore();
 }
 
@@ -479,12 +474,7 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
   ctx.lineWidth = text ? 3 : 2;
   ctx.stroke();
 
-  ctx.beginPath();
-  ctx.arc(x + 32, y + h / 2, 8, 0, Math.PI * 2);
-  ctx.fillStyle = text ? theme.photos.borderColor : 'rgba(255,255,255,0.14)';
-  ctx.fill();
-
-  const maxWidth = w - 84;
+  const maxWidth = w - 40;
   let fontSize = text ? 28 : 22;
   do {
     ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
@@ -494,7 +484,7 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.46)';
-  ctx.fillText(display, x + 52, y + h / 2 + 1, maxWidth);
+  ctx.fillText(display, x + 20, y + h / 2 + 1, maxWidth);
   ctx.restore();
 }
 
