@@ -634,7 +634,7 @@ async function buildPoster() {
   const dateBadgeW = 256;
   ctx.font = '800 30px "Space Grotesk", Arial, sans-serif';
   ctx.shadowColor = 'transparent';
-  ctx.fillStyle = theme.subtitle.color;
+  ctx.fillStyle = theme.title.color;
   ctx.fillText('GREENWICH VIETNAM', brandX, 70);
   ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
   ctx.fillStyle = theme.subtitle.color;
