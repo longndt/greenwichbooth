@@ -680,9 +680,9 @@ async function buildPoster() {
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.title.color;
   ctx.fillText('GREENWICH VIETNAM', brandX, 70);
-  ctx.font = '900 36px "Lato", "Space Grotesk", Arial, sans-serif';
+  ctx.font = '700 26px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('CHANGE STARTS HERE', brandX, 114);
+  ctx.fillText('Change Starts Here', brandX, 114);
 
   ctx.save();
   ctx.beginPath();
