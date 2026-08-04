@@ -22,6 +22,10 @@ async function main() {
   if (themeCount !== 3) {
     throw new Error(`Expected 3 theme chips, found ${themeCount}`);
   }
+  const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
+  if (themeLabels.join('|') !== 'Open Day|Campus Life|Career Day') {
+    throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
+  }
 
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
@@ -162,6 +166,10 @@ async function main() {
     }
   }
 
+  await page.evaluate(async () => {
+    window.__t.setThemeIndex(0);
+    await window.__t.buildPoster();
+  });
   const oldQrWhitePixels = await page.evaluate(() => {
     const canvas = document.querySelector('#cvs');
     const ctx = canvas.getContext('2d');
