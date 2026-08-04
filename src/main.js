@@ -234,7 +234,7 @@ q('#app').innerHTML = `
             aria-label="Chọn ${seconds} giây"
           >
             <span class="theme-chip-dot" aria-hidden="true"></span>
-            <span class="theme-chip-label">Timer ${seconds}s</span>
+            <span class="theme-chip-label">Time ${seconds}s</span>
           </button>
         `).join('')}
       </div>

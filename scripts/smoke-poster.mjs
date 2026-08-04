@@ -45,7 +45,7 @@ async function main() {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (timerLabels.join('|') !== 'Timer 3s|Timer 4s|Timer 5s') {
+  if (timerLabels.join('|') !== 'Time 3s|Time 4s|Time 5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   const layoutRects = await page.evaluate(() => {
