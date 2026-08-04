@@ -623,7 +623,7 @@ async function buildPoster() {
   ctx.fillStyle = theme.subtitle.color;
   ctx.fillText('GREENWICH VIETNAM', 168, 70);
   ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
-  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.fillStyle = theme.subtitle.color;
   ctx.fillText('CHANGE STARTS HERE', 168, 104);
 
   ctx.save();

@@ -125,6 +125,29 @@ async function main() {
     throw new Error(`Poster PNG too small (${metrics.pngLength})`);
   }
 
+  for (let themeIndex = 0; themeIndex < 3; themeIndex += 1) {
+    await page.evaluate(index => window.__t?.setThemeIndex?.(index), themeIndex);
+    await page.waitForFunction(index => window.__t?.S?.themeIndex === index, {}, themeIndex);
+    await page.evaluate(async () => {
+      await window.__t.buildPoster();
+    });
+    const sloganRange = await page.$eval('#cvs', canvas => {
+      const ctx = canvas.getContext('2d');
+      const { data } = ctx.getImageData(160, 92, 220, 26);
+      let min = 255;
+      let max = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        const luminance = 0.2126 * data[i] + 0.7152 * data[i + 1] + 0.0722 * data[i + 2];
+        min = Math.min(min, luminance);
+        max = Math.max(max, luminance);
+      }
+      return max - min;
+    });
+    if (sloganRange < 30) {
+      throw new Error(`Header slogan contrast is too low for theme ${themeIndex + 1}: ${sloganRange.toFixed(1)}`);
+    }
+  }
+
   const oldQrWhitePixels = await page.evaluate(() => {
     const canvas = document.querySelector('#cvs');
     const ctx = canvas.getContext('2d');
