@@ -618,24 +618,32 @@ async function buildPoster() {
   // ── Brand + slogan ──
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
+  const brandX = 160;
+  const badgeLeftX = 64;
+  const badgeLeftW = 500;
+  const badgeRightX = 760;
+  const badgeRightW = 256;
+  const badgeRowY = 154;
+  const dateBadgeX = 760;
+  const dateBadgeW = 256;
   ctx.font = '800 30px "Space Grotesk", Arial, sans-serif';
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('GREENWICH VIETNAM', 168, 70);
+  ctx.fillText('GREENWICH VIETNAM', brandX, 70);
   ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('CHANGE STARTS HERE', 168, 104);
+  ctx.fillText('CHANGE STARTS HERE', brandX, 104);
 
   ctx.save();
   ctx.beginPath();
-  ctx.arc(102, 88, 42, 0, Math.PI * 2);
+  ctx.arc(96, 88, 40, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(255,255,255,0.07)';
   ctx.fill();
   ctx.strokeStyle = 'rgba(255,203,47,0.55)';
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.clip();
-  ctx.drawImage(mascot, 68, 54, 68, 68);
+  ctx.drawImage(mascot, 64, 50, 64, 64);
   ctx.restore();
 
   // ── Date badge ──
@@ -643,7 +651,7 @@ async function buildPoster() {
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  roundRect(ctx, 804, 54, 204, 72, 16);
+  roundRect(ctx, dateBadgeX, 54, dateBadgeW, 72, 16);
   ctx.fill();
   ctx.strokeStyle = theme.photos.borderColor;
   ctx.lineWidth = 2;
@@ -651,18 +659,18 @@ async function buildPoster() {
   ctx.textAlign = 'center';
   ctx.fillStyle = theme.date.color;
   ctx.font = '900 26px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText(today, 906, 96);
+  ctx.fillText(today, dateBadgeX + dateBadgeW / 2, 96);
 
   ctx.save();
   ctx.globalAlpha = 0.18;
   ctx.strokeStyle = theme.title.color;
   ctx.lineWidth = 3;
   ctx.beginPath();
-  ctx.moveTo(770, 24);
-  ctx.lineTo(770, headerH - 24);
+  ctx.moveTo(748, 24);
+  ctx.lineTo(748, headerH - 24);
   ctx.stroke();
   ctx.beginPath();
-  ctx.arc(770, headerH / 2, 10, 0, Math.PI * 2);
+  ctx.arc(748, headerH / 2, 10, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
 
@@ -710,8 +718,8 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  drawEventNameBadge(ctx, S.eventName, 64, 154, 560, 50, theme);
-  drawStudentNameBadge(ctx, S.studentName, 804, 154, 204, 44, theme);
+  drawEventNameBadge(ctx, S.eventName, badgeLeftX, badgeRowY, badgeLeftW, 50, theme);
+  drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 44, theme);
 
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
