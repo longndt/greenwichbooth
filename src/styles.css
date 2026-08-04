@@ -502,6 +502,7 @@ html, body {
 .poster-shell .photo-grid {
   position: relative;
   z-index: 1;
+  height: 76%;
 }
 
 .poster-shell .pv-slot {
