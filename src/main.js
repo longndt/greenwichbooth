@@ -431,41 +431,37 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
 
 function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
   const text = String(name || '').trim();
+  if (!text) return;
+
   ctx.save();
-  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.55)' : 'rgba(0, 31, 20, 0.20)';
-  ctx.shadowBlur = text ? 24 : 12;
-  ctx.fillStyle = text ? 'rgba(0, 31, 20, 0.74)' : 'rgba(255,255,255,0.06)';
+  ctx.shadowColor = 'rgba(0, 31, 20, 0.55)';
+  ctx.shadowBlur = 24;
+  ctx.fillStyle = 'rgba(0, 31, 20, 0.74)';
   roundRect(ctx, x, y, w, h, 24);
   ctx.fill();
   ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = text ? theme.photos.cornerAccent.color : 'rgba(255,255,255,0.10)';
-  ctx.lineWidth = text ? 3 : 2;
+  ctx.strokeStyle = theme.photos.cornerAccent.color;
+  ctx.lineWidth = 3;
   ctx.stroke();
 
   ctx.beginPath();
   ctx.arc(x + 32, y + h / 2, 8, 0, Math.PI * 2);
-  ctx.fillStyle = text ? theme.photos.cornerAccent.color : 'rgba(255,255,255,0.14)';
+  ctx.fillStyle = theme.photos.cornerAccent.color;
   ctx.fill();
 
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  if (text) {
-    const maxWidth = w - 84;
-    let fontSize = 34;
-    do {
-      ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
-      fontSize -= 2;
-    } while (ctx.measureText(text).width > maxWidth && fontSize >= 24);
+  const maxWidth = w - 84;
+  let fontSize = 34;
+  do {
+    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
+    fontSize -= 2;
+  } while (ctx.measureText(text).width > maxWidth && fontSize >= 24);
 
-    ctx.fillStyle = 'rgba(255,255,255,0.96)';
-    ctx.shadowColor = 'rgba(214,178,65,0.34)';
-    ctx.shadowBlur = 10;
-    ctx.fillText(text, x + 52, y + h / 2 + 1, maxWidth);
-  } else {
-    ctx.font = '700 18px "Be Vietnam Pro", Arial, sans-serif';
-    ctx.fillStyle = 'rgba(255,255,255,0.46)';
-    ctx.fillText('TÊN SINH VIÊN', x + 52, y + h / 2 + 1, w - 84);
-  }
+  ctx.fillStyle = 'rgba(255,255,255,0.96)';
+  ctx.shadowColor = 'rgba(214,178,65,0.34)';
+  ctx.shadowBlur = 10;
+  ctx.fillText(text, x + 52, y + h / 2 + 1, maxWidth);
   ctx.restore();
 }
 
