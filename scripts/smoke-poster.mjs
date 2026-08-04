@@ -41,6 +41,27 @@ async function main() {
   if (previewText !== '1 2 3 4') {
     throw new Error(`Expected preview to contain only slot badges, got ${previewText}`);
   }
+  const previewTheme = await page.$eval('#poster-preview', el => {
+    const styles = getComputedStyle(el);
+    return {
+      surface: styles.getPropertyValue('--preview-slot-bg').trim(),
+      border: styles.getPropertyValue('--preview-slot-border').trim(),
+      accent: styles.getPropertyValue('--preview-slot-accent').trim(),
+      frame: styles.getPropertyValue('--preview-shell-border').trim(),
+    };
+  });
+  if (
+    previewTheme.surface !== '#FFF8EA' ||
+    previewTheme.border !== '#D28A2E' ||
+    previewTheme.accent !== '#006A7F' ||
+    previewTheme.frame !== '#006A7F'
+  ) {
+    throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
+  }
+  const heroBorder = await page.$eval('#pvs0', el => getComputedStyle(el).borderTopColor);
+  if (heroBorder !== 'rgb(210, 138, 46)') {
+    throw new Error(`Preview hero slot border did not apply selected theme immediately: ${heroBorder}`);
+  }
 
   const layoutCount = await page.$$eval('.layout-chip', nodes => nodes.length);
   if (layoutCount !== 3) {

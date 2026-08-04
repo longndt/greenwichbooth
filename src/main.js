@@ -65,6 +65,9 @@ function syncThemePicker() {
   qa('.theme-chip[data-theme-index]').forEach(btn => {
     const index = Number(btn.dataset.themeIndex || 0);
     const active = index === S.themeIndex;
+    const theme = POSTER_THEMES[index] || POSTER_THEMES[0];
+    btn.style.setProperty('--chip-a', theme.photos.borderColor);
+    btn.style.setProperty('--chip-b', theme.photos.cornerAccent.color);
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
     btn.disabled = S.mode !== 'ready';
@@ -107,6 +110,10 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-shell-accent', theme.photos.borderColor);
   preview.style.setProperty('--preview-shell-surface', theme.photos.slotBg);
   preview.style.setProperty('--preview-shell-badge', theme.header.topBar.color);
+  preview.style.setProperty('--preview-slot-bg', theme.photos.slotBg);
+  preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
+  preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
+  preview.style.setProperty('--preview-badge-ink', theme.bg.color);
 }
 
 function setThemeIndex(nextIndex) {
@@ -538,13 +545,13 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
   const text = String(name || '').trim();
   const display = text || 'GREENWICH PHOTOBOOTH';
   ctx.save();
-  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.50)' : 'rgba(0, 31, 20, 0.22)';
+  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.50)' : 'rgba(0, 31, 20, 0.10)';
   ctx.shadowBlur = text ? 24 : 12;
-  ctx.fillStyle = text ? 'rgba(0, 31, 20, 0.70)' : 'rgba(255,255,255,0.06)';
+  ctx.fillStyle = text ? 'rgba(0, 31, 20, 0.70)' : 'rgba(255,255,255,0.34)';
   roundRect(ctx, x, y, w, h, 24);
   ctx.fill();
   ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = text ? theme.photos.borderColor : 'rgba(255,255,255,0.10)';
+  ctx.strokeStyle = theme.photos.borderColor;
   ctx.lineWidth = text ? 3 : 2;
   ctx.stroke();
 
@@ -557,7 +564,7 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
 
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.46)';
+  ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : theme.title.color;
   ctx.fillText(display, x + 20, y + h / 2 + 1, maxWidth);
   ctx.restore();
 }
