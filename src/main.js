@@ -18,7 +18,9 @@ const S = {
   stream: null,
   posterUrl: null,
   themeIndex: Number(localStorage.getItem('greenwichbooth.themeIndex') || 0) || 0,
+  layoutIndex: Number(localStorage.getItem('greenwichbooth.layoutIndex') || 0) || 0,
   lockedThemeIndex: null,
+  lockedLayoutIndex: null,
   showPosterPreview: !isMobile(),
 };
 
@@ -28,6 +30,31 @@ const THEME_OPTIONS = [
   { label: 'Hiện đại' },
 ];
 const INTERVAL_OPTIONS = [3, 4, 5];
+const LAYOUT_OPTIONS = [
+  { label: 'Bố cục 1' },
+  { label: 'Bố cục 2' },
+  { label: 'Bố cục 3' },
+];
+const POSTER_LAYOUTS = [
+  [
+    { x: 64, y: 262, w: 952, h: 596, hero: true },
+    { x: 64, y: 884, w: 300, h: 300 },
+    { x: 390, y: 884, w: 300, h: 300 },
+    { x: 716, y: 884, w: 300, h: 300 },
+  ],
+  [
+    { x: 64, y: 262, w: 626, h: 922, hero: true },
+    { x: 716, y: 262, w: 300, h: 296 },
+    { x: 716, y: 575, w: 300, h: 296 },
+    { x: 716, y: 888, w: 300, h: 296 },
+  ],
+  [
+    { x: 64, y: 262, w: 464, h: 449 },
+    { x: 552, y: 262, w: 464, h: 449 },
+    { x: 64, y: 735, w: 464, h: 449 },
+    { x: 552, y: 735, w: 464, h: 449 },
+  ],
+];
 
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
@@ -43,6 +70,19 @@ function syncThemePicker() {
   qa('.theme-chip[data-theme-index]').forEach(btn => {
     const index = Number(btn.dataset.themeIndex || 0);
     const active = index === S.themeIndex;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+    btn.disabled = S.mode !== 'ready';
+  });
+}
+
+function syncLayoutPicker() {
+  const layoutId = String(S.layoutIndex + 1);
+  const grid = q('#photo-grid');
+  if (grid) grid.dataset.layout = layoutId;
+  qa('.layout-chip[data-layout-index]').forEach(btn => {
+    const index = Number(btn.dataset.layoutIndex || 0);
+    const active = index === S.layoutIndex;
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
     btn.disabled = S.mode !== 'ready';
@@ -65,6 +105,14 @@ function setThemeIndex(nextIndex) {
   S.themeIndex = index;
   localStorage.setItem('greenwichbooth.themeIndex', String(index));
   syncThemePicker();
+}
+
+function setLayoutIndex(nextIndex) {
+  if (S.mode !== 'ready') return;
+  const index = Math.max(0, Math.min(POSTER_LAYOUTS.length - 1, Number(nextIndex) || 0));
+  S.layoutIndex = index;
+  localStorage.setItem('greenwichbooth.layoutIndex', String(index));
+  syncLayoutPicker();
 }
 
 function setIntervalSeconds(nextInterval) {
@@ -163,6 +211,19 @@ q('#app').innerHTML = `
           </button>
         `).join('')}
       </div>
+      <div class="layout-picker" aria-label="Chọn bố cục poster">
+        ${LAYOUT_OPTIONS.map((layout, index) => `
+          <button
+            class="layout-chip"
+            type="button"
+            data-layout-index="${index}"
+            aria-pressed="${index === S.layoutIndex}"
+            aria-label="Chọn ${layout.label}"
+          >
+            <span class="theme-chip-label">${index + 1}</span>
+          </button>
+        `).join('')}
+      </div>
       <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
         ${INTERVAL_OPTIONS.map(seconds => `
           <button
@@ -203,7 +264,7 @@ q('#app').innerHTML = `
       </div>
 
       <section class="poster-shell" aria-label="Poster preview">
-        <div class="photo-grid" id="photo-grid">
+        <div class="photo-grid" id="photo-grid" data-layout="${S.layoutIndex + 1}">
           <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
           <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt="Ảnh 2 được chụp"/><span class="pv-badge">2</span></div>
           <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt="Ảnh 3 được chụp"/><span class="pv-badge">3</span></div>
@@ -295,6 +356,7 @@ async function shoot() {
   S.showPosterPreview = true;
   q('#shoot-btn').disabled = true;
   syncThemePicker();
+  syncLayoutPicker();
   syncIntervalPicker();
   syncEventNameField();
   syncStudentNameField();
@@ -333,7 +395,9 @@ async function shoot() {
   q('#proc-sub').textContent = 'Vui lòng chờ';
   q('#proc-ov').classList.remove('hidden');
   S.lockedThemeIndex = S.themeIndex;
+  S.lockedLayoutIndex = S.layoutIndex;
   syncThemePicker();
+  syncLayoutPicker();
   syncIntervalPicker();
   try {
     await buildPoster();
@@ -343,7 +407,9 @@ async function shoot() {
     q('#proc-ov').classList.add('hidden');
     S.mode = 'ready';
     S.lockedThemeIndex = null;
+    S.lockedLayoutIndex = null;
     syncThemePicker();
+    syncLayoutPicker();
     syncIntervalPicker();
     syncEventNameField();
     syncStudentNameField();
@@ -361,7 +427,9 @@ async function shoot() {
     q('#proc-ov').classList.add('hidden');
     S.mode = 'ready';
     S.lockedThemeIndex = null;
+    S.lockedLayoutIndex = null;
     syncThemePicker();
+    syncLayoutPicker();
     syncIntervalPicker();
     syncEventNameField();
     syncStudentNameField();
@@ -375,7 +443,9 @@ async function shoot() {
   q('#proc-ov').classList.add('hidden');
   showResult(uploadP);
   S.lockedThemeIndex = null;
+  S.lockedLayoutIndex = null;
   syncThemePicker();
+  syncLayoutPicker();
   syncIntervalPicker();
 }
 
@@ -500,12 +570,7 @@ async function buildPoster() {
   const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 
   const headerH = 230;
-  const pos = [
-    { x: 64, y: 262, w: 952, h: 596, hero: true },
-    { x: 64, y: 884, w: 300, h: 300 },
-    { x: 390, y: 884, w: 300, h: 300 },
-    { x: 716, y: 884, w: 300, h: 300 },
-  ];
+  const pos = POSTER_LAYOUTS[S.lockedLayoutIndex ?? S.layoutIndex] || POSTER_LAYOUTS[0];
 
   // ── Background + texture ──
   ctx.fillStyle = theme.bg.color;
@@ -763,7 +828,7 @@ async function uploadPoster(blob) {
 }
 
 function retake() {
-  S.mode = 'ready'; S.photos = []; S.posterUrl = null; S.lockedThemeIndex = null;
+  S.mode = 'ready'; S.photos = []; S.posterUrl = null; S.lockedThemeIndex = null; S.lockedLayoutIndex = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
   q('#shoot-btn').disabled = false;
@@ -775,6 +840,7 @@ function retake() {
   S.showPosterPreview = !isMobile();
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
   syncThemePicker();
+  syncLayoutPicker();
   syncIntervalPicker();
   syncEventNameField();
   syncStudentNameField();
@@ -814,6 +880,9 @@ q('#student-name').addEventListener('input', e => setStudentName(e.target.value)
 qa('.theme-chip[data-theme-index]').forEach(btn => {
   btn.addEventListener('click', () => setThemeIndex(btn.dataset.themeIndex));
 });
+qa('.layout-chip[data-layout-index]').forEach(btn => {
+  btn.addEventListener('click', () => setLayoutIndex(btn.dataset.layoutIndex));
+});
 qa('.time-chip').forEach(btn => {
   btn.addEventListener('click', () => setIntervalSeconds(btn.dataset.interval));
 });
@@ -826,8 +895,9 @@ window.addEventListener('orientationchange', () => {
 // ── Init ──────────────────────────────────────────────────────────────────────
 if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 syncThemePicker();
+syncLayoutPicker();
 syncIntervalPicker();
 syncEventNameField();
 syncStudentNameField();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setIntervalSeconds, setEventName, setStudentName };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setLayoutIndex, setIntervalSeconds, setEventName, setStudentName };

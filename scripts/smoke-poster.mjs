@@ -30,6 +30,29 @@ async function main() {
     throw new Error(`Expected Trẻ trung theme active, got ${activeTheme}`);
   }
 
+  const layoutCount = await page.$$eval('.layout-chip', nodes => nodes.length);
+  if (layoutCount !== 3) {
+    throw new Error(`Expected 3 layout chips, found ${layoutCount}`);
+  }
+  await page.click('.layout-chip[data-layout-index="1"]');
+  await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
+  const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
+  if (activeLayout !== '2') {
+    throw new Error(`Expected layout 2 active, got ${activeLayout}`);
+  }
+  const previewLayout = await page.$eval('#photo-grid', el => el.dataset.layout);
+  if (previewLayout !== '2') {
+    throw new Error(`Expected preview layout 2, got ${previewLayout}`);
+  }
+  const layoutRects = await page.evaluate(() => {
+    const a = document.querySelector('#pvs0').getBoundingClientRect();
+    const b = document.querySelector('#pvs1').getBoundingClientRect();
+    return { a: { x: a.x, width: a.width, height: a.height }, b: { x: b.x, width: b.width, height: b.height } };
+  });
+  if (!(layoutRects.a.height > layoutRects.b.height * 2 && layoutRects.a.x < layoutRects.b.x)) {
+    throw new Error(`Preview layout 2 geometry is wrong: ${JSON.stringify(layoutRects)}`);
+  }
+
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
   if (placeholders.join('|') !== 'Tên sự kiện|Tên địa điểm') {
     throw new Error(`Unexpected input placeholders: ${placeholders.join('|')}`);

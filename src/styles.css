@@ -263,6 +263,7 @@ html, body {
 }
 
 .theme-picker,
+.layout-picker,
 .time-picker {
   width: 100%;
   display: grid;
@@ -270,6 +271,7 @@ html, body {
   gap: 8px;
 }
 
+.layout-picker,
 .time-picker {
   margin-top: 0;
 }
@@ -323,6 +325,7 @@ html, body {
 }
 
 .theme-chip,
+.layout-chip,
 .time-chip {
   appearance: none;
   border: 1px solid rgba(255,255,255,0.14);
@@ -345,17 +348,24 @@ html, body {
   justify-content: center;
 }
 
+.layout-chip {
+  justify-content: center;
+  padding: 9px 10px;
+}
+
 .theme-chip-dot {
   display: none;
 }
 
 .theme-chip:hover:not(:disabled),
+.layout-chip:hover:not(:disabled),
 .time-chip:hover:not(:disabled) {
   transform: translateY(-1px);
   border-color: rgba(45,215,122,0.48);
 }
 
 .theme-chip.is-active,
+.layout-chip.is-active,
 .time-chip.is-active {
   background:
     radial-gradient(circle at 24% 24%, rgba(255,203,47,0.22), transparent 36%),
@@ -368,6 +378,7 @@ html, body {
 }
 
 .theme-chip:disabled,
+.layout-chip:disabled,
 .time-chip:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -740,7 +751,8 @@ input[type="range"] {
     justify-content: flex-start;
   }
 
-  .theme-picker { order: -2; }
+  .theme-picker { order: -3; }
+  .layout-picker { order: -2; }
   .time-picker { order: -1; }
   .poster-shell { order: 1; flex: none; min-height: 0; }
   .shoot-btn { order: 0; }
@@ -756,11 +768,6 @@ input[type="range"] {
 
   .frame-ov::before {
     inset: 10px;
-  }
-
-  /* shorter slots so grid doesn't push button off-screen */
-  .pv-slot {
-    aspect-ratio: 4 / 3;
   }
 
   .shoot-btn {
@@ -809,10 +816,6 @@ input[type="range"] {
     gap: 8px;
   }
 
-  .pv-slot {
-    aspect-ratio: 4 / 3;
-  }
-
   .shoot-btn {
     width: min(54vw, 190px);
   }
@@ -825,11 +828,13 @@ input[type="range"] {
     font-size: 17px;
   }
 
-  .theme-picker {
+  .theme-picker,
+  .layout-picker {
     gap: 6px;
   }
 
-  .theme-chip {
+  .theme-chip,
+  .layout-chip {
     gap: 6px;
     padding: 9px 7px 8px;
     border-radius: 12px;
@@ -919,13 +924,34 @@ input[type="range"] {
 /* ── Photo preview grid (during shooting) ───────────────── */
 .photo-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(2, minmax(112px, 1fr));
   gap: 8px;
   width: 100%;
   height: 100%;
   min-height: 0;
   flex: 1;
+}
+
+.photo-grid[data-layout="1"] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: 2fr 1fr;
+}
+
+.photo-grid[data-layout="1"] #pvs0 {
+  grid-column: 1 / 4;
+}
+
+.photo-grid[data-layout="2"] {
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+}
+
+.photo-grid[data-layout="2"] #pvs0 {
+  grid-row: 1 / 4;
+}
+
+.photo-grid[data-layout="3"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
 }
 
 .ctrl-col.shooting .shoot-btn { display: none; }
@@ -1145,7 +1171,8 @@ input[type="range"] {
   .main { grid-template-columns: 3fr 2fr; }
   .cam-col { order: 1; padding: 8px; }
   .ctrl-col { order: 2; gap: 10px; padding: 8px; align-items: center; }
-  .theme-picker { order: -2; gap: 6px; }
+  .theme-picker { order: -3; gap: 6px; }
+  .layout-picker { order: -2; gap: 6px; }
   .shoot-btn { order: 0; width: 120px; }
   .poster-shell { order: 0; flex: 1; padding: 8px; }
   .cam-box {
@@ -1204,12 +1231,14 @@ input[type="range"] {
     width: min(100%, 560px);
   }
 
-  .theme-picker { order: -2; }
+  .theme-picker { order: -3; }
+  .layout-picker { order: -2; }
   .time-picker { order: -1; }
   .shoot-btn { order: 0; }
   .poster-shell { order: 1; }
 
-  .theme-picker {
+  .theme-picker,
+  .layout-picker {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -1228,11 +1257,9 @@ input[type="range"] {
     max-height: 38vh;
   }
 
-  /* Grid rows split available height evenly */
   .photo-grid {
     flex: 1;
     height: 100%;
-    grid-template-rows: 1fr 1fr;
   }
 
   .pv-slot {
