@@ -416,6 +416,7 @@ html, body {
   min-height: 0;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   padding: 12px;
   border-radius: 18px;
   border: 1px solid rgba(255,255,255,0.1);
@@ -683,21 +684,24 @@ input[type="range"] {
 
 @media (min-width: 941px) {
   .ctrl-col {
-    gap: 14px;
+    gap: 10px;
     justify-content: flex-start;
   }
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(260px, 32dvh, 320px);
-    max-height: 320px;
+    height: clamp(220px, 28dvh, 260px);
+    max-height: 260px;
   }
 
   .shoot-btn {
     flex-shrink: 0;
-    width: clamp(150px, 13vw, 186px);
-    margin: 2px auto 0;
+    width: clamp(112px, 10vw, 136px);
+    margin: 0 auto;
   }
+
+  .s-text { font-size: 13px; }
+  .s-text span:last-child { font-size: 15px; }
 }
 
 @media (max-width: 940px) {
@@ -906,8 +910,10 @@ input[type="range"] {
 .photo-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
   gap: 8px;
   width: 100%;
+  height: 100%;
   min-height: 0;
   flex: 1;
 }
@@ -924,7 +930,7 @@ input[type="range"] {
   background:
     linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02)),
     rgba(255,255,255,0.04);
-  aspect-ratio: 1;
+  min-height: 0;
   transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.04),
