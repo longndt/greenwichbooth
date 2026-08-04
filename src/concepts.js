@@ -67,8 +67,8 @@ export const POSTER_THEMES = [
     id: 3,
     name: 'Theme 3',
     bg: {
-      color: '#F0F7FF',
-      texture: { type: 'grid', color: 'rgba(37,99,235,0.13)', step: 36 },
+      color: '#DDEBFF',
+      texture: { type: 'grid', color: 'rgba(37,99,235,0.20)', step: 36 },
     },
     header: {
       bg: '#FFFFFF',
