@@ -510,63 +510,52 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
-function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
+function drawHeaderBadge(ctx, name, fallback, x, y, maxW, h, theme, anchor = 'left') {
   const text = String(name || '').trim();
-  if (!text) return;
+  const display = text || fallback;
+  if (!display) return;
 
   ctx.save();
-  ctx.shadowColor = 'rgba(0, 31, 20, 0.55)';
-  ctx.shadowBlur = 24;
-  ctx.fillStyle = 'rgba(0, 31, 20, 0.74)';
-  roundRect(ctx, x, y, w, h, 24);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = theme.photos.cornerAccent.color;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  const maxWidth = w - 28;
-  let fontSize = 22;
+  const padX = 22;
+  let fontSize = text ? 28 : 22;
   do {
     ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
+    if (ctx.measureText(display).width <= maxW - padX * 2) break;
     fontSize -= 2;
-  } while (ctx.measureText(text).width > maxWidth && fontSize >= 14);
+  } while (fontSize >= 18);
 
-  ctx.fillStyle = 'rgba(255,255,255,0.96)';
-  ctx.shadowColor = 'rgba(214,178,65,0.34)';
-  ctx.shadowBlur = 10;
-  ctx.fillText(text, x + w / 2, y + h / 2 + 1, maxWidth);
-  ctx.restore();
-}
+  const textW = Math.min(ctx.measureText(display).width, maxW - padX * 2);
+  const badgeW = Math.min(maxW, Math.max(128, Math.ceil(textW + padX * 2)));
+  const badgeX = anchor === 'right' ? x + maxW - badgeW : x;
 
-function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
-  const text = String(name || '').trim();
-  const display = text || 'GREENWICH PHOTOBOOTH';
-  ctx.save();
   ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.50)' : 'rgba(0, 31, 20, 0.10)';
   ctx.shadowBlur = text ? 24 : 12;
   ctx.fillStyle = text ? 'rgba(0, 31, 20, 0.70)' : 'rgba(255,255,255,0.34)';
-  roundRect(ctx, x, y, w, h, 24);
+  roundRect(ctx, badgeX, y, badgeW, h, 24);
   ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.strokeStyle = theme.photos.borderColor;
   ctx.lineWidth = text ? 3 : 2;
   ctx.stroke();
 
-  const maxWidth = w - 40;
-  let fontSize = text ? 28 : 22;
-  do {
-    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
-    fontSize -= 2;
-  } while (ctx.measureText(display).width > maxWidth && fontSize >= 18);
-
-  ctx.textAlign = 'left';
+  ctx.textAlign = anchor === 'right' ? 'center' : 'left';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : theme.title.color;
-  ctx.fillText(display, x + 20, y + h / 2 + 1, maxWidth);
+  ctx.fillText(
+    display,
+    anchor === 'right' ? badgeX + badgeW / 2 : badgeX + padX,
+    y + h / 2 + 1,
+    badgeW - padX * 2,
+  );
   ctx.restore();
+}
+
+function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
+  drawHeaderBadge(ctx, name, '', x, y, w, h, theme, 'right');
+}
+
+function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
+  drawHeaderBadge(ctx, name, 'GREENWICH PHOTOBOOTH', x, y, w, h, theme, 'left');
 }
 
 // ── Poster composition (1080×1440) — Selected concept + rendering
@@ -723,7 +712,7 @@ async function buildPoster() {
   });
 
   drawEventNameBadge(ctx, S.eventName, badgeLeftX, badgeRowY, badgeLeftW, 50, theme);
-  drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 44, theme);
+  drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
 
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
