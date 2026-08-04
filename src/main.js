@@ -94,24 +94,11 @@ function syncIntervalPicker() {
   });
 }
 
-function syncTimeLiveView() {
-  const badge = q('#time-live-badge');
-  const value = q('#time-live-value');
-  if (!badge || !value) return;
-
-  value.textContent = `${S.interval}s`;
-  badge.dataset.interval = String(S.interval);
-}
-
 function syncPosterPreview() {
   const preview = q('#poster-preview');
   if (!preview) return;
 
   const theme = POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0];
-  const title = q('#preview-theme-name');
-  const subtitle = q('#preview-theme-subtitle');
-  const footer = q('#preview-theme-footer');
-  const caption = q('#preview-theme-caption');
 
   preview.dataset.themeIndex = String(theme.id);
   preview.style.setProperty('--preview-shell-bg', `linear-gradient(180deg, ${theme.header.bg} 0%, ${theme.bg.color} 54%, ${theme.footer.bg} 100%)`);
@@ -125,11 +112,6 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-shell-footer', theme.footer.hashtag.color);
   preview.style.setProperty('--preview-shell-text', theme.footer.url.color);
   preview.style.setProperty('--preview-shell-badge', theme.header.topBar.color);
-
-  if (title) title.textContent = theme.name;
-  if (subtitle) subtitle.textContent = theme.subtitle.text;
-  if (footer) footer.textContent = `${theme.footer.hashtag.text} · ${theme.footer.url.text}`;
-  if (caption) caption.textContent = `Bản xem trước live của poster sẽ xuất ra theo theme này.`;
 }
 
 function setThemeIndex(nextIndex) {
@@ -154,7 +136,6 @@ function setIntervalSeconds(nextInterval) {
   const seconds = Number(nextInterval) || 3;
   S.interval = INTERVAL_OPTIONS.includes(seconds) ? seconds : 3;
   syncIntervalPicker();
-  syncTimeLiveView();
 }
 
 function syncStudentNameField() {
@@ -205,10 +186,6 @@ q('#app').innerHTML = `
       <div class="cam-box">
         <video id="cam" autoplay muted playsinline></video>
         <div class="frame-ov" id="fov"></div>
-        <div class="time-live-badge" id="time-live-badge" aria-live="polite" aria-label="Thời gian đếm ngược đang chọn">
-          <span class="time-live-badge__label">Countdown</span>
-          <span class="time-live-badge__value" id="time-live-value">${S.interval}s</span>
-        </div>
 
         <div class="cnt-ov hidden" id="cov">
           <div class="cnt-num-wrap">
@@ -273,7 +250,7 @@ q('#app').innerHTML = `
             aria-label="Chọn ${seconds} giây"
           >
             <span class="theme-chip-dot" aria-hidden="true"></span>
-            <span class="theme-chip-label">Time ${seconds}s</span>
+            <span class="theme-chip-label">${seconds === 3 ? 'Countdown 3s' : `${seconds}s`}</span>
           </button>
         `).join('')}
       </div>
@@ -303,19 +280,12 @@ q('#app').innerHTML = `
       </div>
 
       <section class="poster-shell" id="poster-preview" aria-label="Poster preview">
-        <div class="poster-shell__meta">
-          <div class="poster-shell__kicker">Preview live</div>
-          <div class="poster-shell__title" id="preview-theme-name">${THEME_OPTIONS[S.themeIndex]?.label || 'Open Day'}</div>
-          <div class="poster-shell__subtitle" id="preview-theme-subtitle">${(POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0]).subtitle.text}</div>
-          <div class="poster-shell__caption" id="preview-theme-caption">Bản xem trước live của poster sẽ xuất ra theo theme này.</div>
-        </div>
         <div class="photo-grid" id="photo-grid" data-layout="${S.layoutIndex + 1}">
           <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
           <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt="Ảnh 2 được chụp"/><span class="pv-badge">2</span></div>
           <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt="Ảnh 3 được chụp"/><span class="pv-badge">3</span></div>
           <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt="Ảnh 4 được chụp"/><span class="pv-badge">4</span></div>
         </div>
-        <div class="poster-shell__footer" id="preview-theme-footer"></div>
       </section>
 
       <button class="shoot-btn" id="shoot-btn" aria-label="Chụp">
@@ -897,7 +867,6 @@ function retake() {
   syncPosterPreview();
   syncLayoutPicker();
   syncIntervalPicker();
-  syncTimeLiveView();
   syncEventNameField();
   syncStudentNameField();
 }
@@ -954,7 +923,6 @@ syncThemePicker();
 syncPosterPreview();
 syncLayoutPicker();
 syncIntervalPicker();
-syncTimeLiveView();
 syncEventNameField();
 syncStudentNameField();
 startCam();
