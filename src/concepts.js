@@ -30,7 +30,7 @@ export const POSTER_THEMES = [
       url: { text: 'greenwich.edu.vn', color: '#0A5B66' },
       hashtag: { text: 'My Greenwich Moment', color: '#0A5B66' },
     },
-    frame: { outer: '#7CCBB9', outerW: 5, inner: '#D28A2E', innerW: 2 },
+    frame: { outer: '#7CCBB9', outerW: 3, inner: '#D28A2E', innerW: 0 },
   },
   {
     id: 2,
@@ -61,7 +61,7 @@ export const POSTER_THEMES = [
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: 'My Greenwich Moment', color: '#FFD166' },
     },
-    frame: { outer: '#FF6B4A', outerW: 6, inner: '#006D77', innerW: 2 },
+    frame: { outer: '#FF6B4A', outerW: 3, inner: '#006D77', innerW: 0 },
   },
   {
     id: 3,
@@ -82,9 +82,9 @@ export const POSTER_THEMES = [
       slotShadow: 'rgba(37,99,235,0.18)',
       slotBg: '#FFFFFF',
       borderColor: '#2563EB',
-      borderWidth: 3,
+      borderWidth: 2,
       radius: 10,
-      cornerAccent: { color: '#FFCB2F', size: 22, lw: 2 },
+      cornerAccent: { color: '#FFCB2F', size: 0, lw: 0 },
     },
     footer: {
       bg: '#102A43',
@@ -92,6 +92,6 @@ export const POSTER_THEMES = [
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: 'My Greenwich Moment', color: '#FFCB2F' },
     },
-    frame: { outer: '#2563EB', outerW: 6, inner: '#FFCB2F', innerW: 2 },
+    frame: { outer: '#2563EB', outerW: 2, inner: '#FFCB2F', innerW: 0 },
   },
 ];

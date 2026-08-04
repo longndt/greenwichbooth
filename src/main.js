@@ -508,6 +508,7 @@ function roundRect(ctx, x, y, w, h, r) {
 }
 
 function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
+  if (size <= 0 || lw <= 0) return;
   ctx.save();
   ctx.strokeStyle = color;
   ctx.lineWidth = lw;
@@ -748,44 +749,34 @@ async function buildPoster() {
   drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
 
   // ── Footer statement ──
-  const footerW = 888;
-  const footerH = 114;
-  const footerY = 1206;
+  const footerW = 720;
+  const footerH = 68;
+  const footerY = 1300;
   const footerX = (W - footerW) / 2;
   ctx.save();
   ctx.shadowColor = theme.photos.slotShadow;
-  ctx.shadowBlur = 28;
-  ctx.shadowOffsetY = 10;
+  ctx.shadowBlur = 12;
+  ctx.shadowOffsetY = 4;
   ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, footerX, footerY, footerW, footerH, 22);
+  roundRect(ctx, footerX, footerY, footerW, footerH, 16);
   ctx.fill();
   ctx.restore();
 
   ctx.shadowColor = 'transparent';
   ctx.strokeStyle = theme.footer.borderColor;
-  ctx.lineWidth = 3;
-  roundRect(ctx, footerX, footerY, footerW, footerH, 22);
+  ctx.globalAlpha = 0.32;
+  ctx.lineWidth = 1;
+  roundRect(ctx, footerX, footerY, footerW, footerH, 16);
   ctx.stroke();
-  ctx.globalAlpha = 0.18;
-  ctx.fillStyle = theme.footer.borderColor;
-  roundRect(ctx, footerX + 36, footerY + 18, footerW - 72, 4, 2);
-  ctx.fill();
   ctx.globalAlpha = 1;
-
-  const glow = ctx.createRadialGradient(540, 1264, 28, 540, 1264, 230);
-  glow.addColorStop(0, 'rgba(214,178,65,0.28)');
-  glow.addColorStop(1, 'rgba(214,178,65,0)');
-  ctx.fillStyle = glow;
-  roundRect(ctx, 160, 1232, 760, 66, 20);
-  ctx.fill();
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.shadowColor = 'rgba(0,0,0,0.34)';
-  ctx.shadowBlur = 12;
-  ctx.font = '900 44px "Lato", "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1267);
+  ctx.shadowColor = 'rgba(0,0,0,0.18)';
+  ctx.shadowBlur = 6;
+  ctx.font = '900 34px "Lato", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, footerY + footerH / 2 + 1);
   ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
@@ -794,7 +785,7 @@ async function buildPoster() {
   ctx.strokeRect(20, 20, W - 40, H - 40);
   ctx.strokeStyle = theme.frame.inner;
   ctx.lineWidth = theme.frame.innerW;
-  ctx.strokeRect(32, 32, W - 64, H - 64);
+  if (theme.frame.innerW > 0) ctx.strokeRect(32, 32, W - 64, H - 64);
 }
 
 function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
