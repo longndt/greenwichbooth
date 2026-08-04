@@ -12,6 +12,7 @@ const isMobile = () => window.innerWidth <= 768;
 const S = {
   mode: 'ready',
   interval: 3,
+  eventName: localStorage.getItem('greenwichbooth.eventName') || '',
   studentName: localStorage.getItem('greenwichbooth.studentName') || '',
   photos: [],
   stream: null,
@@ -80,12 +81,27 @@ function syncStudentNameField() {
   input.disabled = S.mode !== 'ready';
 }
 
+function syncEventNameField() {
+  const input = q('#event-name');
+  if (!input) return;
+  input.value = S.eventName;
+  input.disabled = S.mode !== 'ready';
+}
+
 function setStudentName(nextName) {
   if (S.mode !== 'ready') return;
   const name = String(nextName || '').replace(/\s+/g, ' ').slice(0, 32);
   S.studentName = name;
   localStorage.setItem('greenwichbooth.studentName', name);
   syncStudentNameField();
+}
+
+function setEventName(nextName) {
+  if (S.mode !== 'ready') return;
+  const name = String(nextName || '').replace(/\s+/g, ' ').slice(0, 44);
+  S.eventName = name;
+  localStorage.setItem('greenwichbooth.eventName', name);
+  syncEventNameField();
 }
 
 // ── Mount HTML ────────────────────────────────────────────────────────────────
@@ -164,13 +180,25 @@ q('#app').innerHTML = `
 
       <div class="name-field">
         <input
+          id="event-name"
+          class="name-input"
+          type="text"
+          inputmode="text"
+          maxlength="44"
+          placeholder="Tên sự kiện"
+          aria-label="Tên sự kiện để hiển thị trên poster"
+        >
+      </div>
+
+      <div class="name-field">
+        <input
           id="student-name"
           class="name-input"
           type="text"
           inputmode="text"
           maxlength="32"
-          placeholder="Enter name (optional)"
-          aria-label="Enter student name for poster personalization"
+          placeholder="Tên sinh viên"
+          aria-label="Tên sinh viên để hiển thị trên poster"
         >
       </div>
 
@@ -269,6 +297,7 @@ async function shoot() {
   q('#shoot-btn').disabled = true;
   syncThemePicker();
   syncIntervalPicker();
+  syncEventNameField();
   syncStudentNameField();
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
@@ -317,6 +346,7 @@ async function shoot() {
     S.lockedThemeIndex = null;
     syncThemePicker();
     syncIntervalPicker();
+    syncEventNameField();
     syncStudentNameField();
     return;
   }
@@ -334,10 +364,12 @@ async function shoot() {
     S.lockedThemeIndex = null;
     syncThemePicker();
     syncIntervalPicker();
+    syncEventNameField();
     syncStudentNameField();
     return;
   }
   S.mode = 'done';
+  syncEventNameField();
   syncStudentNameField();
   S.posterUrl = posterDataUrl;
   const uploadP = uploadPoster(uploadBlob);
@@ -434,6 +466,39 @@ function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
     ctx.fillStyle = 'rgba(255,255,255,0.46)';
     ctx.fillText('TÊN SINH VIÊN', x + 52, y + h / 2 + 1, w - 84);
   }
+  ctx.restore();
+}
+
+function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
+  const text = String(name || '').trim();
+  const display = text || 'GREENWICH PHOTOBOOTH';
+  ctx.save();
+  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.50)' : 'rgba(0, 31, 20, 0.22)';
+  ctx.shadowBlur = text ? 24 : 12;
+  ctx.fillStyle = text ? 'rgba(0, 31, 20, 0.70)' : 'rgba(255,255,255,0.06)';
+  roundRect(ctx, x, y, w, h, 24);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = text ? theme.photos.borderColor : 'rgba(255,255,255,0.10)';
+  ctx.lineWidth = text ? 3 : 2;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(x + 32, y + h / 2, 8, 0, Math.PI * 2);
+  ctx.fillStyle = text ? theme.photos.borderColor : 'rgba(255,255,255,0.14)';
+  ctx.fill();
+
+  const maxWidth = w - 84;
+  let fontSize = text ? 28 : 22;
+  do {
+    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
+    fontSize -= 2;
+  } while (ctx.measureText(display).width > maxWidth && fontSize >= 18);
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : 'rgba(255,255,255,0.46)';
+  ctx.fillText(display, x + 52, y + h / 2 + 1, maxWidth);
   ctx.restore();
 }
 
@@ -600,6 +665,7 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
+  drawEventNameBadge(ctx, S.eventName, 64, 154, 560, 50, theme);
   drawStudentNameBadge(ctx, S.studentName, 656, 154, 360, 50, theme);
 
   // ── Footer statement ──
@@ -725,6 +791,7 @@ function retake() {
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
   syncThemePicker();
   syncIntervalPicker();
+  syncEventNameField();
   syncStudentNameField();
 }
 
@@ -755,6 +822,8 @@ q('#shoot-btn').addEventListener('click', shoot);
 q('#retry-cam').addEventListener('click', startCam);
 q('#retake-btn').addEventListener('click', retake);
 q('#print-btn').addEventListener('click', printPoster);
+q('#event-name').value = S.eventName;
+q('#event-name').addEventListener('input', e => setEventName(e.target.value));
 q('#student-name').value = S.studentName;
 q('#student-name').addEventListener('input', e => setStudentName(e.target.value));
 qa('.theme-chip[data-theme-index]').forEach(btn => {
@@ -773,6 +842,7 @@ window.addEventListener('orientationchange', () => {
 if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 syncThemePicker();
 syncIntervalPicker();
+syncEventNameField();
 syncStudentNameField();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setIntervalSeconds, setStudentName };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setIntervalSeconds, setEventName, setStudentName };

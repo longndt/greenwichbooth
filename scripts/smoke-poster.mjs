@@ -30,6 +30,13 @@ async function main() {
     throw new Error(`Expected Festival Pulse theme active, got ${activeTheme}`);
   }
 
+  const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
+  if (placeholders.join('|') !== 'Tên sự kiện|Tên sinh viên') {
+    throw new Error(`Unexpected input placeholders: ${placeholders.join('|')}`);
+  }
+
+  await page.evaluate(() => window.__t?.setEventName?.('Open Day 2026'));
+  await page.waitForFunction(() => window.__t?.S?.eventName === 'Open Day 2026');
   await page.evaluate(() => window.__t?.setStudentName?.('Nguyen '));
   await page.waitForFunction(() => window.__t?.S?.studentName === 'Nguyen ');
   await page.evaluate(() => window.__t?.setStudentName?.('Nguyen Van A'));
