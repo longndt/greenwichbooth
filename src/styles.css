@@ -481,13 +481,7 @@ html, body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background:
-    linear-gradient(
-      180deg,
-      var(--preview-header-bg, rgba(8,37,51,0.96)) 0 18%,
-      transparent 18% 84%,
-      var(--preview-footer-bg, rgba(6,25,35,0.98)) 84% 100%
-    );
+  background: none;
 }
 
 .poster-shell::after {
