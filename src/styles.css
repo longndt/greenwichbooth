@@ -167,20 +167,20 @@ html, body {
 /* ── Countdown overlay ───────────────────────────────────── */
 .cnt-ov {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  background: rgba(4,18,26,0.76);
-  backdrop-filter: blur(8px);
+  top: 24px;
+  right: 26px;
+  background: transparent;
+  backdrop-filter: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 8px;
   z-index: 10;
-  padding: 12px 14px;
-  border: 1px solid rgba(255,255,255,0.14);
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.45);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  box-shadow: none;
 }
 
 .cnt-ov.hidden { display: none; }
