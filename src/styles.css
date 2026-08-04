@@ -476,6 +476,29 @@ html, body {
   transition: background 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
 }
 
+.poster-shell::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      var(--preview-header-bg, rgba(8,37,51,0.96)) 0 18%,
+      transparent 18% 84%,
+      var(--preview-footer-bg, rgba(6,25,35,0.98)) 84% 100%
+    );
+}
+
+.poster-shell::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1px solid var(--preview-frame-inner, rgba(255,203,47,0.55));
+  border-radius: 12px;
+  pointer-events: none;
+}
+
 .poster-shell .photo-grid {
   position: relative;
   z-index: 1;
@@ -489,9 +512,9 @@ html, body {
 .poster-shell .pv-slot.filled {
   border-color: var(--preview-slot-border, var(--preview-shell-accent, var(--emerald)));
   box-shadow:
-    0 0 0 1px rgba(10,147,150,0.2),
+    0 0 0 1px var(--preview-slot-border, rgba(10,147,150,0.2)),
     0 0 16px var(--preview-shell-glow, rgba(10,147,150,0.24)),
-    inset 0 0 0 1px rgba(10,147,150,0.1);
+    inset 0 0 0 1px rgba(255,255,255,0.12);
 }
 
 .poster-shell .pv-slot.filled .pv-badge {
@@ -1032,9 +1055,9 @@ input[type="range"] {
 .pv-slot.filled {
   border-color: var(--preview-slot-border, var(--preview-shell-accent, var(--emerald)));
   box-shadow:
-    0 0 0 1px rgba(10,147,150,0.2),
+    0 0 0 1px var(--preview-slot-border, rgba(10,147,150,0.2)),
     0 0 16px var(--preview-shell-glow, rgba(10,147,150,0.24)),
-    inset 0 0 0 1px rgba(10,147,150,0.1);
+    inset 0 0 0 1px rgba(255,255,255,0.12);
   transform: translateY(-1px);
 }
 

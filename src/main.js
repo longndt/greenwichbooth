@@ -104,8 +104,11 @@ function syncPosterPreview() {
   const theme = POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0];
 
   preview.dataset.themeIndex = String(theme.id);
-  preview.style.setProperty('--preview-shell-bg', `linear-gradient(180deg, ${theme.header.bg} 0%, ${theme.bg.color} 54%, ${theme.footer.bg} 100%)`);
+  preview.style.setProperty('--preview-shell-bg', theme.bg.color);
+  preview.style.setProperty('--preview-header-bg', theme.header.bg);
+  preview.style.setProperty('--preview-footer-bg', theme.footer.bg);
   preview.style.setProperty('--preview-shell-border', theme.frame.outer);
+  preview.style.setProperty('--preview-frame-inner', theme.frame.inner);
   preview.style.setProperty('--preview-shell-glow', theme.photos.slotShadow);
   preview.style.setProperty('--preview-shell-accent', theme.photos.borderColor);
   preview.style.setProperty('--preview-shell-surface', theme.photos.slotBg);

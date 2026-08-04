@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer';
+import { POSTER_THEMES } from '../src/concepts.js';
 
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:5173';
 
@@ -183,6 +184,28 @@ async function main() {
     const previewThemeId = await page.$eval('#poster-preview', el => el.dataset.themeIndex);
     if (previewThemeId !== String(themeIndex + 1)) {
       throw new Error(`Preview theme id did not track theme ${themeIndex + 1}: got ${previewThemeId}`);
+    }
+    const expectedTheme = POSTER_THEMES[themeIndex];
+    const previewVars = await page.$eval('#poster-preview', el => {
+      const styles = getComputedStyle(el);
+      return {
+        header: styles.getPropertyValue('--preview-header-bg').trim(),
+        footer: styles.getPropertyValue('--preview-footer-bg').trim(),
+        inner: styles.getPropertyValue('--preview-frame-inner').trim(),
+        surface: styles.getPropertyValue('--preview-slot-bg').trim(),
+        border: styles.getPropertyValue('--preview-slot-border').trim(),
+        accent: styles.getPropertyValue('--preview-slot-accent').trim(),
+      };
+    });
+    if (
+      previewVars.header !== expectedTheme.header.bg ||
+      previewVars.footer !== expectedTheme.footer.bg ||
+      previewVars.inner !== expectedTheme.frame.inner ||
+      previewVars.surface !== expectedTheme.photos.slotBg ||
+      previewVars.border !== expectedTheme.photos.borderColor ||
+      previewVars.accent !== expectedTheme.photos.cornerAccent.color
+    ) {
+      throw new Error(`Preview theme variables do not match theme ${themeIndex + 1}: ${JSON.stringify(previewVars)}`);
     }
     await page.evaluate(async () => {
       await window.__t.buildPoster();
