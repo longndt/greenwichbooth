@@ -685,24 +685,24 @@ input[type="range"] {
 
 @media (min-width: 941px) {
   .ctrl-col {
-    gap: 10px;
+    gap: 12px;
     justify-content: flex-start;
   }
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(220px, 28dvh, 260px);
-    max-height: 260px;
+    height: clamp(260px, 32dvh, 300px);
+    max-height: 300px;
   }
 
   .shoot-btn {
     flex-shrink: 0;
-    width: clamp(112px, 10vw, 136px);
-    margin: 0 auto;
+    width: clamp(100px, 8.5vw, 110px);
+    margin: 10px auto 0;
   }
 
-  .s-text { font-size: 13px; }
-  .s-text span:last-child { font-size: 15px; }
+  .s-text { font-size: 12px; }
+  .s-text span:last-child { font-size: 13px; }
 }
 
 @media (max-width: 940px) {
@@ -911,7 +911,7 @@ input[type="range"] {
 .photo-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(112px, 1fr));
   gap: 8px;
   width: 100%;
   height: 100%;
