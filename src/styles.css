@@ -705,12 +705,12 @@ input[type="range"] {
 
   .shoot-btn {
     flex-shrink: 0;
-    width: clamp(100px, 8.5vw, 110px);
-    margin: 10px auto 0;
+    width: clamp(128px, 11vw, 150px);
+    margin: 18px auto 0;
   }
 
-  .s-text { font-size: 12px; }
-  .s-text span:last-child { font-size: 13px; }
+  .s-text { font-size: 13px; }
+  .s-text span:last-child { font-size: 15px; }
 }
 
 @media (max-width: 940px) {
@@ -741,9 +741,9 @@ input[type="range"] {
   }
 
   .theme-picker { order: -2; }
-  /* shoot button above photo grid on mobile */
-  .shoot-btn { order: -1; }
+  .time-picker { order: -1; }
   .poster-shell { order: 1; flex: none; min-height: 0; }
+  .shoot-btn { order: 0; }
 
   .cam-box {
     aspect-ratio: 4 / 3;
@@ -764,7 +764,8 @@ input[type="range"] {
   }
 
   .shoot-btn {
-    width: min(60vw, 160px);
+    width: min(46vw, 180px);
+    margin: 16px auto 8px;
   }
 }
 
@@ -813,15 +814,15 @@ input[type="range"] {
   }
 
   .shoot-btn {
-    width: min(56vw, 148px);
+    width: min(54vw, 190px);
   }
 
   .s-text {
-    font-size: 14px;
+    font-size: 15px;
   }
 
   .s-text span:last-child {
-    font-size: 15px;
+    font-size: 17px;
   }
 
   .theme-picker {
