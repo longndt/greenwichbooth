@@ -29,6 +29,18 @@ async function main() {
   if (activeTheme !== 'Campus Life') {
     throw new Error(`Expected Campus Life theme active, got ${activeTheme}`);
   }
+  const previewTheme = await page.$eval('#preview-theme-name', el => el.textContent.trim());
+  if (previewTheme !== 'Campus Life') {
+    throw new Error(`Expected preview theme name to update, got ${previewTheme}`);
+  }
+  const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
+  if (!previewAccent.includes('0F5132')) {
+    throw new Error(`Expected preview accent to follow theme 2, got ${previewAccent}`);
+  }
+  const liveCountdown = await page.$eval('#time-live-value', el => el.textContent.trim());
+  if (liveCountdown !== '3s') {
+    throw new Error(`Expected initial live countdown to be 3s, got ${liveCountdown}`);
+  }
 
   const layoutCount = await page.$$eval('.layout-chip', nodes => nodes.length);
   if (layoutCount !== 3) {
@@ -47,6 +59,12 @@ async function main() {
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
   if (timerLabels.join('|') !== 'Time 3s|Time 4s|Time 5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
+  }
+  await page.click('.time-chip[data-interval="5"]');
+  await page.waitForFunction(() => window.__t?.S?.interval === 5);
+  const updatedCountdown = await page.$eval('#time-live-value', el => el.textContent.trim());
+  if (updatedCountdown !== '5s') {
+    throw new Error(`Expected live countdown to track interval 5s, got ${updatedCountdown}`);
   }
   const layoutRects = await page.evaluate(() => {
     const grid = document.querySelector('#photo-grid').getBoundingClientRect();
@@ -128,6 +146,11 @@ async function main() {
   for (let themeIndex = 0; themeIndex < 3; themeIndex += 1) {
     await page.evaluate(index => window.__t?.setThemeIndex?.(index), themeIndex);
     await page.waitForFunction(index => window.__t?.S?.themeIndex === index, {}, themeIndex);
+    const previewLabel = await page.$eval('#preview-theme-name', el => el.textContent.trim());
+    const expectedLabel = ['Open Day', 'Campus Life', 'Future Lab'][themeIndex];
+    if (previewLabel !== expectedLabel) {
+      throw new Error(`Preview label did not track theme ${themeIndex + 1}: expected ${expectedLabel}, got ${previewLabel}`);
+    }
     await page.evaluate(async () => {
       await window.__t.buildPoster();
     });
