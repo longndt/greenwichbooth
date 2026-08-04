@@ -1,10 +1,8 @@
 import http from 'node:http';
 import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const distDir = path.join(__dirname, 'dist');
+const distDir = path.join(process.cwd(), 'dist');
 const port = Number(process.env.PORT || 3000);
 
 const MIME_TYPES = {
