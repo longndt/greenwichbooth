@@ -220,7 +220,7 @@ q('#app').innerHTML = `
             aria-pressed="${index === S.layoutIndex}"
             aria-label="Chọn ${layout.label}"
           >
-            <span class="theme-chip-label">${index + 1}</span>
+            <span class="theme-chip-label">Layout ${index + 1}</span>
           </button>
         `).join('')}
       </div>
@@ -234,7 +234,7 @@ q('#app').innerHTML = `
             aria-label="Chọn ${seconds} giây"
           >
             <span class="theme-chip-dot" aria-hidden="true"></span>
-            <span class="theme-chip-label">${seconds}s</span>
+            <span class="theme-chip-label">Timer ${seconds}s</span>
           </button>
         `).join('')}
       </div>

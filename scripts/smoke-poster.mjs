@@ -37,12 +37,16 @@ async function main() {
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeLayout !== '2') {
+  if (activeLayout !== 'Layout 2') {
     throw new Error(`Expected layout 2 active, got ${activeLayout}`);
   }
   const previewLayout = await page.$eval('#photo-grid', el => el.dataset.layout);
   if (previewLayout !== '2') {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
+  }
+  const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
+  if (timerLabels.join('|') !== 'Timer 3s|Timer 4s|Timer 5s') {
+    throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   const layoutRects = await page.evaluate(() => {
     const a = document.querySelector('#pvs0').getBoundingClientRect();
