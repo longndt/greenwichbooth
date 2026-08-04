@@ -737,22 +737,24 @@ async function buildPoster() {
   drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
 
   // ── Footer statement ──
-  const footerW = 520;
+  const footerW = 620;
+  const footerH = 62;
+  const footerY = 1238;
   const footerX = (W - footerW) / 2;
+  ctx.shadowColor = theme.photos.slotShadow;
+  ctx.shadowBlur = 18;
   ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, footerX, 1304, footerW, 46, 14);
+  roundRect(ctx, footerX, footerY, footerW, footerH, 18);
   ctx.fill();
-  ctx.strokeStyle = theme.footer.borderColor;
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  ctx.shadowColor = 'transparent';
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.shadowColor = 'rgba(214,178,65,0.22)';
-  ctx.shadowBlur = 5;
-  ctx.font = '900 24px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1327);
+  ctx.shadowColor = 'rgba(214,178,65,0.26)';
+  ctx.shadowBlur = 7;
+  ctx.font = '900 36px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, footerY + footerH / 2 + 1);
   ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
