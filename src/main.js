@@ -525,80 +525,22 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
-function drawHeaderBadge(ctx, name, fallback, x, y, maxW, h, theme, anchor = 'left') {
-  const text = String(name || '').trim();
-  const display = text || fallback;
+function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, family, color, align = 'left') {
+  const display = String(text || '').trim();
   if (!display) return;
 
   ctx.save();
-  const padX = 22;
-  let fontSize = text ? 28 : 22;
+  let size = fontSize;
   do {
-    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
-    if (ctx.measureText(display).width <= maxW - padX * 2) break;
-    fontSize -= 2;
-  } while (fontSize >= 18);
+    ctx.font = `${fontWeight} ${size}px "${family}", Arial, sans-serif`;
+    if (ctx.measureText(display).width <= maxW) break;
+    size -= 2;
+  } while (size >= minSize);
 
-  const textW = Math.min(ctx.measureText(display).width, maxW - padX * 2);
-  const badgeW = Math.min(maxW, Math.max(128, Math.ceil(textW + padX * 2)));
-  const badgeX = anchor === 'right' ? x + maxW - badgeW : x;
-
-  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.50)' : 'rgba(0, 31, 20, 0.10)';
-  ctx.shadowBlur = text ? 24 : 12;
-  ctx.fillStyle = text ? 'rgba(0, 31, 20, 0.70)' : 'rgba(255,255,255,0.34)';
-  roundRect(ctx, badgeX, y, badgeW, h, 24);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.strokeStyle = theme.photos.borderColor;
-  ctx.lineWidth = text ? 3 : 2;
-  ctx.stroke();
-
-  ctx.textAlign = anchor === 'right' ? 'center' : 'left';
+  ctx.textAlign = align;
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : theme.title.color;
-  ctx.fillText(
-    display,
-    anchor === 'right' ? badgeX + badgeW / 2 : badgeX + padX,
-    y + h / 2 + 1,
-    badgeW - padX * 2,
-  );
-  ctx.restore();
-}
-
-function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
-  drawHeaderBadge(ctx, name, '', x, y, w, h, theme, 'right');
-}
-
-function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
-  const text = String(name || '').trim();
-  const display = text || 'GREENWICH PHOTOBOOTH';
-
-  ctx.save();
-  const padX = 22;
-  let fontSize = text ? 26 : 20;
-  do {
-    ctx.font = `900 ${fontSize}px "Lato", Arial, sans-serif`;
-    if (ctx.measureText(display).width <= w - padX * 2 - 10) break;
-    fontSize -= 2;
-  } while (fontSize >= 18);
-
-  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.38)' : 'rgba(0, 31, 20, 0.10)';
-  ctx.shadowBlur = text ? 18 : 10;
-  ctx.fillStyle = text ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.22)';
-  roundRect(ctx, x, y, w, h, 12);
-  ctx.fill();
-  ctx.shadowColor = 'transparent';
-  ctx.fillStyle = theme.header.topBar.color;
-  roundRect(ctx, x, y, 8, h, 6);
-  ctx.fill();
-  ctx.strokeStyle = theme.header.topBar.color;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText(display, x + padX, y + h / 2 + 1, w - padX * 2);
+  ctx.fillStyle = color;
+  ctx.fillText(display, x, y, maxW);
   ctx.restore();
 }
 
@@ -621,13 +563,6 @@ async function buildPoster() {
   ctx.fillStyle = theme.bg.color;
   ctx.fillRect(0, 0, W, H);
 
-  const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-  bgGrad.addColorStop(0, 'rgba(10, 147, 150, 0.12)');
-  bgGrad.addColorStop(0.45, 'rgba(0, 40, 58, 0)');
-  bgGrad.addColorStop(1, 'rgba(214, 178, 65, 0.09)');
-  ctx.fillStyle = bgGrad;
-  ctx.fillRect(0, 0, W, H);
-
   if (theme.bg.texture.type === 'grid') {
     ctx.fillStyle = theme.bg.texture.color;
     for (let x = 0; x < W; x += theme.bg.texture.step) ctx.fillRect(x, 0, 1, H);
@@ -637,20 +572,6 @@ async function buildPoster() {
     const s = theme.bg.texture.step;
     for (let x = 0; x < W; x += s) for (let y = 0; y < H; y += s) ctx.fillRect(x, y, 2, 2);
   }
-
-  // ── Header background ──
-  ctx.fillStyle = theme.header.bg;
-  ctx.fillRect(0, 0, W, headerH);
-  ctx.fillStyle = theme.title.color;
-  ctx.globalAlpha = 0.08;
-  ctx.beginPath();
-  ctx.moveTo(705, 0);
-  ctx.lineTo(W, 0);
-  ctx.lineTo(W, headerH);
-  ctx.lineTo(610, headerH);
-  ctx.closePath();
-  ctx.fill();
-  ctx.globalAlpha = 1;
 
   // ── Header top bar ──
   ctx.fillStyle = theme.header.topBar.color;
@@ -665,24 +586,12 @@ async function buildPoster() {
     ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
   }
 
-  // ── Brand + slogan ──
-  ctx.textAlign = 'left';
-  ctx.textBaseline = 'middle';
+  // ── Brand + metadata ──
   const brandX = 160;
-  const badgeLeftX = 64;
-  const badgeLeftW = 500;
-  const badgeRightX = 760;
-  const badgeRightW = 256;
-  const badgeRowY = 154;
-  const dateBadgeX = 760;
-  const dateBadgeW = 256;
-  ctx.font = '800 30px "Space Grotesk", Arial, sans-serif';
   ctx.shadowColor = 'transparent';
-  ctx.fillStyle = theme.title.color;
-  ctx.fillText('GREENWICH VIETNAM', brandX, 70);
-  ctx.font = '700 26px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('Change Starts Here', brandX, 114);
+  drawHeaderText(ctx, 'GREENWICH VIETNAM', brandX, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
+  drawHeaderText(ctx, 'Change Starts Here', brandX, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.date.color);
+  drawHeaderText(ctx, S.eventName || 'Greenwich Open Day', 64, 166, 650, 900, 56, 34, 'Space Grotesk', theme.subtitle.color);
 
   ctx.save();
   ctx.beginPath();
@@ -696,10 +605,12 @@ async function buildPoster() {
   ctx.drawImage(mascot, 64, 50, 64, 64);
   ctx.restore();
 
-  // ── Date badge ──
+  // ── Date + location metadata ──
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  drawHeaderBadge(ctx, today, '', dateBadgeX, 62, dateBadgeW, 50, theme, 'right');
+  const metaX = 1016;
+  drawHeaderText(ctx, today, metaX, 82, 260, 800, 34, 24, 'Space Grotesk', theme.date.color, 'right');
+  drawHeaderText(ctx, S.studentName || 'FPT Tower', metaX, 130, 260, 700, 26, 18, 'Be Vietnam Pro', theme.title.color, 'right');
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -745,18 +656,13 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  drawEventNameBadge(ctx, S.eventName, badgeLeftX, badgeRowY, badgeLeftW, 50, theme);
-  drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
-
-  // ── Footer signature ──
+  // ── Footer statement ──
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.shadowColor = 'rgba(0,0,0,0.12)';
-  ctx.shadowBlur = 4;
-  ctx.font = '800 34px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1326);
   ctx.shadowColor = 'transparent';
+  ctx.font = '900 36px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1270);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
