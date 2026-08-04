@@ -24,18 +24,18 @@ async function main() {
     throw new Error(`Expected 3 theme chips, found ${themeCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'Open Day|Student Life|Graduation Day') {
+  if (themeLabels.join('|') !== 'Theme 1|Theme 2|Theme 3') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
 
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'Student Life') {
-    throw new Error(`Expected Student Life theme active, got ${activeTheme}`);
+  if (activeTheme !== 'Theme 2') {
+    throw new Error(`Expected Theme 2 active, got ${activeTheme}`);
   }
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
-  if (!previewAccent.includes('D28A2E')) {
+  if (!previewAccent.includes('FF6B4A')) {
     throw new Error(`Expected preview accent to follow theme 2, got ${previewAccent}`);
   }
   const previewText = await page.$eval('#poster-preview', el => el.textContent.replace(/\s+/g, ' ').trim());
@@ -52,15 +52,15 @@ async function main() {
     };
   });
   if (
-    previewTheme.surface !== '#FFF8EA' ||
-    previewTheme.border !== '#D28A2E' ||
-    previewTheme.accent !== '#006A7F' ||
-    previewTheme.frame !== '#006A7F'
+    previewTheme.surface !== '#FFFFFF' ||
+    previewTheme.border !== '#FF6B4A' ||
+    previewTheme.accent !== '#006D77' ||
+    previewTheme.frame !== '#FF6B4A'
   ) {
     throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
   }
   const heroBorder = await page.$eval('#pvs0', el => getComputedStyle(el).borderTopColor);
-  if (heroBorder !== 'rgb(210, 138, 46)') {
+  if (heroBorder !== 'rgb(255, 107, 74)') {
     throw new Error(`Preview hero slot border did not apply selected theme immediately: ${heroBorder}`);
   }
 
@@ -212,7 +212,7 @@ async function main() {
     });
     const sloganRange = await page.$eval('#cvs', canvas => {
       const ctx = canvas.getContext('2d');
-      const { data } = ctx.getImageData(160, 92, 220, 26);
+      const { data } = ctx.getImageData(160, 96, 320, 42);
       let min = 255;
       let max = 0;
       for (let i = 0; i < data.length; i += 4) {

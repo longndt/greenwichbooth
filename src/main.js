@@ -679,9 +679,9 @@ async function buildPoster() {
   ctx.shadowColor = 'transparent';
   ctx.fillStyle = theme.title.color;
   ctx.fillText('GREENWICH VIETNAM', brandX, 70);
-  ctx.font = '700 16px "Space Grotesk", Arial, sans-serif';
+  ctx.font = '900 36px "Lato", "Space Grotesk", Arial, sans-serif';
   ctx.fillStyle = theme.subtitle.color;
-  ctx.fillText('CHANGE STARTS HERE', brandX, 104);
+  ctx.fillText('CHANGE STARTS HERE', brandX, 114);
 
   ctx.save();
   ctx.beginPath();
@@ -748,24 +748,44 @@ async function buildPoster() {
   drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
 
   // ── Footer statement ──
-  const footerW = 620;
-  const footerH = 62;
-  const footerY = 1238;
+  const footerW = 888;
+  const footerH = 114;
+  const footerY = 1206;
   const footerX = (W - footerW) / 2;
+  ctx.save();
   ctx.shadowColor = theme.photos.slotShadow;
-  ctx.shadowBlur = 18;
+  ctx.shadowBlur = 28;
+  ctx.shadowOffsetY = 10;
   ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, footerX, footerY, footerW, footerH, 18);
+  roundRect(ctx, footerX, footerY, footerW, footerH, 22);
   ctx.fill();
+  ctx.restore();
+
   ctx.shadowColor = 'transparent';
+  ctx.strokeStyle = theme.footer.borderColor;
+  ctx.lineWidth = 3;
+  roundRect(ctx, footerX, footerY, footerW, footerH, 22);
+  ctx.stroke();
+  ctx.globalAlpha = 0.18;
+  ctx.fillStyle = theme.footer.borderColor;
+  roundRect(ctx, footerX + 36, footerY + 18, footerW - 72, 4, 2);
+  ctx.fill();
+  ctx.globalAlpha = 1;
+
+  const glow = ctx.createRadialGradient(540, 1264, 28, 540, 1264, 230);
+  glow.addColorStop(0, 'rgba(214,178,65,0.28)');
+  glow.addColorStop(1, 'rgba(214,178,65,0)');
+  ctx.fillStyle = glow;
+  roundRect(ctx, 160, 1232, 760, 66, 20);
+  ctx.fill();
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.shadowColor = 'rgba(214,178,65,0.26)';
-  ctx.shadowBlur = 7;
-  ctx.font = '900 36px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, footerY + footerH / 2 + 1);
+  ctx.shadowColor = 'rgba(0,0,0,0.34)';
+  ctx.shadowBlur = 12;
+  ctx.font = '900 44px "Lato", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1267);
   ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
