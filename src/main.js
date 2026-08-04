@@ -746,12 +746,15 @@ async function buildPoster() {
   ctx.shadowBlur = 14;
   ctx.font = '900 32px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillText(theme.footer.hashtag.text, 540, 1290);
-  ctx.shadowColor = 'rgba(0,0,0,0.45)';
-  ctx.shadowBlur = 10;
+  const lightUrl = theme.footer.url.color.toLowerCase() !== '#ffffff';
+  ctx.shadowColor = lightUrl ? 'transparent' : 'rgba(0,0,0,0.45)';
+  ctx.shadowBlur = lightUrl ? 0 : 10;
   ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = 'rgba(0,0,0,0.38)';
-  ctx.strokeText(theme.footer.url.text, 540, 1336);
+  if (!lightUrl) {
+    ctx.lineWidth = 5;
+    ctx.strokeStyle = 'rgba(0,0,0,0.38)';
+    ctx.strokeText(theme.footer.url.text, 540, 1336);
+  }
   ctx.fillStyle = theme.footer.url.color;
   ctx.fillText(theme.footer.url.text, 540, 1336);
   ctx.shadowColor = 'transparent';
