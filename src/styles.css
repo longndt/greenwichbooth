@@ -361,35 +361,45 @@ html, body {
 .theme-chip.is-active,
 .layout-chip.is-active,
 .time-chip.is-active {
-  background:
-    radial-gradient(circle at 24% 24%, rgba(255,203,47,0.22), transparent 36%),
-    linear-gradient(145deg, rgba(0,95,115,0.92), rgba(3,32,47,0.96));
-  border-color: rgba(255,203,47,0.55);
+  color: #fffef7;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.28);
+  border-color: rgba(255,255,255,0.18);
   box-shadow:
-    0 0 0 1px rgba(255,203,47,0.1),
-    0 0 18px rgba(10,147,150,0.22),
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 12px 26px rgba(0,0,0,0.24),
     inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.theme-chip.is-active {
+  background:
+    radial-gradient(circle at 22% 22%, rgba(255,203,47,0.35), transparent 34%),
+    linear-gradient(145deg, rgba(0,126,143,0.98), rgba(5,49,61,0.98));
+  border-color: rgba(255,203,47,0.72);
+  box-shadow:
+    0 0 0 1px rgba(255,203,47,0.16),
+    0 0 20px rgba(0,126,143,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .layout-chip.is-active {
   background:
-    radial-gradient(circle at 24% 24%, rgba(148,210,189,0.24), transparent 38%),
-    linear-gradient(145deg, rgba(0,106,127,0.92), rgba(33,59,66,0.96));
-  border-color: rgba(148,210,189,0.58);
+    radial-gradient(circle at 22% 22%, rgba(125,211,252,0.34), transparent 36%),
+    linear-gradient(145deg, rgba(79,70,229,0.98), rgba(17,24,39,0.98));
+  border-color: rgba(125,211,252,0.7);
   box-shadow:
-    0 0 0 1px rgba(148,210,189,0.12),
-    0 0 18px rgba(0,106,127,0.24),
+    0 0 0 1px rgba(125,211,252,0.16),
+    0 0 20px rgba(79,70,229,0.32),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
 .time-chip.is-active {
   background:
-    radial-gradient(circle at 24% 24%, rgba(255,209,102,0.28), transparent 38%),
-    linear-gradient(145deg, rgba(122,74,33,0.92), rgba(7,59,76,0.96));
-  border-color: rgba(255,209,102,0.66);
+    radial-gradient(circle at 22% 22%, rgba(255,230,159,0.34), transparent 38%),
+    linear-gradient(145deg, rgba(234,88,12,0.98), rgba(120,53,15,0.98));
+  border-color: rgba(255,230,159,0.7);
   box-shadow:
-    0 0 0 1px rgba(255,209,102,0.14),
-    0 0 18px rgba(214,167,44,0.24),
+    0 0 0 1px rgba(255,230,159,0.16),
+    0 0 20px rgba(234,88,12,0.3),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
@@ -410,7 +420,7 @@ html, body {
 }
 
 .theme-chip.is-active .theme-chip-dot {
-  box-shadow: 0 0 14px rgba(10,147,150,0.38);
+  box-shadow: 0 0 14px rgba(255,203,47,0.48);
 }
 
 .theme-chip-text {
