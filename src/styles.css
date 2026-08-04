@@ -394,12 +394,12 @@ html, body {
 
 .time-chip.is-active {
   background:
-    radial-gradient(circle at 22% 22%, rgba(255,230,159,0.34), transparent 38%),
-    linear-gradient(145deg, rgba(234,88,12,0.98), rgba(120,53,15,0.98));
-  border-color: rgba(255,230,159,0.7);
+    radial-gradient(circle at 22% 22%, rgba(224,196,135,0.18), transparent 38%),
+    linear-gradient(145deg, rgba(128,104,63,0.94), rgba(49,47,38,0.98));
+  border-color: rgba(224,196,135,0.38);
   box-shadow:
-    0 0 0 1px rgba(255,230,159,0.16),
-    0 0 20px rgba(234,88,12,0.3),
+    0 0 0 1px rgba(224,196,135,0.1),
+    0 0 14px rgba(128,104,63,0.16),
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
