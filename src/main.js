@@ -191,13 +191,6 @@ q('#app').innerHTML = `
           <div class="cnt-num-wrap">
             <div class="cnt-n" id="cnt-n">3</div>
           </div>
-          <div class="cnt-lbl" id="cnt-lbl">Ảnh 1 / 4</div>
-          <div class="dot-strip">
-            <span class="dot" id="d0"></span>
-            <span class="dot" id="d1"></span>
-            <span class="dot" id="d2"></span>
-            <span class="dot" id="d3"></span>
-          </div>
         </div>
 
         <div class="cam-err hidden" id="cerr">
@@ -386,14 +379,12 @@ async function shoot() {
   for (let i = 0; i < 4; i++) {
     for (let c = S.interval; c > 0; c--) {
       q('#cnt-n').textContent = c;
-      q('#cnt-lbl').textContent = `Ảnh ${i + 1} / 4`;
       q('#cnt-n').dataset.tick = '1';
       await sleep(900);
       delete q('#cnt-n').dataset.tick;
       await sleep(80);
     }
     q('#cnt-n').textContent = '😊';
-    q('#cnt-lbl').textContent = '';
     await sleep(280);
 
     S.photos.push(capFrame(cam));
@@ -856,7 +847,6 @@ function retake() {
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
   q('#shoot-btn').disabled = false;
-  qa('.dot').forEach(d => d.classList.remove('done'));
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
   q('#cov').classList.add('hidden');

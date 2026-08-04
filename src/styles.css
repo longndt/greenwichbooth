@@ -207,33 +207,6 @@ html, body {
 
 .cnt-n[data-tick] { transform: scale(1.25); }
 
-.cnt-lbl {
-  font-size: 12px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.95);
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  text-align: center;
-  text-shadow: 0 1px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.8);
-}
-
-.dot-strip { display: flex; gap: 7px; }
-
-.dot {
-  width: 9px; height: 9px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.3);
-  background: transparent;
-  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-}
-
-.dot.done {
-  background: var(--gold);
-  border-color: var(--gold);
-  box-shadow: 0 0 10px rgba(255,203,47,0.65);
-  transform: scale(1.18);
-}
-
 /* ── Camera error ────────────────────────────────────────── */
 .cam-err {
   position: absolute;
@@ -1316,9 +1289,6 @@ input[type="range"] {
   /* Countdown: smaller for 27dvh camera box */
   .cnt-num-wrap { width: 52px; height: 52px; }
   .cnt-n { font-size: 24px; }
-  .cnt-lbl { font-size: 11px; }
-  .dot { width: 7px; height: 7px; }
-  .dot-strip { gap: 5px; }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */
