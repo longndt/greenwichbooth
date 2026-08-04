@@ -666,6 +666,25 @@ input[type="range"] {
   border-color: var(--border);
 }
 
+@media (min-width: 941px) {
+  .ctrl-col {
+    gap: 14px;
+    justify-content: flex-start;
+  }
+
+  .poster-shell {
+    flex: 0 0 auto;
+    height: clamp(260px, 32dvh, 320px);
+    max-height: 320px;
+  }
+
+  .shoot-btn {
+    flex-shrink: 0;
+    width: clamp(150px, 13vw, 186px);
+    margin: 2px auto 0;
+  }
+}
+
 @media (max-width: 940px) {
   body { overflow-y: auto; }
 
