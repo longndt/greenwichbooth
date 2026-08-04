@@ -1027,12 +1027,6 @@ input[type="range"] {
   100% { width: 100%; }
 }
 
-.proc-percent {
-  font-size: 11px;
-  color: var(--color-text-muted);
-  font-weight: 600;
-}
-
 /* ── Smooth Transitions & Animations ───────────────────────── */
 
 /* Photo grid fade-in */
