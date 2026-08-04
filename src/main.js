@@ -716,36 +716,25 @@ async function buildPoster() {
 
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, 64, 1240, 952, 126, 22);
+  roundRect(ctx, 64, 1276, 952, 74, 18);
   ctx.fill();
   ctx.strokeStyle = theme.footer.borderColor;
   ctx.lineWidth = 2;
   ctx.stroke();
-  const footerGlow = ctx.createRadialGradient(540, 1294, 40, 540, 1294, 280);
+  const footerGlow = ctx.createRadialGradient(540, 1313, 24, 540, 1313, 210);
   footerGlow.addColorStop(0, 'rgba(214,178,65,0.18)');
   footerGlow.addColorStop(1, 'rgba(214,178,65,0)');
   ctx.fillStyle = footerGlow;
-  roundRect(ctx, 210, 1256, 660, 84, 20);
+  roundRect(ctx, 234, 1288, 612, 50, 16);
   ctx.fill();
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
   ctx.shadowColor = 'rgba(214,178,65,0.34)';
-  ctx.shadowBlur = 14;
-  ctx.font = '900 32px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1290);
-  const lightUrl = theme.footer.url.color.toLowerCase() !== '#ffffff';
-  ctx.shadowColor = lightUrl ? 'transparent' : 'rgba(0,0,0,0.45)';
-  ctx.shadowBlur = lightUrl ? 0 : 10;
-  ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
-  if (!lightUrl) {
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = 'rgba(0,0,0,0.38)';
-    ctx.strokeText(theme.footer.url.text, 540, 1336);
-  }
-  ctx.fillStyle = theme.footer.url.color;
-  ctx.fillText(theme.footer.url.text, 540, 1336);
+  ctx.shadowBlur = 8;
+  ctx.font = '900 30px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1314);
   ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
