@@ -393,7 +393,7 @@ async function shoot() {
     q(`#pv${i}`).src = S.photos[i];
     q(`#pvs${i}`).classList.add('filled');
 
-    q(`#d${i}`).classList.add('done');
+    q(`#d${i}`)?.classList.add('done');
     if (i < 3) await sleep(380);
   }
 
