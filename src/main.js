@@ -676,19 +676,6 @@ async function buildPoster() {
   ctx.font = '900 26px "Space Grotesk", Arial, sans-serif';
   ctx.fillText(today, dateBadgeX + dateBadgeW / 2, 96);
 
-  ctx.save();
-  ctx.globalAlpha = 0.18;
-  ctx.strokeStyle = theme.title.color;
-  ctx.lineWidth = 3;
-  ctx.beginPath();
-  ctx.moveTo(748, 24);
-  ctx.lineTo(748, headerH - 24);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(748, headerH / 2, 10, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
-
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
     ctx.save();
