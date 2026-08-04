@@ -575,9 +575,9 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
 
   ctx.save();
   const padX = 22;
-  let fontSize = text ? 28 : 22;
+  let fontSize = text ? 26 : 20;
   do {
-    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
+    ctx.font = `900 ${fontSize}px "Lato", Arial, sans-serif`;
     if (ctx.measureText(display).width <= w - padX * 2 - 10) break;
     fontSize -= 2;
   } while (fontSize >= 18);
@@ -597,7 +597,7 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
 
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = theme.title.color;
+  ctx.fillStyle = theme.subtitle.color;
   ctx.fillText(display, x + padX, y + h / 2 + 1, w - padX * 2);
   ctx.restore();
 }
