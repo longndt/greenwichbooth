@@ -53,7 +53,7 @@ async function main() {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (timerLabels.join('|') !== 'Countdown 3s|4s|5s') {
+  if (timerLabels.join('|') !== 'Countdown 3s|Countdown 4s|Countdown 5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   await page.click('.time-chip[data-interval="5"]');

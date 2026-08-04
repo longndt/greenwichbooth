@@ -250,7 +250,7 @@ q('#app').innerHTML = `
             aria-label="Chọn ${seconds} giây"
           >
             <span class="theme-chip-dot" aria-hidden="true"></span>
-            <span class="theme-chip-label">${seconds === 3 ? 'Countdown 3s' : `${seconds}s`}</span>
+            <span class="theme-chip-label">Countdown ${seconds}s</span>
           </button>
         `).join('')}
       </div>
