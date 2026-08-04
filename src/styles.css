@@ -459,7 +459,7 @@ input[type="range"] {
 
 /* ── Shoot button ────────────────────────────────────────── */
 .shoot-btn {
-  width: clamp(154px, 17vw, 224px);
+  width: clamp(128px, 14vw, 184px);
   aspect-ratio: 1;
   padding: 18px;
   border-radius: 50%;
@@ -712,14 +712,14 @@ input[type="range"] {
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(260px, 32dvh, 300px);
-    max-height: 300px;
+    height: clamp(320px, 44dvh, 430px);
+    max-height: 430px;
   }
 
   .shoot-btn {
     flex-shrink: 0;
-    width: clamp(128px, 11vw, 150px);
-    margin: 18px auto 0;
+    width: clamp(104px, 9vw, 124px);
+    margin: 12px auto 0;
   }
 
   .s-text { font-size: 13px; }
@@ -773,8 +773,8 @@ input[type="range"] {
   }
 
   .shoot-btn {
-    width: min(46vw, 180px);
-    margin: 16px auto 8px;
+    width: min(38vw, 150px);
+    margin: 12px auto 6px;
   }
 }
 
@@ -819,7 +819,7 @@ input[type="range"] {
   }
 
   .shoot-btn {
-    width: min(54vw, 190px);
+    width: min(42vw, 150px);
   }
 
   .s-text {
@@ -1178,7 +1178,7 @@ input[type="range"] {
   .ctrl-col { order: 2; gap: 10px; padding: 8px; align-items: center; }
   .theme-picker { order: -3; gap: 6px; }
   .layout-picker { order: -2; gap: 6px; }
-  .shoot-btn { order: 0; width: 120px; }
+  .shoot-btn { order: 0; width: 96px; }
   .poster-shell { order: 0; flex: 1; padding: 8px; }
   .cam-box {
     width: min(100%, calc((100dvh - 58px) * 4 / 3));
@@ -1249,17 +1249,17 @@ input[type="range"] {
 
   .shoot-btn {
     flex-shrink: 0;
-    width: clamp(118px, 30vw, 136px);
+    width: clamp(96px, 24vw, 112px);
     margin: 4px auto 0;
   }
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(160px, 28dvh, 300px);
-    min-height: 160px;
+    height: clamp(190px, 34dvh, 340px);
+    min-height: 190px;
     width: 100%;
     padding: 8px;
-    max-height: 38vh;
+    max-height: 44vh;
   }
 
   .photo-grid {
