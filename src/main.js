@@ -343,7 +343,7 @@ q('#app').innerHTML = `
     <img class="proc-img" id="proc-img" alt="Placeholder ảnh đang được xử lý" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1440'%3E%3Cdefs%3E%3ClinearGradient id='pg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23005F73;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230A9396;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1080' height='1440' fill='url(%23pg)'/%3E%3C/svg%3E"/>
     <div class="proc-spin"></div>
     <p class="proc-txt">Đang tạo poster...</p>
-    <small class="proc-sub" id="proc-sub">Vui lòng chờ</small>
+    <small class="proc-sub" id="proc-sub"></small>
     <div class="proc-progress-wrap">
       <div class="proc-progress-bar" id="proc-progress"></div>
     </div>
@@ -416,7 +416,7 @@ async function shoot() {
 
   q('#cov').classList.add('hidden');
   q('#shoot-btn').disabled = false;
-  q('#proc-sub').textContent = 'Vui lòng chờ';
+  q('#proc-sub').textContent = '';
   q('#proc-ov').classList.remove('hidden');
   S.lockedThemeIndex = S.themeIndex;
   S.lockedLayoutIndex = S.layoutIndex;
