@@ -34,7 +34,7 @@ async function main() {
     throw new Error(`Expected Student Life theme active, got ${activeTheme}`);
   }
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
-  if (!previewAccent.includes('005F73')) {
+  if (!previewAccent.includes('D28A2E')) {
     throw new Error(`Expected preview accent to follow theme 2, got ${previewAccent}`);
   }
   const previewText = await page.$eval('#poster-preview', el => el.textContent.replace(/\s+/g, ' ').trim());

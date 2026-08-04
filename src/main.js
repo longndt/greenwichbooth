@@ -105,12 +105,7 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-shell-border', theme.frame.outer);
   preview.style.setProperty('--preview-shell-glow', theme.photos.slotShadow);
   preview.style.setProperty('--preview-shell-accent', theme.photos.borderColor);
-  preview.style.setProperty('--preview-shell-accent-strong', theme.header.topBar.color);
   preview.style.setProperty('--preview-shell-surface', theme.photos.slotBg);
-  preview.style.setProperty('--preview-shell-title', theme.title.color);
-  preview.style.setProperty('--preview-shell-subtitle', theme.subtitle.color);
-  preview.style.setProperty('--preview-shell-footer', theme.footer.hashtag.color);
-  preview.style.setProperty('--preview-shell-text', theme.footer.url.color);
   preview.style.setProperty('--preview-shell-badge', theme.header.topBar.color);
 }
 
