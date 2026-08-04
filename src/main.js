@@ -190,6 +190,7 @@ q('#app').innerHTML = `
         <div class="cnt-ov hidden" id="cov">
           <div class="cnt-num-wrap">
             <div class="cnt-n" id="cnt-n">3</div>
+            <img class="cnt-mascot" id="cnt-mascot" src="${mascotUrl}" alt="" aria-hidden="true">
           </div>
         </div>
 
@@ -384,8 +385,10 @@ async function shoot() {
       delete q('#cnt-n').dataset.tick;
       await sleep(80);
     }
-    q('#cnt-n').textContent = '😊';
+    q('#cnt-n').textContent = '';
+    q('#cnt-mascot').classList.add('is-visible');
     await sleep(280);
+    q('#cnt-mascot').classList.remove('is-visible');
 
     S.photos.push(capFrame(cam));
     if (navigator.vibrate) navigator.vibrate([50]);

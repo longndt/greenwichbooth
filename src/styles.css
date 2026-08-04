@@ -186,6 +186,7 @@ html, body {
 .cnt-ov.hidden { display: none; }
 
 .cnt-num-wrap {
+  position: relative;
   width: 64px; height: 64px;
   border-radius: 50%;
   border: 3px solid var(--gold);
@@ -196,11 +197,30 @@ html, body {
   box-shadow: 0 0 28px rgba(255,203,47,0.22), inset 0 0 18px rgba(0,107,63,0.35);
 }
 
+.cnt-mascot {
+  position: absolute;
+  inset: 9px;
+  width: calc(100% - 18px);
+  height: calc(100% - 18px);
+  object-fit: contain;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.12s ease-out, transform 0.12s ease-out;
+  pointer-events: none;
+}
+
+.cnt-mascot.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
 .cnt-n {
   font-family: 'Be Vietnam Pro', sans-serif;
   font-size: 30px;
   font-weight: 900;
   color: white;
+  position: relative;
+  z-index: 1;
   line-height: 1;
   transition: transform 0.08s ease-out;
 }

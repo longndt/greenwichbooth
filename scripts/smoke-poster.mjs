@@ -60,6 +60,16 @@ async function main() {
   if (timerLabels.join('|') !== 'Countdown 3s|Countdown 4s|Countdown 5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
+  const countdownMascot = await page.$eval('#cnt-mascot', img => ({
+    src: img.getAttribute('src') || '',
+    hidden: img.classList.contains('is-visible'),
+  }));
+  if (!countdownMascot.src.includes('mascot')) {
+    throw new Error(`Countdown mascot is not wired to the mascot asset: ${countdownMascot.src}`);
+  }
+  if (countdownMascot.hidden) {
+    throw new Error('Countdown mascot should be hidden before shooting starts');
+  }
   await page.click('.time-chip[data-interval="5"]');
   await page.waitForFunction(() => window.__t?.S?.interval === 5);
   const layoutRects = await page.evaluate(() => {
