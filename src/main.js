@@ -440,22 +440,22 @@ function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
   ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.strokeStyle = theme.photos.cornerAccent.color;
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 2;
   ctx.stroke();
 
-  ctx.textAlign = 'left';
+  ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  const maxWidth = w - 40;
-  let fontSize = 34;
+  const maxWidth = w - 28;
+  let fontSize = 22;
   do {
     ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
     fontSize -= 2;
-  } while (ctx.measureText(text).width > maxWidth && fontSize >= 24);
+  } while (ctx.measureText(text).width > maxWidth && fontSize >= 14);
 
   ctx.fillStyle = 'rgba(255,255,255,0.96)';
   ctx.shadowColor = 'rgba(214,178,65,0.34)';
   ctx.shadowBlur = 10;
-  ctx.fillText(text, x + 20, y + h / 2 + 1, maxWidth);
+  ctx.fillText(text, x + w / 2, y + h / 2 + 1, maxWidth);
   ctx.restore();
 }
 
@@ -651,7 +651,7 @@ async function buildPoster() {
   });
 
   drawEventNameBadge(ctx, S.eventName, 64, 154, 560, 50, theme);
-  drawStudentNameBadge(ctx, S.studentName, 656, 154, 360, 50, theme);
+  drawStudentNameBadge(ctx, S.studentName, 804, 142, 204, 44, theme);
 
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
