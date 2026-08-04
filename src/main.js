@@ -555,7 +555,36 @@ function drawStudentNameBadge(ctx, name, x, y, w, h, theme) {
 }
 
 function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
-  drawHeaderBadge(ctx, name, 'GREENWICH PHOTOBOOTH', x, y, w, h, theme, 'left');
+  const text = String(name || '').trim();
+  const display = text || 'GREENWICH PHOTOBOOTH';
+
+  ctx.save();
+  const padX = 22;
+  let fontSize = text ? 28 : 22;
+  do {
+    ctx.font = `900 ${fontSize}px "Be Vietnam Pro", Arial, sans-serif`;
+    if (ctx.measureText(display).width <= w - padX * 2 - 10) break;
+    fontSize -= 2;
+  } while (fontSize >= 18);
+
+  ctx.shadowColor = text ? 'rgba(0, 31, 20, 0.38)' : 'rgba(0, 31, 20, 0.10)';
+  ctx.shadowBlur = text ? 18 : 10;
+  ctx.fillStyle = text ? 'rgba(255,255,255,0.09)' : 'rgba(255,255,255,0.22)';
+  roundRect(ctx, x, y, w, h, 12);
+  ctx.fill();
+  ctx.shadowColor = 'transparent';
+  ctx.fillStyle = theme.header.topBar.color;
+  roundRect(ctx, x, y, 8, h, 6);
+  ctx.fill();
+  ctx.strokeStyle = theme.header.topBar.color;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : theme.title.color;
+  ctx.fillText(display, x + padX, y + h / 2 + 1, w - padX * 2);
+  ctx.restore();
 }
 
 // ── Poster composition (1080×1440) — Selected concept + rendering
@@ -653,19 +682,9 @@ async function buildPoster() {
   ctx.restore();
 
   // ── Date badge ──
-  ctx.shadowColor = 'transparent';
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  ctx.fillStyle = 'rgba(255,255,255,0.06)';
-  roundRect(ctx, dateBadgeX, 54, dateBadgeW, 72, 16);
-  ctx.fill();
-  ctx.strokeStyle = theme.photos.borderColor;
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.textAlign = 'center';
-  ctx.fillStyle = theme.date.color;
-  ctx.font = '900 26px "Space Grotesk", Arial, sans-serif';
-  ctx.fillText(today, dateBadgeX + dateBadgeW / 2, 96);
+  drawHeaderBadge(ctx, today, '', dateBadgeX, 62, dateBadgeW, 50, theme, 'right');
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -715,26 +734,22 @@ async function buildPoster() {
   drawStudentNameBadge(ctx, S.studentName, badgeRightX, badgeRowY, badgeRightW, 50, theme);
 
   // ── Footer statement ──
+  const footerW = 520;
+  const footerX = (W - footerW) / 2;
   ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, 64, 1276, 952, 74, 18);
+  roundRect(ctx, footerX, 1304, footerW, 46, 14);
   ctx.fill();
   ctx.strokeStyle = theme.footer.borderColor;
   ctx.lineWidth = 2;
   ctx.stroke();
-  const footerGlow = ctx.createRadialGradient(540, 1313, 24, 540, 1313, 210);
-  footerGlow.addColorStop(0, 'rgba(214,178,65,0.18)');
-  footerGlow.addColorStop(1, 'rgba(214,178,65,0)');
-  ctx.fillStyle = footerGlow;
-  roundRect(ctx, 234, 1288, 612, 50, 16);
-  ctx.fill();
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.shadowColor = 'rgba(214,178,65,0.34)';
-  ctx.shadowBlur = 8;
-  ctx.font = '900 30px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1314);
+  ctx.shadowColor = 'rgba(214,178,65,0.22)';
+  ctx.shadowBlur = 5;
+  ctx.font = '900 24px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1327);
   ctx.shadowColor = 'transparent';
 
   // ── Outer frame borders ──
