@@ -7,13 +7,13 @@
 
 export const CONCEPTS = [
 
-  // ── 01. Năng động ───────────────────────────────────────────────────────
+  // ── 01. Open Day ────────────────────────────────────────────────────────
   {
     id: 1,
-    name: 'Năng động',
+    name: 'Open Day',
     bg: {
       color: '#062115',
-      texture: { type: 'dots', color: 'rgba(255,203,47,0.08)', step: 32 },
+      texture: { type: 'confetti', color: 'rgba(255,203,47,0.12)', step: 42 },
     },
     header: {
       bg: '#03170d',
@@ -28,7 +28,7 @@ export const CONCEPTS = [
       y: 140,
     },
     subtitle: {
-      text: 'NĂNG ĐỘNG · BỨT PHÁ',
+      text: 'OPEN DAY · BIG ENERGY',
       font: '800 18px "Be Vietnam Pro", Arial, sans-serif',
       color: '#2DD77A',
       y: 198,
@@ -41,7 +41,7 @@ export const CONCEPTS = [
       borderWidth: 4,
       radius: 18,
       cornerAccent: { color: '#FF6B35', size: 34, lw: 3 },
-      emojis: ['⚡', '🎉', '🔥', '✨'],
+      emojis: ['🎉', '⚡', '🔥', '✨'],
     },
     footer: {
       bg: 'rgba(3,23,13,0.96)',
@@ -52,94 +52,94 @@ export const CONCEPTS = [
     frame: { outer: '#FFCB2F', outerW: 8, inner: '#FF6B35', innerW: 2 },
   },
 
-  // ── 02. Trẻ trung ───────────────────────────────────────────────────────
+  // ── 02. Campus Life ─────────────────────────────────────────────────────
   {
     id: 2,
-    name: 'Trẻ trung',
+    name: 'Campus Life',
     bg: {
-      color: '#073426',
-      texture: { type: 'dots', color: 'rgba(144,200,172,0.10)', step: 38 },
+      color: '#F5EDD6',
+      texture: { type: 'dots', color: 'rgba(15,81,50,0.10)', step: 44 },
     },
     header: {
-      bg: '#05261b',
-      topBar: { color: '#90C8AC', height: 6 },
-      bottomBar: { colors: ['rgba(45,215,122,0.22)', '#2DD77A'], height: 10 },
+      bg: '#F5EDD6',
+      topBar: { color: '#0F5132', height: 6 },
+      bottomBar: { colors: ['rgba(15,81,50,0.10)', 'rgba(15,81,50,0.24)'], height: 10 },
     },
     title: {
       text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
-      color: '#FFFFFF',
-      shadow: { color: 'rgba(45,215,122,0.5)', blur: 18 },
+      color: '#0F5132',
+      shadow: { color: 'rgba(15,81,50,0.12)', blur: 8 },
       y: 150,
     },
     subtitle: {
-      text: 'TRẺ TRUNG · KẾT NỐI',
+      text: 'CAMPUS LIFE · GREENWICH MOMENT',
       font: '600 16px "Space Grotesk", Arial, sans-serif',
-      color: '#90C8AC',
+      color: '#6B4226',
       y: 205,
     },
-    date: { color: 'rgba(255,255,255,0.72)', y: 238 },
+    date: { color: '#6B4226', y: 238 },
     photos: {
-      slotShadow: 'rgba(144,200,172,0.24)',
-      slotBg: '#092f22',
-      borderColor: '#90C8AC',
+      slotShadow: 'rgba(15,81,50,0.16)',
+      slotBg: '#EAE0C8',
+      borderColor: '#0F5132',
       borderWidth: 3,
-      radius: 20,
-      cornerAccent: { color: '#2DD77A', size: 26, lw: 2 },
-      emojis: ['💚', '📸', '🌿', '😊'],
+      radius: 14,
+      cornerAccent: { color: '#FFCB2F', size: 24, lw: 2 },
+      emojis: ['🌿', '📸', '💚', '😊'],
     },
     footer: {
-      bg: '#05261b',
-      borderColor: '#2DD77A',
+      bg: '#0F5132',
+      borderColor: '#FFCB2F',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
-      hashtag: { text: '#GreenwichVietnam', color: '#90C8AC' },
+      hashtag: { text: '#GreenwichVietnam', color: '#FFCB2F' },
     },
-    frame: { outer: '#90C8AC', outerW: 6, inner: '#2DD77A', innerW: 2 },
+    frame: { outer: '#0F5132', outerW: 6, inner: '#FFCB2F', innerW: 2 },
   },
 
-  // ── 03. Hiện đại ────────────────────────────────────────────────────────
+  // ── 03. Future Lab ──────────────────────────────────────────────────────
   {
     id: 3,
-    name: 'Hiện đại',
+    name: 'Future Lab',
     bg: {
-      color: '#050b08',
-      texture: { type: 'grid', color: 'rgba(45,215,122,0.055)', step: 44 },
+      color: '#030f07',
+      texture: { type: 'grid', color: 'rgba(255,107,53,0.07)', step: 32 },
     },
     header: {
-      bg: '#030705',
-      topBar: { color: '#2DD77A', height: 5 },
-      bottomBar: { colors: ['rgba(45,215,122,0.10)', 'rgba(45,215,122,0.42)'], height: 8 },
+      bg: '#020a04',
+      topBar: { color: '#FF6B35', height: 6 },
+      bottomBar: { colors: ['rgba(255,107,53,0.20)', 'rgba(255,107,53,0.50)'], height: 8 },
     },
     title: {
       text: 'GREENWICH VIETNAM',
       font: '800 56px "Plus Jakarta Sans", Arial, sans-serif',
-      color: '#2DD77A',
-      shadow: { color: 'rgba(45,215,122,0.45)', blur: 16 },
+      color: '#FF6B35',
+      shadow: { color: 'rgba(255,107,53,0.70)', blur: 20 },
       y: 150,
     },
     subtitle: {
-      text: 'HIỆN ĐẠI · TINH GỌN',
+      text: '// BUILD YOUR FUTURE_',
       font: '600 16px "Space Grotesk", Arial, sans-serif',
-      color: 'rgba(255,255,255,0.72)',
+      color: 'rgba(255,107,53,0.70)',
       y: 205,
     },
-    date: { color: 'rgba(255,255,255,0.82)', y: 238 },
+    date: { color: 'rgba(255,255,255,0.45)', y: 238 },
     photos: {
-      slotShadow: 'rgba(45,215,122,0.18)',
-      slotBg: '#06120c',
-      borderColor: '#2DD77A',
-      borderWidth: 2,
-      radius: 10,
-      cornerAccent: { color: '#FFCB2F', size: 20, lw: 2 },
-      emojis: ['▣', '◆', '●', '◇'],
+      slotShadow: 'rgba(255,107,53,0.15)',
+      slotBg: '#020a04',
+      borderColor: '#FF6B35',
+      borderWidth: 3,
+      radius: 8,
+      cornerAccent: { color: '#FFD700', size: 22, lw: 2 },
+      emojis: ['💻', '🚀', '⚡', '🎨'],
     },
     footer: {
-      bg: '#030705',
-      borderColor: 'rgba(45,215,122,0.55)',
-      url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
-      hashtag: { text: '#GreenwichVietnam', color: '#2DD77A' },
+      bg: '#020a04',
+      borderColor: 'rgba(255,107,53,0.4)',
+      url: { text: 'greenwich.edu.vn', color: 'rgba(255,255,255,0.7)' },
+      hashtag: { text: '#GreenwichVietnam', color: '#FF6B35' },
     },
-    frame: { outer: '#2DD77A', outerW: 5, inner: 'rgba(255,255,255,0.14)', innerW: 1 },
+    frame: { outer: '#FF6B35', outerW: 6, inner: 'rgba(255,215,0,0.3)', innerW: 1 },
   },
 
   // ── 04. Greenwich Champion ──────────────────────────────────────────────

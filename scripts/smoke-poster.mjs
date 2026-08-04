@@ -26,8 +26,8 @@ async function main() {
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'Trẻ trung') {
-    throw new Error(`Expected Trẻ trung theme active, got ${activeTheme}`);
+  if (activeTheme !== 'Campus Life') {
+    throw new Error(`Expected Campus Life theme active, got ${activeTheme}`);
   }
 
   const layoutCount = await page.$$eval('.layout-chip', nodes => nodes.length);

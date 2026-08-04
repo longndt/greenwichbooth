@@ -24,11 +24,7 @@ const S = {
   showPosterPreview: !isMobile(),
 };
 
-const THEME_OPTIONS = [
-  { label: 'Năng động' },
-  { label: 'Trẻ trung' },
-  { label: 'Hiện đại' },
-];
+const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 4, 5];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },
