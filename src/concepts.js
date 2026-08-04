@@ -14,7 +14,7 @@ export const POSTER_THEMES = [
       bottomBar: { colors: ['rgba(10,147,150,0.10)', 'rgba(10,147,150,0.32)'], height: 2 },
     },
     title: { color: '#073B4C' },
-    subtitle: { color: '#0A9396' },
+    subtitle: { color: '#B85C19' },
     date: { color: '#375B63' },
     photos: {
       slotShadow: 'rgba(10,147,150,0.18)',
@@ -45,7 +45,7 @@ export const POSTER_THEMES = [
       bottomBar: { colors: ['rgba(184,92,25,0.20)', 'rgba(184,92,25,0.20)'], height: 2 },
     },
     title: { color: '#006A7F' },
-    subtitle: { color: '#B85C19' },
+    subtitle: { color: '#A84A17' },
     date: { color: '#7A4A21' },
     photos: {
       slotShadow: 'rgba(122,74,33,0.18)',
@@ -76,7 +76,7 @@ export const POSTER_THEMES = [
       bottomBar: { colors: ['rgba(10,147,150,0.08)', 'rgba(255,203,47,0.22)'], height: 2 },
     },
     title: { color: '#0A5B66' },
-    subtitle: { color: '#D28A2E' },
+    subtitle: { color: '#C7751A' },
     date: { color: '#0A5B66' },
     photos: {
       slotShadow: 'rgba(10,91,102,0.14)',

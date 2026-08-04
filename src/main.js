@@ -591,7 +591,7 @@ async function buildPoster() {
   ctx.shadowColor = 'transparent';
   drawHeaderText(ctx, 'GREENWICH VIETNAM', brandX, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
   drawHeaderText(ctx, 'Change Starts Here', brandX, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.date.color);
-  drawHeaderText(ctx, S.eventName || 'Greenwich Open Day', 64, 166, 650, 900, 56, 34, 'Space Grotesk', theme.subtitle.color);
+  drawHeaderText(ctx, S.eventName || 'Greenwich Open Day', 64, 166, 650, 900, 54, 34, 'Be Vietnam Pro', theme.subtitle.color);
 
   ctx.save();
   ctx.beginPath();
@@ -610,7 +610,7 @@ async function buildPoster() {
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   const metaX = 1016;
   drawHeaderText(ctx, today, metaX, 82, 260, 800, 34, 24, 'Space Grotesk', theme.date.color, 'right');
-  drawHeaderText(ctx, S.studentName || 'FPT Tower', metaX, 130, 260, 700, 26, 18, 'Be Vietnam Pro', theme.title.color, 'right');
+  drawHeaderText(ctx, S.studentName || 'FPT Tower', metaX, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.title.color, 'right');
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -661,11 +661,11 @@ async function buildPoster() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
   ctx.shadowColor = 'transparent';
-  ctx.font = '900 40px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1268);
-  ctx.font = '800 24px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1276);
+  ctx.font = '800 18px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillStyle = theme.title.color;
-  ctx.fillText(theme.footer.url.text, 540, 1320);
+  ctx.fillText(theme.footer.url.text, 540, 1312);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
