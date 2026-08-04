@@ -525,6 +525,26 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
+function drawSpark(ctx, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.fillStyle = color;
+  ctx.shadowColor = 'rgba(0,0,0,0.28)';
+  ctx.shadowBlur = 8;
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.lineTo(size * 0.28, -size * 0.28);
+  ctx.lineTo(size, 0);
+  ctx.lineTo(size * 0.28, size * 0.28);
+  ctx.lineTo(0, size);
+  ctx.lineTo(-size * 0.28, size * 0.28);
+  ctx.lineTo(-size, 0);
+  ctx.lineTo(-size * 0.28, -size * 0.28);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
 function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, family, color, align = 'left') {
   const display = String(text || '').trim();
   if (!display) return;
@@ -657,15 +677,42 @@ async function buildPoster() {
   });
 
   // ── Footer statement ──
+  const footerTextColor = theme.footer.hashtag.color;
+  const footerUrlColor = theme.footer.url.color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = theme.footer.hashtag.color;
+  ctx.fillStyle = theme.footer.bg;
+  roundRect(ctx, 176, 1228, 728, 92, 24);
+  ctx.fill();
+  ctx.strokeStyle = theme.footer.borderColor;
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  drawSpark(ctx, 236, 1274, 14, theme.footer.borderColor);
+
+  ctx.shadowColor = 'rgba(0,0,0,0.42)';
+  ctx.shadowBlur = 14;
+  ctx.font = '900 52px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.lineWidth = 5;
+  ctx.strokeStyle = 'rgba(0,0,0,0.46)';
+  ctx.strokeText(theme.footer.hashtag.text, 540, 1266);
+  ctx.fillStyle = footerTextColor;
+  ctx.fillText(theme.footer.hashtag.text, 540, 1266);
+
   ctx.shadowColor = 'transparent';
-  ctx.font = '900 34px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1276);
-  ctx.font = '800 18px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillStyle = theme.title.color;
-  ctx.fillText(theme.footer.url.text, 540, 1312);
+  ctx.shadowBlur = 0;
+  ctx.fillStyle = 'rgba(255,255,255,0.14)';
+  roundRect(ctx, 416, 1292, 248, 28, 14);
+  ctx.fill();
+  ctx.strokeStyle = theme.footer.borderColor;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+  ctx.font = '800 20px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = 'rgba(0,0,0,0.36)';
+  ctx.strokeText(theme.footer.url.text, 540, 1306);
+  ctx.fillStyle = footerUrlColor;
+  ctx.fillText(theme.footer.url.text, 540, 1306);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
