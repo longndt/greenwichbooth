@@ -596,7 +596,7 @@ function drawEventNameBadge(ctx, name, x, y, w, h, theme) {
 
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  ctx.fillStyle = text ? 'rgba(255,255,255,0.96)' : theme.title.color;
+  ctx.fillStyle = theme.title.color;
   ctx.fillText(display, x + padX, y + h / 2 + 1, w - padX * 2);
   ctx.restore();
 }
