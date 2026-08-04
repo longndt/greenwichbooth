@@ -97,6 +97,14 @@ function syncIntervalPicker() {
   });
 }
 
+function syncReadyCountdown() {
+  if (S.mode !== 'ready') return;
+  q('#cov')?.classList.remove('hidden');
+  q('#cnt-mascot')?.classList.remove('is-visible');
+  const n = q('#cnt-n');
+  if (n) n.textContent = `${S.interval}s`;
+}
+
 function syncPosterPreview() {
   const preview = q('#poster-preview');
   if (!preview) return;
@@ -141,6 +149,7 @@ function setIntervalSeconds(nextInterval) {
   const seconds = Number(nextInterval) || 3;
   S.interval = INTERVAL_OPTIONS.includes(seconds) ? seconds : 3;
   syncIntervalPicker();
+  syncReadyCountdown();
 }
 
 function syncStudentNameField() {
@@ -192,9 +201,9 @@ q('#app').innerHTML = `
         <video id="cam" autoplay muted playsinline></video>
         <div class="frame-ov" id="fov"></div>
 
-        <div class="cnt-ov hidden" id="cov">
+        <div class="cnt-ov" id="cov">
           <div class="cnt-num-wrap">
-            <div class="cnt-n" id="cnt-n">3</div>
+            <div class="cnt-n" id="cnt-n">${S.interval}s</div>
             <img class="cnt-mascot" id="cnt-mascot" src="${mascotUrl}" alt="" aria-hidden="true">
           </div>
         </div>
@@ -426,6 +435,7 @@ async function shoot() {
     syncThemePicker();
     syncLayoutPicker();
     syncIntervalPicker();
+    syncReadyCountdown();
     syncEventNameField();
     syncStudentNameField();
     return;
@@ -446,6 +456,7 @@ async function shoot() {
     syncThemePicker();
     syncLayoutPicker();
     syncIntervalPicker();
+    syncReadyCountdown();
     syncEventNameField();
     syncStudentNameField();
     return;
@@ -842,7 +853,7 @@ function retake() {
   q('#shoot-btn').disabled = false;
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
-  q('#cov').classList.add('hidden');
+  q('#cov').classList.remove('hidden');
   q('.ctrl-col').classList.remove('shooting');
   S.showPosterPreview = !isMobile();
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
@@ -850,6 +861,7 @@ function retake() {
   syncPosterPreview();
   syncLayoutPicker();
   syncIntervalPicker();
+  syncReadyCountdown();
   syncEventNameField();
   syncStudentNameField();
 }
@@ -906,6 +918,7 @@ syncThemePicker();
 syncPosterPreview();
 syncLayoutPicker();
 syncIntervalPicker();
+syncReadyCountdown();
 syncEventNameField();
 syncStudentNameField();
 startCam();
