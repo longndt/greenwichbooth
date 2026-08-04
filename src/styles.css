@@ -1177,11 +1177,11 @@ input[type="range"] {
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(120px, 22dvh, 220px);
-    min-height: 120px;
+    height: clamp(160px, 28dvh, 300px);
+    min-height: 160px;
     width: 100%;
     padding: 8px;
-    max-height: 35vh;
+    max-height: 38vh;
   }
 
   /* Grid rows split available height evenly */
