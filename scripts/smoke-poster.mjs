@@ -34,8 +34,9 @@ async function main() {
   if (activeTheme !== 'Theme 2') {
     throw new Error(`Expected Theme 2 active, got ${activeTheme}`);
   }
+  const theme2 = POSTER_THEMES[1];
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
-  if (!previewAccent.includes('FF6B4A')) {
+  if (previewAccent !== theme2.photos.borderColor) {
     throw new Error(`Expected preview accent to follow theme 2, got ${previewAccent}`);
   }
   const previewText = await page.$eval('#poster-preview', el => el.textContent.replace(/\s+/g, ' ').trim());
@@ -52,15 +53,15 @@ async function main() {
     };
   });
   if (
-    previewTheme.surface !== '#FFFFFF' ||
-    previewTheme.border !== '#FF6B4A' ||
-    previewTheme.accent !== '#006D77' ||
-    previewTheme.frame !== '#FF6B4A'
+    previewTheme.surface !== theme2.photos.slotBg ||
+    previewTheme.border !== theme2.photos.borderColor ||
+    previewTheme.accent !== theme2.photos.cornerAccent.color ||
+    previewTheme.frame !== theme2.frame.outer
   ) {
     throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
   }
   const heroBorder = await page.$eval('#pvs0', el => getComputedStyle(el).borderTopColor);
-  if (heroBorder !== 'rgb(255, 107, 74)') {
+  if (heroBorder !== 'rgb(210, 138, 46)') {
     throw new Error(`Preview hero slot border did not apply selected theme immediately: ${heroBorder}`);
   }
 

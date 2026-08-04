@@ -595,14 +595,14 @@ async function buildPoster() {
 
   ctx.save();
   ctx.beginPath();
-  ctx.arc(96, 88, 40, 0, Math.PI * 2);
+  ctx.arc(96, 88, 48, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(255,255,255,0.07)';
   ctx.fill();
   ctx.strokeStyle = 'rgba(255,203,47,0.55)';
   ctx.lineWidth = 2;
   ctx.stroke();
   ctx.clip();
-  ctx.drawImage(mascot, 64, 50, 64, 64);
+  ctx.drawImage(mascot, 56, 42, 80, 80);
   ctx.restore();
 
   // ── Date + location metadata ──
@@ -661,8 +661,11 @@ async function buildPoster() {
   ctx.textBaseline = 'middle';
   ctx.fillStyle = theme.footer.hashtag.color;
   ctx.shadowColor = 'transparent';
-  ctx.font = '900 36px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillText(theme.footer.hashtag.text, 540, 1270);
+  ctx.font = '900 40px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillText(theme.footer.hashtag.text, 540, 1268);
+  ctx.font = '800 24px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillStyle = theme.title.color;
+  ctx.fillText(theme.footer.url.text, 540, 1320);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
