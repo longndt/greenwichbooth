@@ -1,6 +1,5 @@
 import QRCode from 'qrcode';
-import logoUrl from './assets/greenwich-logo.png';
-import mascotUrl from './assets/greenwich-lion-mascot.jpg';
+import mascotUrl from './assets/mascot.png';
 import './styles.css';
 import { POSTER_THEMES } from './concepts.js';
 
@@ -153,7 +152,7 @@ q('#app').innerHTML = `
 <div class="app">
   <header class="hdr">
     <div class="hdr-brand">
-      <img class="hdr-lion" src="${logoUrl}" alt="" aria-hidden="true">
+      <img class="hdr-lion" src="${mascotUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
         <span class="hdr-name">Greenwich Photobooth</span>
       </div>
@@ -712,7 +711,7 @@ async function buildPoster() {
   });
 
   drawEventNameBadge(ctx, S.eventName, 64, 154, 560, 50, theme);
-  drawStudentNameBadge(ctx, S.studentName, 804, 142, 204, 44, theme);
+  drawStudentNameBadge(ctx, S.studentName, 804, 154, 204, 44, theme);
 
   // ── Footer statement ──
   ctx.fillStyle = theme.footer.bg;
