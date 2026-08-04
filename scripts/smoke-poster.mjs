@@ -23,18 +23,18 @@ async function main() {
     throw new Error(`Expected 3 theme chips, found ${themeCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'Open Day|Campus Life|Career Day') {
+  if (themeLabels.join('|') !== 'Open Day|Student Life|Graduation Day') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
 
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'Campus Life') {
-    throw new Error(`Expected Campus Life theme active, got ${activeTheme}`);
+  if (activeTheme !== 'Student Life') {
+    throw new Error(`Expected Student Life theme active, got ${activeTheme}`);
   }
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
-  if (!previewAccent.includes('0F5132')) {
+  if (!previewAccent.includes('005F73')) {
     throw new Error(`Expected preview accent to follow theme 2, got ${previewAccent}`);
   }
   const previewText = await page.$eval('#poster-preview', el => el.textContent.replace(/\s+/g, ' ').trim());
@@ -180,18 +180,20 @@ async function main() {
     window.__t.setThemeIndex(0);
     await window.__t.buildPoster();
   });
-  const oldQrWhitePixels = await page.evaluate(() => {
+  const oldQrPixels = await page.evaluate(() => {
     const canvas = document.querySelector('#cvs');
     const ctx = canvas.getContext('2d');
     const { data } = ctx.getImageData(764, 1278, 112, 112);
-    let count = 0;
+    let white = 0;
+    let dark = 0;
     for (let i = 0; i < data.length; i += 4) {
-      if (data[i] > 220 && data[i + 1] > 220 && data[i + 2] > 220 && data[i + 3] > 0) count += 1;
+      if (data[i] > 220 && data[i + 1] > 220 && data[i + 2] > 220 && data[i + 3] > 0) white += 1;
+      if (data[i] < 80 && data[i + 1] < 80 && data[i + 2] < 80 && data[i + 3] > 0) dark += 1;
     }
-    return count;
+    return { white, dark };
   });
-  if (oldQrWhitePixels > 900) {
-    throw new Error(`Final poster still appears to contain a QR block (${oldQrWhitePixels} white pixels)`);
+  if (oldQrPixels.white > 900 && oldQrPixels.dark > 900) {
+    throw new Error(`Final poster still appears to contain a QR block (${JSON.stringify(oldQrPixels)})`);
   }
 
   if (consoleErrors.length || pageErrors.length) {

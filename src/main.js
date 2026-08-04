@@ -326,7 +326,7 @@ q('#app').innerHTML = `
 
 <div class="proc-ov hidden" id="proc-ov">
   <div class="proc-card">
-    <img class="proc-img" id="proc-img" alt="Placeholder ảnh đang được xử lý" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1440'%3E%3Cdefs%3E%3ClinearGradient id='pg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23006b3f;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%232DD77A;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1080' height='1440' fill='url(%23pg)'/%3E%3C/svg%3E"/>
+    <img class="proc-img" id="proc-img" alt="Placeholder ảnh đang được xử lý" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1440'%3E%3Cdefs%3E%3ClinearGradient id='pg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23005F73;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230A9396;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1080' height='1440' fill='url(%23pg)'/%3E%3C/svg%3E"/>
     <div class="proc-spin"></div>
     <p class="proc-txt">Đang tạo poster...</p>
     <small class="proc-sub" id="proc-sub">Vui lòng chờ</small>
@@ -587,8 +587,8 @@ async function buildPoster() {
   ctx.fillRect(0, 0, W, H);
 
   const bgGrad = ctx.createLinearGradient(0, 0, W, H);
-  bgGrad.addColorStop(0, 'rgba(0, 200, 117, 0.12)');
-  bgGrad.addColorStop(0.45, 'rgba(0, 31, 20, 0)');
+  bgGrad.addColorStop(0, 'rgba(10, 147, 150, 0.12)');
+  bgGrad.addColorStop(0.45, 'rgba(0, 40, 58, 0)');
   bgGrad.addColorStop(1, 'rgba(214, 178, 65, 0.09)');
   ctx.fillStyle = bgGrad;
   ctx.fillRect(0, 0, W, H);
@@ -803,7 +803,7 @@ function showResult(uploadP) {
     }
     // Wrap image URL in display page with download button
     const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
-    QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#006b3f', light: '#fff' } })
+    QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } })
       .then(qr => {
         q('#qr-img').src = qr;
       });
