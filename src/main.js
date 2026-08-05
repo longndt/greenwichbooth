@@ -126,7 +126,7 @@ function syncThemePicker() {
 function syncLayoutPicker() {
   const layoutId = String(S.layoutIndex + 1);
   const grid = q('#photo-grid');
-  if (grid) {
+  if (grid && S.mode === 'ready') {
     const layout = getLayout();
     grid.dataset.layout = layoutId;
     grid.dataset.photoCount = String(S.photoCount);
@@ -499,6 +499,7 @@ async function shoot() {
   syncThemePicker();
   syncLayoutPicker();
   syncIntervalPicker();
+  await nextFrame();
   try {
     await buildPoster();
   } catch (err) {
