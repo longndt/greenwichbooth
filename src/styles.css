@@ -1615,8 +1615,8 @@ input[type="range"] {
 .hdr-name { font-size: 13px; }
 
 .ctrl-col {
-  gap: 8px;
-  padding: 8px 12px 8px 6px;
+  gap: 12px;
+  padding: 10px 12px 10px 6px;
   justify-content: flex-start;
 }
 
@@ -1624,20 +1624,20 @@ input[type="range"] {
 .layout-picker,
 .count-picker,
 .time-picker {
-  gap: 6px;
+  gap: 10px;
 }
 
 .ctrl-grid {
-  gap: 6px;
+  gap: 14px;
 }
 
 .theme-chip,
 .layout-chip,
 .count-chip,
 .time-chip {
-  min-height: 30px;
-  padding: 7px 8px 6px;
-  border-radius: 10px;
+  min-height: 50px;
+  padding: 13px 14px 12px;
+  border-radius: 14px;
 }
 
 .count-chip,
@@ -1648,17 +1648,17 @@ input[type="range"] {
 
 .theme-chip-label,
 .name-input {
-  font-size: 12px;
+  font-size: 16px;
 }
 
 .name-field {
-  padding: 6px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 14px;
 }
 
 .name-input {
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 14px 14px;
+  border-radius: 12px;
   font-weight: 700;
 }
 
@@ -1688,8 +1688,8 @@ input[type="range"] {
   }
 
   .poster-shell {
-    height: min(42dvh, calc(100dvh - 350px));
-    width: min(100%, calc(min(42dvh, calc(100dvh - 350px)) * 4 / 5));
+    height: min(48dvh, calc(100dvh - 286px));
+    width: min(100%, calc(min(48dvh, calc(100dvh - 286px)) * 4 / 5));
   }
 }
 
