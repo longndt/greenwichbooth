@@ -197,6 +197,8 @@ function syncPosterPreview() {
   if (!preview) return;
 
   const theme = POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0];
+  const d = new Date();
+  const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
 
   preview.dataset.themeIndex = String(theme.id);
   preview.style.setProperty('--preview-shell-bg', theme.bg.color);
@@ -208,10 +210,19 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-shell-accent', theme.photos.borderColor);
   preview.style.setProperty('--preview-shell-surface', theme.photos.slotBg);
   preview.style.setProperty('--preview-shell-badge', theme.header.topBar.color);
+  preview.style.setProperty('--preview-title', theme.title.color);
+  preview.style.setProperty('--preview-subtitle', theme.subtitle.color);
+  preview.style.setProperty('--preview-date', theme.date.color);
+  preview.style.setProperty('--preview-footer-text', theme.footer.hashtag.color);
+  preview.style.setProperty('--preview-footer-border', theme.footer.borderColor);
   preview.style.setProperty('--preview-slot-bg', theme.photos.slotBg);
   preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
   preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
   preview.style.setProperty('--preview-badge-ink', theme.bg.color);
+  q('#preview-event').textContent = S.eventName || 'Greenwich Open Day';
+  q('#preview-date').textContent = today;
+  q('#preview-place').textContent = S.studentName || 'FPT Tower';
+  q('#preview-hashtag').textContent = theme.footer.hashtag.text;
 }
 
 function setThemeIndex(nextIndex) {
@@ -335,52 +346,54 @@ q('#app').innerHTML = `
             </button>
           `).join('')}
         </div>
-
-      <div class="ctrl-group">
-        <div class="ctrl-group-title">Số ảnh</div>
-        <div class="count-picker" aria-label="Chọn số lượng ảnh">
-          ${PHOTO_COUNT_OPTIONS.map(count => `
-            <button
-              class="count-chip"
-              type="button"
-              data-photo-count="${count}"
-              aria-pressed="${count === S.photoCount}"
-              aria-label="Chọn ${count} ảnh"
-            >
-              <span class="theme-chip-label">${count} ảnh</span>
-            </button>
-          `).join('')}
-        </div>
-      </div>
-
-      <div class="layout-picker" aria-label="Chọn bố cục poster">
-          ${LAYOUT_OPTIONS.map((layout, index) => `
-            <button
-              class="layout-chip"
-              type="button"
-              data-layout-index="${index}"
-              aria-pressed="${index === S.layoutIndex}"
-              aria-label="Chọn ${layout.label}"
-            >
-              <span class="theme-chip-label">${layout.label}</span>
-            </button>
-          `).join('')}
+      <div class="ctrl-grid" aria-label="Tùy chọn chụp">
+        <div class="ctrl-group">
+          <div class="count-picker" aria-label="Chọn số lượng ảnh">
+            ${PHOTO_COUNT_OPTIONS.map(count => `
+              <button
+                class="count-chip"
+                type="button"
+                data-photo-count="${count}"
+                aria-pressed="${count === S.photoCount}"
+                aria-label="Chọn ${count} ảnh"
+              >
+                <span class="theme-chip-label">${count} ảnh</span>
+              </button>
+            `).join('')}
+          </div>
         </div>
 
-      <div class="ctrl-group">
-        <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
-          ${INTERVAL_OPTIONS.map(seconds => `
-            <button
-              class="time-chip"
-              type="button"
-              data-interval="${seconds}"
-              aria-pressed="${seconds === S.interval}"
-              aria-label="Chọn ${seconds} giây"
-            >
-              <span class="theme-chip-dot" aria-hidden="true"></span>
-              <span class="theme-chip-label">${seconds} giây</span>
-            </button>
-          `).join('')}
+        <div class="ctrl-group">
+          <div class="layout-picker" aria-label="Chọn bố cục poster">
+            ${LAYOUT_OPTIONS.map((layout, index) => `
+              <button
+                class="layout-chip"
+                type="button"
+                data-layout-index="${index}"
+                aria-pressed="${index === S.layoutIndex}"
+                aria-label="Chọn ${layout.label}"
+              >
+                <span class="theme-chip-label">${layout.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="ctrl-group">
+          <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
+            ${INTERVAL_OPTIONS.map(seconds => `
+              <button
+                class="time-chip"
+                type="button"
+                data-interval="${seconds}"
+                aria-pressed="${seconds === S.interval}"
+                aria-label="Chọn ${seconds} giây"
+              >
+                <span class="theme-chip-dot" aria-hidden="true"></span>
+                <span class="theme-chip-label">${seconds} giây</span>
+              </button>
+            `).join('')}
+          </div>
         </div>
       </div>
 
@@ -411,7 +424,20 @@ q('#app').innerHTML = `
       </div>
 
       <section class="poster-shell" id="poster-preview" aria-label="Poster preview">
+        <div class="preview-brand">
+          <img class="preview-mascot" src="${mascotUrl}" alt="" aria-hidden="true">
+          <div>
+            <div class="preview-title">GREENWICH VIETNAM</div>
+            <div class="preview-tagline">Change Starts Here</div>
+          </div>
+        </div>
+        <div class="preview-meta">
+          <div id="preview-date"></div>
+          <div id="preview-place"></div>
+        </div>
+        <div class="preview-event" id="preview-event"></div>
         <div class="photo-grid" id="photo-grid" data-layout="${S.layoutIndex + 1}" data-photo-count="${S.photoCount}"></div>
+        <div class="preview-footer" id="preview-hashtag"></div>
       </section>
 
       <button class="shoot-btn" id="shoot-btn" aria-label="Chụp">
