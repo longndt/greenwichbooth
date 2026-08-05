@@ -1401,3 +1401,126 @@ input[type="range"] {
     scroll-behavior: auto !important;
   }
 }
+
+/* ── Compact booth controls ───────────────────────────────── */
+.hdr {
+  height: 44px;
+  padding: 0 12px;
+}
+
+.hdr-brand { gap: 6px; }
+
+.hdr-lion {
+  width: 28px;
+  height: 28px;
+  padding: 3px;
+}
+
+.hdr-name { font-size: 13px; }
+
+.ctrl-col {
+  gap: 8px;
+  padding: 8px 12px 8px 6px;
+  justify-content: flex-start;
+}
+
+.theme-picker,
+.layout-picker,
+.count-picker,
+.time-picker {
+  gap: 6px;
+}
+
+.theme-chip,
+.layout-chip,
+.count-chip,
+.time-chip {
+  min-height: 30px;
+  padding: 7px 8px 6px;
+  border-radius: 10px;
+}
+
+.theme-chip-label,
+.name-input {
+  font-size: 12px;
+}
+
+.name-field {
+  padding: 6px;
+  border-radius: 10px;
+}
+
+.name-input {
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+}
+
+.poster-shell {
+  flex: 0 0 auto;
+  height: clamp(190px, 32dvh, 320px);
+  padding: 8px;
+  border-radius: 14px;
+}
+
+.shoot-btn {
+  width: clamp(76px, 6.5vw, 96px);
+  padding: 12px;
+  margin: 6px auto 0;
+}
+
+.s-text { font-size: 12px; }
+
+.shoot-btn::before { inset: 8px; }
+.shoot-btn::after { inset: 17px; }
+
+@media (min-width: 941px) {
+  .cam-box {
+    width: min(100%, calc((100dvh - 68px) * 4 / 3));
+    max-height: calc(100dvh - 68px);
+  }
+
+  .poster-shell {
+    height: clamp(180px, 30dvh, 300px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hdr {
+    height: 42px;
+  }
+
+  .hdr-lion {
+    width: 28px;
+    height: 28px;
+  }
+
+  .hdr-name {
+    font-size: 12px;
+  }
+
+  .ctrl-col {
+    gap: 7px;
+    padding: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .name-field {
+    padding: 6px;
+  }
+
+  .name-input {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .poster-shell {
+    height: clamp(150px, 26dvh, 230px);
+    min-height: 150px;
+    max-height: 30dvh;
+  }
+
+  .shoot-btn {
+    width: clamp(74px, 18vw, 88px);
+    margin-top: 2px;
+  }
+}

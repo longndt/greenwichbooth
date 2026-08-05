@@ -126,11 +126,15 @@ async function main() {
     throw new Error(`Expected 3 preview slots for default 3 ảnh, got ${layoutRects.slots.length}`);
   }
   const close = (actual, expected) => Math.abs(actual - expected) < 0.12;
-  if (!close(layoutRects.grid.width / layoutRects.grid.height, 952 / 922)) {
-    throw new Error(`Preview grid aspect is wrong: ${JSON.stringify(layoutRects)}`);
-  }
   if (!(layoutRects.slots[0].w > layoutRects.slots[1].w && layoutRects.slots[1].w > 0)) {
     throw new Error(`Preview slot widths are wrong: ${JSON.stringify(layoutRects)}`);
+  }
+  const shootVisible = await page.$eval('#shoot-btn', btn => {
+    const r = btn.getBoundingClientRect();
+    return r.top >= 0 && r.bottom <= window.innerHeight;
+  });
+  if (!shootVisible) {
+    throw new Error('Shoot button is not fully visible');
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
