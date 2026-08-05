@@ -279,7 +279,7 @@ html, body {
 }
 
 .cnt-ov.is-processing .cnt-num-wrap::after {
-  content: 'Đang xử lý ảnh và tạo mã QR';
+  content: 'Vui lòng chờ';
   width: 100%;
   padding-top: 28px;
   border-top: 1px solid rgba(255,255,255,0.08);

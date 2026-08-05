@@ -33,7 +33,6 @@ const LAYOUT_OPTIONS = [
 ];
 const POSTER_WIDTH = 1080;
 const POSTER_HEIGHT = 1350;
-const POSTER_EXPORT_SCALE = 2;
 const POSTER_LAYOUTS = {
   2: [
     [
@@ -552,7 +551,6 @@ async function shoot() {
   }
 
   await nextFrame();
-  await sleep(1000);
   q('#cov').classList.add('is-processing');
   q('#cnt-n').textContent = 'Đang tạo poster...';
   q('#shoot-btn').disabled = false;
@@ -608,14 +606,18 @@ async function shoot() {
   syncEventNameField();
   syncStudentNameField();
   S.posterUrl = posterDataUrl;
-  const dlUrl = await uploadPoster(uploadBlob);
-  if (dlUrl) {
+  try {
+    const dlUrl = await uploadPoster(uploadBlob);
+    if (!dlUrl) throw new Error('Upload failed');
     const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
-    try {
-      q('#qr-img').src = await QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } });
-    } catch (err) {
-      console.error('QR generation failed:', err);
-    }
+    q('#qr-img').src = await QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } });
+  } catch (err) {
+    console.error('QR preparation failed:', err);
+    q('#cov').classList.remove('is-processing');
+    q('#cov').classList.add('hidden');
+    alert('Không thể tạo mã QR, hãy thử lại.');
+    retake();
+    return;
   }
   await fadeOutProcessing();
   showResult();
@@ -634,7 +636,7 @@ function canvasToBlob(canvas, quality) {
 }
 
 async function exportPosterImage(canvas) {
-  const scale = POSTER_EXPORT_SCALE;
+  const scale = 1;
   const out = document.createElement('canvas');
   out.width = canvas.width * scale;
   out.height = canvas.height * scale;
