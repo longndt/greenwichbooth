@@ -26,7 +26,7 @@ const S = {
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 4, 5];
-const PHOTO_COUNT_OPTIONS = [1, 3, 4];
+const PHOTO_COUNT_OPTIONS = [3, 4, 6];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },
   { label: 'Bố cục 2' },
@@ -34,8 +34,6 @@ const LAYOUT_OPTIONS = [
 ];
 const POSTER_WIDTH = 1080;
 const POSTER_HEIGHT = 1350;
-const SLOT_BASE_W = 952;
-const SLOT_BASE_H = 1048;
 const POSTER_LAYOUTS = {
   2: [
     [
@@ -137,13 +135,11 @@ const loadImage = url => new Promise((resolve, reject) => {
 
 function getPreviewSlots() {
   const layout = getLayout();
-  const previewWidth = 100;
-  const previewHeight = 100;
   return layout.map(slot => ({
-    x: ((slot.x - 64) / SLOT_BASE_W) * previewWidth,
-    y: ((slot.y - 262) / SLOT_BASE_H) * previewHeight,
-    w: (slot.w / SLOT_BASE_W) * previewWidth,
-    h: (slot.h / SLOT_BASE_H) * previewHeight,
+    x: (slot.x / POSTER_WIDTH) * 100,
+    y: (slot.y / POSTER_HEIGHT) * 100,
+    w: (slot.w / POSTER_WIDTH) * 100,
+    h: (slot.h / POSTER_HEIGHT) * 100,
     hero: !!slot.hero,
   }));
 }
@@ -346,7 +342,8 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
-      <div class="option-grid">
+      <div class="ctrl-group">
+        <div class="ctrl-group-title">Phong cách</div>
         <div class="theme-picker" aria-label="Chọn phong cách poster">
           ${THEME_OPTIONS.map((theme, index) => `
             <button
@@ -363,6 +360,10 @@ q('#app').innerHTML = `
             </button>
           `).join('')}
         </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-group-title">Bố cục</div>
         <div class="layout-picker" aria-label="Chọn bố cục poster">
           ${LAYOUT_OPTIONS.map((layout, index) => `
             <button
@@ -376,6 +377,10 @@ q('#app').innerHTML = `
             </button>
           `).join('')}
         </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-group-title">Số ảnh</div>
         <div class="count-picker" aria-label="Chọn số lượng ảnh">
           ${PHOTO_COUNT_OPTIONS.map(count => `
             <button
@@ -389,6 +394,10 @@ q('#app').innerHTML = `
             </button>
           `).join('')}
         </div>
+      </div>
+
+      <div class="ctrl-group">
+        <div class="ctrl-group-title">Đếm ngược</div>
         <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
           ${INTERVAL_OPTIONS.map(seconds => `
             <button

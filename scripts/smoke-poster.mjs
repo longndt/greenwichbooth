@@ -69,23 +69,23 @@ async function main() {
   if (layoutCount !== 3) {
     throw new Error(`Expected 3 layout chips, found ${layoutCount}`);
   }
-  await page.click('.count-chip[data-photo-count="1"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 1);
+  await page.click('.count-chip[data-photo-count="3"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   const lockedLayoutState = await page.$eval('.layout-picker', el => ({
     locked: el.classList.contains('is-locked'),
     opacity: getComputedStyle(el).opacity,
   }));
-  if (!lockedLayoutState.locked || Number(lockedLayoutState.opacity) > 0.6) {
-    throw new Error(`Layout picker should be locked and faded for 1 ảnh: ${JSON.stringify(lockedLayoutState)}`);
+  if (lockedLayoutState.locked || Number(lockedLayoutState.opacity) < 0.9) {
+    throw new Error(`Layout picker should stay available for 3 ảnh: ${JSON.stringify(lockedLayoutState)}`);
   }
   const blockedLayoutIndex = await page.evaluate(() => {
     window.__t.setLayoutIndex(2);
     return window.__t.S.layoutIndex;
   });
-  if (blockedLayoutIndex !== 0) {
-    throw new Error(`Layout index should stay fixed on 1 ảnh, got ${blockedLayoutIndex}`);
+  if (blockedLayoutIndex !== 2) {
+    throw new Error(`Layout index should change on 3 ảnh, got ${blockedLayoutIndex}`);
   }
-  const onePhotoLayout = await page.evaluate(() => {
+  const threePhotoLayout = await page.evaluate(() => {
     const grid = document.querySelector('#photo-grid');
     const slots = [...document.querySelectorAll('#photo-grid .pv-slot')].map(el => {
       const r = el.getBoundingClientRect();
@@ -94,32 +94,23 @@ async function main() {
     });
     return { layout: grid.dataset.layout, slots };
   });
-  if (onePhotoLayout.slots.length !== 1) {
-    throw new Error(`Expected 1 preview slot for 1 ảnh, got ${onePhotoLayout.slots.length}`);
+  if (threePhotoLayout.slots.length !== 3) {
+    throw new Error(`Expected 3 preview slots for 3 ảnh, got ${threePhotoLayout.slots.length}`);
+  }
+  await page.click('.count-chip[data-photo-count="4"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 4);
+  const fourPhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
+  if (fourPhotoSlots !== 4) {
+    throw new Error(`Expected 4 preview slots, found ${fourPhotoSlots}`);
+  }
+  await page.click('.count-chip[data-photo-count="6"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 6);
+  const sixPhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
+  if (sixPhotoSlots !== 6) {
+    throw new Error(`Expected 6 preview slots, found ${sixPhotoSlots}`);
   }
   await page.click('.count-chip[data-photo-count="3"]');
   await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
-  const threePhotoLayouts = await page.evaluate(() => {
-    const read = () => [...document.querySelectorAll('#photo-grid .pv-slot')].map(el => {
-      const grid = document.querySelector('#photo-grid').getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      return { x: r.x - grid.x, w: r.width };
-    });
-    return {
-      layout1: read(),
-      layout2: (window.__t.setLayoutIndex(1), read()),
-      layout3: (window.__t.setLayoutIndex(2), read()),
-    };
-  });
-  if (!(threePhotoLayouts.layout1[0].w > 0 && Math.abs(threePhotoLayouts.layout1[0].w - threePhotoLayouts.layout1[1].w) < 5)) {
-    throw new Error(`Three-photo layout 1 should be balanced: ${JSON.stringify(threePhotoLayouts.layout1)}`);
-  }
-  if (!(threePhotoLayouts.layout2[0].w > threePhotoLayouts.layout2[1].w && threePhotoLayouts.layout2[0].x < threePhotoLayouts.layout2[1].x)) {
-    throw new Error(`Three-photo layout 2 should be left-large/right-small: ${JSON.stringify(threePhotoLayouts.layout2)}`);
-  }
-  if (!(threePhotoLayouts.layout3[0].w < threePhotoLayouts.layout3[1].w && threePhotoLayouts.layout3[0].x < threePhotoLayouts.layout3[1].x)) {
-    throw new Error(`Three-photo layout 3 should be left-small/right-large: ${JSON.stringify(threePhotoLayouts.layout3)}`);
-  }
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
@@ -131,17 +122,9 @@ async function main() {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
   const photoCountLabels = await page.$$eval('.count-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (photoCountLabels.join('|') !== '1 ảnh|3 ảnh|4 ảnh') {
+  if (photoCountLabels.join('|') !== '3 ảnh|4 ảnh|6 ảnh') {
     throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
   }
-  await page.click('.count-chip[data-photo-count="4"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 4);
-  const fourPhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
-  if (fourPhotoSlots !== 4) {
-    throw new Error(`Expected 4 preview slots, found ${fourPhotoSlots}`);
-  }
-  await page.click('.count-chip[data-photo-count="3"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
   if (timerLabels.join('|') !== '3s|4s|5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
@@ -181,7 +164,7 @@ async function main() {
     throw new Error(`Preview slot widths are wrong: ${JSON.stringify(layoutRects)}`);
   }
   const heroAspect = layoutRects.slots[0].w / layoutRects.slots[0].h;
-  if (Math.abs(heroAspect - (626 / 922)) > 0.02) {
+  if (Math.abs(heroAspect - (464 / 449)) > 0.02) {
     throw new Error(`Preview slot aspect ratio does not match poster layout: ${heroAspect.toFixed(3)}`);
   }
   const shootVisible = await page.$eval('#shoot-btn', btn => {
