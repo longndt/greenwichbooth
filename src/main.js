@@ -33,6 +33,7 @@ const LAYOUT_OPTIONS = [
 ];
 const POSTER_WIDTH = 1080;
 const POSTER_HEIGHT = 1350;
+const POSTER_EXPORT_SCALE = 2;
 const POSTER_LAYOUTS = {
   2: [
     [
@@ -581,8 +582,8 @@ async function shoot() {
   let posterDataUrl;
   let uploadBlob;
   try {
-    posterDataUrl = q('#cvs').toDataURL('image/jpeg', 0.88);
-    uploadBlob = await canvasToBlob(q('#cvs'), 0.76);
+    posterDataUrl = await exportPosterImage(q('#cvs'));
+    uploadBlob = await canvasToBlob(q('#cvs'), 0.94);
   } catch (err) {
     // ponytail: canvas taint (SVG/CORS) → degrade gracefully
     console.error('toDataURL failed:', err);
@@ -628,6 +629,18 @@ function canvasToBlob(canvas, quality) {
   return new Promise((resolve, reject) => {
     canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/jpeg', quality);
   });
+}
+
+async function exportPosterImage(canvas) {
+  const scale = POSTER_EXPORT_SCALE;
+  const out = document.createElement('canvas');
+  out.width = canvas.width * scale;
+  out.height = canvas.height * scale;
+  const ctx = out.getContext('2d');
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
+  ctx.drawImage(canvas, 0, 0, out.width, out.height);
+  return out.toDataURL('image/jpeg', 0.97);
 }
 
 function capFrame(cam) {

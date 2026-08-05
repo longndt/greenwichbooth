@@ -183,26 +183,26 @@ async function main() {
   await page.evaluate(() => {
     const makeShot = index => {
       const canvas = document.createElement('canvas');
-      canvas.width = 900;
-      canvas.height = 900;
+      canvas.width = 1800;
+      canvas.height = 1800;
       const ctx = canvas.getContext('2d');
-      const bg = ctx.createLinearGradient(0, 0, 900, 900);
+      const bg = ctx.createLinearGradient(0, 0, 1800, 1800);
       const top = ['#eef0ed', '#e0e8e1', '#e9eee9', '#d6e0db', '#dde8e4'][index];
       const bottom = ['#17241d', '#21372b', '#24352b', '#1b2d23', '#20362d'][index];
       bg.addColorStop(0, top);
       bg.addColorStop(1, bottom);
       ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, 900, 900);
+      ctx.fillRect(0, 0, 1800, 1800);
       ctx.fillStyle = '#252525';
       ctx.beginPath();
-      ctx.arc(450, 310, 92, 0, Math.PI * 2);
+      ctx.arc(900, 620, 184, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#111';
-      ctx.fillRect(304, 410, 292, 340);
+      ctx.fillRect(608, 820, 584, 680);
       ctx.fillStyle = '#ffffff';
-      ctx.font = '800 54px "Be Vietnam Pro", sans-serif';
+      ctx.font = '800 108px "Be Vietnam Pro", sans-serif';
       ctx.textAlign = 'center';
-      ctx.fillText(`SHOT ${index + 1}`, 450, 600);
+      ctx.fillText(`SHOT ${index + 1}`, 900, 1200);
       return canvas.toDataURL('image/jpeg', 0.95);
     };
 
@@ -279,7 +279,7 @@ async function main() {
     await window.__t.buildPoster();
   });
   const resultState = await page.evaluate(() => {
-    window.__t.S.posterUrl = document.querySelector('#cvs').toDataURL('image/jpeg', 0.88);
+    window.__t.S.posterUrl = document.querySelector('#cvs').toDataURL('image/jpeg', 0.97);
     document.querySelector('#qr-img').src = window.__t.S.posterUrl;
     window.__t.showResult();
     return {
