@@ -399,7 +399,7 @@ q('#app').innerHTML = `
               aria-label="Chọn ${seconds} giây"
             >
               <span class="theme-chip-dot" aria-hidden="true"></span>
-              <span class="theme-chip-label">Countdown ${seconds}s</span>
+              <span class="theme-chip-label">${seconds}s</span>
             </button>
           `).join('')}
         </div>
@@ -521,7 +521,7 @@ async function shoot() {
 
   for (let i = 0; i < S.photoCount; i++) {
     for (let c = S.interval; c > 0; c--) {
-      q('#cnt-n').textContent = c;
+      q('#cnt-n').textContent = String(c);
       q('#cnt-n').dataset.tick = '1';
       await sleep(650);
       delete q('#cnt-n').dataset.tick;

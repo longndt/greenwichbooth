@@ -143,7 +143,7 @@ async function main() {
   await page.click('.count-chip[data-photo-count="3"]');
   await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (timerLabels.join('|') !== 'Countdown 3s|Countdown 4s|Countdown 5s') {
+  if (timerLabels.join('|') !== '3s|4s|5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   const countdownMascot = await page.$eval('#cnt-mascot', img => ({
