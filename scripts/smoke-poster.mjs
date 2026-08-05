@@ -232,20 +232,19 @@ async function main() {
     window.__t.setThemeIndex(0);
     await window.__t.buildPoster();
   });
-  const oldQrPixels = await page.evaluate(() => {
-    const canvas = document.querySelector('#cvs');
-    const ctx = canvas.getContext('2d');
-    const { data } = ctx.getImageData(764, 1278, 112, 112);
-    let white = 0;
-    let dark = 0;
-    for (let i = 0; i < data.length; i += 4) {
-      if (data[i] > 220 && data[i + 1] > 220 && data[i + 2] > 220 && data[i + 3] > 0) white += 1;
-      if (data[i] < 80 && data[i + 1] < 80 && data[i + 2] < 80 && data[i + 3] > 0) dark += 1;
-    }
-    return { white, dark };
+  const qrSrc = await page.evaluate(async () => {
+    window.__t.S.posterUrl = document.querySelector('#cvs').toDataURL('image/jpeg', 0.88);
+    window.__t.showResult(Promise.resolve('https://example.com/poster.jpg'));
+    await new Promise(resolve => {
+      const img = document.querySelector('#qr-img');
+      const done = () => resolve(img.src);
+      img.onload = done;
+      setTimeout(done, 2000);
+    });
+    return document.querySelector('#qr-img').src;
   });
-  if (oldQrPixels.white > 900 && oldQrPixels.dark > 900) {
-    throw new Error(`Final poster still appears to contain a QR block (${JSON.stringify(oldQrPixels)})`);
+  if (!qrSrc.startsWith('data:image/png;base64,')) {
+    throw new Error('Result QR code was not generated');
   }
 
   if (consoleErrors.length || pageErrors.length) {

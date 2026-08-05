@@ -579,22 +579,6 @@ function drawStar(ctx, x, y, size, color, alpha = 1) {
   ctx.restore();
 }
 
-function drawRibbon(ctx, x, y, w, h, color, text) {
-  ctx.save();
-  ctx.fillStyle = color;
-  roundRect(ctx, x, y, w, h, h / 2);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  ctx.font = '800 16px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillStyle = '#fffef7';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, x + w / 2, y + h / 2 + 0.5);
-  ctx.restore();
-}
-
 function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, family, color, align = 'left') {
   const display = String(text || '').trim();
   if (!display) return;
@@ -749,12 +733,6 @@ async function buildPoster() {
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
 
-  // ── Accent labels ──
-  drawRibbon(ctx, 86, 372, 104, 28, theme.frame.outer, 'SHOT 01');
-  drawRibbon(ctx, 86, 694, 104, 28, theme.photos.cornerAccent.color, 'SHOT 02');
-  drawRibbon(ctx, 86, 1016, 104, 28, theme.frame.outer, 'SHOT 03');
-  drawRibbon(ctx, 86, 1338, 104, 28, theme.photos.cornerAccent.color, 'SHOT 04');
-
   // ── Footer statement ──
   const footerTextColor = theme.footer.hashtag.color;
   const footerUrlColor = theme.footer.url.color;
@@ -812,8 +790,6 @@ async function buildPoster() {
   ctx.fillStyle = theme.date.color;
   ctx.fillText('Captured by Greenwich Booth', 540, 1232);
   ctx.restore();
-
-  drawRibbon(ctx, 756, 76, 210, 34, theme.footer.borderColor, 'OPEN DAY EDITION');
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -973,4 +949,4 @@ syncReadyCountdown();
 syncEventNameField();
 syncStudentNameField();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, setThemeIndex, setLayoutIndex, setIntervalSeconds, setEventName, setStudentName };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, showResult, setThemeIndex, setLayoutIndex, setIntervalSeconds, setEventName, setStudentName };
