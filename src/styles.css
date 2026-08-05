@@ -328,8 +328,8 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 5px;
-  padding: 8px 12px 8px 6px;
+  gap: 10px;
+  padding: 10px 12px 10px 6px;
   min-height: 0;
 }
 
@@ -350,19 +350,19 @@ html, body {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 10px;
 }
 
 .ctrl-grid {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
+  gap: 14px;
 }
 
 .ctrl-col-group {
   display: grid;
-  gap: 8px;
+  gap: 10px;
 }
 
 .layout-picker.is-locked {
@@ -382,7 +382,7 @@ html, body {
 
 .name-field {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 14px;
   background: rgba(4, 18, 26, 0.62);
@@ -397,9 +397,9 @@ html, body {
   border-radius: 12px;
   background: rgba(0,0,0,0.2);
   color: var(--text);
-  padding: 12px 12px;
+  padding: 14px 14px;
   font-family: 'Be Vietnam Pro', sans-serif;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   outline: none;
 }
@@ -437,11 +437,11 @@ html, body {
   background: rgba(4, 18, 26, 0.76);
   color: var(--text);
   border-radius: 14px;
-  padding: 10px 10px 9px;
+  padding: 12px 12px 11px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
   transition: transform 0.18s, border-color 0.18s, background 0.18s, box-shadow 0.18s;
   box-shadow:
@@ -453,7 +453,7 @@ html, body {
 .layout-chip,
 .time-chip {
   width: 100%;
-  min-height: 38px;
+  min-height: 46px;
   justify-content: center;
 }
 
@@ -545,8 +545,8 @@ html, body {
 }
 
 .theme-chip-dot {
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
   border-radius: 50%;
   background: linear-gradient(145deg, var(--chip-a, var(--gold)), var(--chip-b, var(--emerald)));
@@ -567,9 +567,9 @@ html, body {
 
 .theme-chip-label {
   font-family: 'Be Vietnam Pro', sans-serif;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 800;
-  line-height: 1;
+  line-height: 1.1;
   white-space: nowrap;
   width: 100%;
   text-align: center;
