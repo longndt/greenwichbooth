@@ -26,12 +26,16 @@ const S = {
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 4, 5];
-const PHOTO_COUNT_OPTIONS = [2, 3, 4];
+const PHOTO_COUNT_OPTIONS = [1, 3, 4];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },
   { label: 'Bố cục 2' },
   { label: 'Bố cục 3' },
 ];
+const POSTER_WIDTH = 1080;
+const POSTER_HEIGHT = 1350;
+const SLOT_BASE_W = 952;
+const SLOT_BASE_H = 1048;
 const POSTER_LAYOUTS = {
   2: [
     [
@@ -136,10 +140,10 @@ function getPreviewSlots() {
   const previewWidth = 100;
   const previewHeight = 100;
   return layout.map(slot => ({
-    x: ((slot.x - 64) / 952) * previewWidth,
-    y: ((slot.y - 262) / 1138) * previewHeight,
-    w: (slot.w / 952) * previewWidth,
-    h: (slot.h / 1138) * previewHeight,
+    x: ((slot.x - 64) / SLOT_BASE_W) * previewWidth,
+    y: ((slot.y - 262) / SLOT_BASE_H) * previewHeight,
+    w: (slot.w / SLOT_BASE_W) * previewWidth,
+    h: (slot.h / SLOT_BASE_H) * previewHeight,
     hero: !!slot.hero,
   }));
 }
@@ -175,12 +179,15 @@ function syncLayoutPicker() {
       el.style.height = `${slot.h}%`;
     });
   }
+  const locked = S.photoCount === 1;
+  const picker = q('.layout-picker');
+  if (picker) picker.classList.toggle('is-locked', locked);
   qa('.layout-chip[data-layout-index]').forEach(btn => {
     const index = Number(btn.dataset.layoutIndex || 0);
     const active = index === S.layoutIndex;
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
-    btn.disabled = S.mode !== 'ready';
+    btn.disabled = S.mode !== 'ready' || locked;
   });
 }
 
@@ -245,6 +252,7 @@ function setThemeIndex(nextIndex) {
 
 function setLayoutIndex(nextIndex) {
   if (S.mode !== 'ready') return;
+  if (S.photoCount === 1) return;
   const index = Math.max(0, Math.min(getLayouts().length - 1, Number(nextIndex) || 0));
   S.layoutIndex = index;
   localStorage.setItem('greenwichbooth.layoutIndex', String(index));
@@ -253,8 +261,9 @@ function setLayoutIndex(nextIndex) {
 
 function setPhotoCount(nextCount) {
   if (S.mode !== 'ready') return;
-  const count = Number(nextCount) || 4;
+  const count = Number(nextCount) || 3;
   S.photoCount = PHOTO_COUNT_OPTIONS.includes(count) ? count : 3;
+  if (S.photoCount === 1) S.layoutIndex = 0;
   S.layoutIndex = Math.min(S.layoutIndex, getLayouts().length - 1);
   localStorage.setItem('greenwichbooth.photoCount', String(S.photoCount));
   localStorage.setItem('greenwichbooth.layoutIndex', String(S.layoutIndex));
@@ -436,7 +445,7 @@ q('#app').innerHTML = `
 <!-- Result overlay -->
 <div class="result-ov hidden" id="rov">
   <div class="result-card">
-    <img class="poster-img" id="poster-img" alt="Bộ poster 4 ảnh được ghép lại"/>
+    <img class="poster-img" id="poster-img" alt="Poster được ghép lại"/>
     <div class="dl-row">
       <div class="qr-wrap">
         <img id="qr-img" alt="Mã QR để quét và tải ảnh"/>
@@ -468,7 +477,7 @@ q('#app').innerHTML = `
 </div>
 
 
-<canvas id="cvs" width="1080" height="1440" style="display:none"></canvas>
+<canvas id="cvs" width="${POSTER_WIDTH}" height="${POSTER_HEIGHT}" style="display:none"></canvas>
 `;
 
 // ── Camera ────────────────────────────────────────────────────────────────────
@@ -534,7 +543,7 @@ async function shoot() {
   }
 
   await nextFrame();
-  await sleep(260);
+  await sleep(1000);
   q('#cov').classList.add('is-processing');
   q('#cnt-n').textContent = 'Đang tạo poster...';
   q('#shoot-btn').disabled = false;
@@ -691,15 +700,15 @@ function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, fa
   ctx.restore();
 }
 
-// ── Poster composition (1080×1440) — Selected concept + rendering
+// ── Poster composition (4:5) — Selected concept + rendering
 async function buildPoster() {
   await document.fonts.ready;
   const mascot = await loadImage(mascotUrl);
 
   const cvs = q('#cvs');
-  cvs.width = 1080; cvs.height = 1440;
+  cvs.width = POSTER_WIDTH; cvs.height = POSTER_HEIGHT;
   const ctx = cvs.getContext('2d');
-  const W = 1080, H = 1440;
+  const W = POSTER_WIDTH, H = POSTER_HEIGHT;
 
   const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 

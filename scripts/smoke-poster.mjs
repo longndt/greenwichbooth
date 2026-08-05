@@ -69,9 +69,37 @@ async function main() {
   if (layoutCount !== 3) {
     throw new Error(`Expected 3 layout chips, found ${layoutCount}`);
   }
-  await page.click('.count-chip[data-photo-count="2"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 2);
-  const twoPhotoLayouts = await page.evaluate(() => {
+  await page.click('.count-chip[data-photo-count="1"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 1);
+  const lockedLayoutState = await page.$eval('.layout-picker', el => ({
+    locked: el.classList.contains('is-locked'),
+    opacity: getComputedStyle(el).opacity,
+  }));
+  if (!lockedLayoutState.locked || Number(lockedLayoutState.opacity) > 0.6) {
+    throw new Error(`Layout picker should be locked and faded for 1 ảnh: ${JSON.stringify(lockedLayoutState)}`);
+  }
+  const blockedLayoutIndex = await page.evaluate(() => {
+    window.__t.setLayoutIndex(2);
+    return window.__t.S.layoutIndex;
+  });
+  if (blockedLayoutIndex !== 0) {
+    throw new Error(`Layout index should stay fixed on 1 ảnh, got ${blockedLayoutIndex}`);
+  }
+  const onePhotoLayout = await page.evaluate(() => {
+    const grid = document.querySelector('#photo-grid');
+    const slots = [...document.querySelectorAll('#photo-grid .pv-slot')].map(el => {
+      const r = el.getBoundingClientRect();
+      const g = grid.getBoundingClientRect();
+      return { x: r.x - g.x, y: r.y - g.y, w: r.width, h: r.height };
+    });
+    return { layout: grid.dataset.layout, slots };
+  });
+  if (onePhotoLayout.slots.length !== 1) {
+    throw new Error(`Expected 1 preview slot for 1 ảnh, got ${onePhotoLayout.slots.length}`);
+  }
+  await page.click('.count-chip[data-photo-count="3"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
+  const threePhotoLayouts = await page.evaluate(() => {
     const read = () => [...document.querySelectorAll('#photo-grid .pv-slot')].map(el => {
       const grid = document.querySelector('#photo-grid').getBoundingClientRect();
       const r = el.getBoundingClientRect();
@@ -83,17 +111,15 @@ async function main() {
       layout3: (window.__t.setLayoutIndex(2), read()),
     };
   });
-  if (!(twoPhotoLayouts.layout1[0].w > 0 && Math.abs(twoPhotoLayouts.layout1[0].w - twoPhotoLayouts.layout1[1].w) < 5)) {
-    throw new Error(`Two-photo layout 1 should be balanced: ${JSON.stringify(twoPhotoLayouts.layout1)}`);
+  if (!(threePhotoLayouts.layout1[0].w > 0 && Math.abs(threePhotoLayouts.layout1[0].w - threePhotoLayouts.layout1[1].w) < 5)) {
+    throw new Error(`Three-photo layout 1 should be balanced: ${JSON.stringify(threePhotoLayouts.layout1)}`);
   }
-  if (!(twoPhotoLayouts.layout2[0].w > twoPhotoLayouts.layout2[1].w && twoPhotoLayouts.layout2[0].x < twoPhotoLayouts.layout2[1].x)) {
-    throw new Error(`Two-photo layout 2 should be left-large/right-small: ${JSON.stringify(twoPhotoLayouts.layout2)}`);
+  if (!(threePhotoLayouts.layout2[0].w > threePhotoLayouts.layout2[1].w && threePhotoLayouts.layout2[0].x < threePhotoLayouts.layout2[1].x)) {
+    throw new Error(`Three-photo layout 2 should be left-large/right-small: ${JSON.stringify(threePhotoLayouts.layout2)}`);
   }
-  if (!(twoPhotoLayouts.layout3[0].w < twoPhotoLayouts.layout3[1].w && twoPhotoLayouts.layout3[0].x < twoPhotoLayouts.layout3[1].x)) {
-    throw new Error(`Two-photo layout 3 should be left-small/right-large: ${JSON.stringify(twoPhotoLayouts.layout3)}`);
+  if (!(threePhotoLayouts.layout3[0].w < threePhotoLayouts.layout3[1].w && threePhotoLayouts.layout3[0].x < threePhotoLayouts.layout3[1].x)) {
+    throw new Error(`Three-photo layout 3 should be left-small/right-large: ${JSON.stringify(threePhotoLayouts.layout3)}`);
   }
-  await page.click('.count-chip[data-photo-count="3"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
@@ -105,7 +131,7 @@ async function main() {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
   const photoCountLabels = await page.$$eval('.count-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (photoCountLabels.join('|') !== '2 ảnh|3 ảnh|4 ảnh') {
+  if (photoCountLabels.join('|') !== '1 ảnh|3 ảnh|4 ảnh') {
     throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
   }
   await page.click('.count-chip[data-photo-count="4"]');
@@ -216,7 +242,7 @@ async function main() {
     height: canvas.height,
     pngLength: canvas.toDataURL('image/png').length,
   }));
-  if (metrics.width !== 1080 || metrics.height !== 1440) {
+  if (metrics.width !== 1080 || metrics.height !== 1350) {
     throw new Error(`Unexpected canvas size ${metrics.width}x${metrics.height}`);
   }
   if (metrics.pngLength < 20000) {

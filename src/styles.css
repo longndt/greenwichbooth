@@ -356,6 +356,15 @@ html, body {
   gap: 8px;
 }
 
+.layout-picker.is-locked {
+  opacity: 0.45;
+  filter: grayscale(0.2);
+}
+
+.layout-picker.is-locked .layout-chip {
+  pointer-events: none;
+}
+
 .layout-picker,
 .count-picker,
 .time-picker {
@@ -566,11 +575,11 @@ html, body {
 /* ── Live poster preview ─────────────────────────────────── */
 .poster-shell {
   position: relative;
-  width: min(100%, calc((100dvh - 286px) * 952 / 1138));
+  width: min(100%, calc((100dvh - 286px) * 952 / 1048));
   flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
-  aspect-ratio: 952 / 1138;
+  aspect-ratio: 4 / 5;
   display: flex;
   flex-direction: column;
   align-items: center;
