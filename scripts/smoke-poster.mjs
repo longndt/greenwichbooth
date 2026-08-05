@@ -232,19 +232,20 @@ async function main() {
     window.__t.setThemeIndex(0);
     await window.__t.buildPoster();
   });
-  const qrSrc = await page.evaluate(async () => {
+  const resultState = await page.evaluate(() => {
     window.__t.S.posterUrl = document.querySelector('#cvs').toDataURL('image/jpeg', 0.88);
     window.__t.showResult(Promise.resolve('https://example.com/poster.jpg'));
-    await new Promise(resolve => {
-      const img = document.querySelector('#qr-img');
-      const done = () => resolve(img.src);
-      img.onload = done;
-      setTimeout(done, 2000);
-    });
-    return document.querySelector('#qr-img').src;
+    return {
+      hidden: document.querySelector('#rov').classList.contains('hidden'),
+      loading: document.querySelector('.qr-wrap').classList.contains('qr-loading'),
+      qrSrc: document.querySelector('#qr-img').src,
+    };
   });
-  if (!qrSrc.startsWith('data:image/png;base64,')) {
-    throw new Error('Result QR code was not generated');
+  if (resultState.hidden) {
+    throw new Error('Result screen did not open');
+  }
+  if (!resultState.loading) {
+    throw new Error('QR loading state did not start');
   }
 
   if (consoleErrors.length || pageErrors.length) {

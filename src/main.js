@@ -54,6 +54,7 @@ const POSTER_LAYOUTS = [
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const nextFrame = () => new Promise(r => requestAnimationFrame(r));
 const loadImage = url => new Promise((resolve, reject) => {
   const img = new Image();
   img.onload = () => resolve(img);
@@ -338,18 +339,6 @@ q('#app').innerHTML = `
 </div>
 
 
-<div class="proc-ov hidden" id="proc-ov">
-  <div class="proc-card">
-    <img class="proc-img" id="proc-img" alt="Placeholder ảnh đang được xử lý" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1080 1440'%3E%3Cdefs%3E%3ClinearGradient id='pg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23005F73;stop-opacity:1'/%3E%3Cstop offset='100%25' style='stop-color:%230A9396;stop-opacity:1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1080' height='1440' fill='url(%23pg)'/%3E%3C/svg%3E"/>
-    <div class="proc-spin"></div>
-    <p class="proc-txt">Đang tạo poster...</p>
-    <small class="proc-sub" id="proc-sub"></small>
-    <div class="proc-progress-wrap">
-      <div class="proc-progress-bar" id="proc-progress"></div>
-    </div>
-  </div>
-</div>
-
 <canvas id="cvs" width="1080" height="1440" style="display:none"></canvas>
 `;
 
@@ -395,13 +384,13 @@ async function shoot() {
     for (let c = S.interval; c > 0; c--) {
       q('#cnt-n').textContent = c;
       q('#cnt-n').dataset.tick = '1';
-      await sleep(900);
+      await sleep(650);
       delete q('#cnt-n').dataset.tick;
-      await sleep(80);
+      await sleep(40);
     }
     q('#cnt-n').textContent = '';
     q('#cnt-mascot').classList.add('is-visible');
-    await sleep(280);
+    await sleep(180);
     q('#cnt-mascot').classList.remove('is-visible');
 
     S.photos.push(capFrame(cam));
@@ -411,13 +400,10 @@ async function shoot() {
     q(`#pvs${i}`).classList.add('filled');
 
     q(`#d${i}`)?.classList.add('done');
-    if (i < 3) await sleep(380);
+    if (i < 3) await sleep(220);
   }
 
-  q('#cov').classList.add('hidden');
   q('#shoot-btn').disabled = false;
-  q('#proc-sub').textContent = '';
-  q('#proc-ov').classList.remove('hidden');
   S.lockedThemeIndex = S.themeIndex;
   S.lockedLayoutIndex = S.layoutIndex;
   syncThemePicker();
@@ -427,8 +413,8 @@ async function shoot() {
     await buildPoster();
   } catch (err) {
     console.error('buildPoster failed:', err);
-    q('#proc-sub').textContent = 'Không thể tạo poster, hãy chụp lại.';
-    q('#proc-ov').classList.add('hidden');
+    q('#cov').classList.add('hidden');
+    alert('Không thể tạo poster, hãy chụp lại.');
     S.mode = 'ready';
     S.lockedThemeIndex = null;
     S.lockedLayoutIndex = null;
@@ -448,8 +434,8 @@ async function shoot() {
   } catch (err) {
     // ponytail: canvas taint (SVG/CORS) → degrade gracefully
     console.error('toDataURL failed:', err);
-    q('#proc-sub').textContent = 'Không thể xuất ảnh, hãy chụp lại.';
-    q('#proc-ov').classList.add('hidden');
+    q('#cov').classList.add('hidden');
+    alert('Không thể xuất ảnh, hãy chụp lại.');
     S.mode = 'ready';
     S.lockedThemeIndex = null;
     S.lockedLayoutIndex = null;
@@ -466,8 +452,20 @@ async function shoot() {
   syncStudentNameField();
   S.posterUrl = posterDataUrl;
   const uploadP = uploadPoster(uploadBlob);
-  q('#proc-ov').classList.add('hidden');
   showResult(uploadP);
+  await nextFrame();
+  q('#cov').classList.add('hidden');
+  uploadP.then(dlUrl => {
+    if (!dlUrl) return;
+    const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
+    QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } })
+      .then(qr => {
+        q('#qr-img').src = qr;
+        q('.qr-wrap').classList.remove('qr-loading');
+        q('#rov').classList.add('is-ready');
+      })
+      .catch(err => console.error('QR generation failed:', err));
+  });
   S.lockedThemeIndex = null;
   S.lockedLayoutIndex = null;
   syncThemePicker();
@@ -525,26 +523,6 @@ function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
   ctx.restore();
 }
 
-function drawSpark(ctx, x, y, size, color) {
-  ctx.save();
-  ctx.translate(x, y);
-  ctx.fillStyle = color;
-  ctx.shadowColor = 'rgba(0,0,0,0.28)';
-  ctx.shadowBlur = 8;
-  ctx.beginPath();
-  ctx.moveTo(0, -size);
-  ctx.lineTo(size * 0.28, -size * 0.28);
-  ctx.lineTo(size, 0);
-  ctx.lineTo(size * 0.28, size * 0.28);
-  ctx.lineTo(0, size);
-  ctx.lineTo(-size * 0.28, size * 0.28);
-  ctx.lineTo(-size, 0);
-  ctx.lineTo(-size * 0.28, -size * 0.28);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-}
-
 function drawGlowOrb(ctx, x, y, radius, color, alpha = 1) {
   ctx.save();
   ctx.globalAlpha = alpha;
@@ -554,27 +532,6 @@ function drawGlowOrb(ctx, x, y, radius, color, alpha = 1) {
   ctx.fillStyle = grad;
   ctx.beginPath();
   ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawStar(ctx, x, y, size, color, alpha = 1) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  ctx.translate(x, y);
-  ctx.fillStyle = color;
-  ctx.shadowColor = 'rgba(0,0,0,0.2)';
-  ctx.shadowBlur = 6;
-  ctx.beginPath();
-  ctx.moveTo(0, -size);
-  ctx.lineTo(size * 0.35, -size * 0.2);
-  ctx.lineTo(size, 0);
-  ctx.lineTo(size * 0.35, size * 0.2);
-  ctx.lineTo(0, size);
-  ctx.lineTo(-size * 0.35, size * 0.2);
-  ctx.lineTo(-size, 0);
-  ctx.lineTo(-size * 0.35, -size * 0.2);
-  ctx.closePath();
   ctx.fill();
   ctx.restore();
 }
@@ -735,61 +692,27 @@ async function buildPoster() {
 
   // ── Footer statement ──
   const footerTextColor = theme.footer.hashtag.color;
-  const footerUrlColor = theme.footer.url.color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.save();
   ctx.shadowColor = theme.footer.glow || 'rgba(0,0,0,0.18)';
-  ctx.shadowBlur = 30;
+  ctx.shadowBlur = 18;
   ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, 176, 1228, 728, 92, 24);
+  roundRect(ctx, 196, 1232, 688, 82, 22);
   ctx.fill();
   ctx.restore();
-  ctx.strokeStyle = theme.footer.borderColor;
-  ctx.lineWidth = 4;
-  ctx.stroke();
-
-  drawSpark(ctx, 236, 1274, 14, theme.footer.borderColor);
-  drawSpark(ctx, 844, 1274, 14, theme.footer.borderColor);
-
-  drawStar(ctx, 146, 170, 11, theme.footer.borderColor, 0.85);
-  drawStar(ctx, 934, 170, 11, theme.photos.cornerAccent.color, 0.85);
-
-  ctx.shadowColor = 'rgba(0,0,0,0.42)';
-  ctx.shadowBlur = 14;
-  ctx.font = '900 52px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = 'rgba(0,0,0,0.46)';
-  ctx.strokeText(theme.footer.hashtag.text, 540, 1266);
-  ctx.fillStyle = footerTextColor;
-  ctx.fillText(theme.footer.hashtag.text, 540, 1266);
-
-  ctx.save();
-  ctx.fillStyle = 'rgba(255,255,255,0.08)';
-  roundRect(ctx, 302, 1210, 476, 30, 15);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.shadowColor = 'transparent';
-  ctx.shadowBlur = 0;
-  ctx.fillStyle = 'rgba(255,255,255,0.14)';
-  roundRect(ctx, 416, 1292, 248, 28, 14);
-  ctx.fill();
   ctx.strokeStyle = theme.footer.borderColor;
   ctx.lineWidth = 2;
   ctx.stroke();
-  ctx.font = '800 20px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.lineWidth = 4;
-  ctx.strokeStyle = 'rgba(0,0,0,0.36)';
-  ctx.strokeText(theme.footer.url.text, 540, 1306);
-  ctx.fillStyle = footerUrlColor;
-  ctx.fillText(theme.footer.url.text, 540, 1306);
 
-  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.42)';
+  ctx.shadowBlur = 10;
+  ctx.font = '900 48px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillStyle = footerTextColor;
+  ctx.fillText(theme.footer.hashtag.text, 540, 1268);
   ctx.font = '700 16px "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillStyle = theme.date.color;
-  ctx.fillText('Captured by Greenwich Booth', 540, 1232);
-  ctx.restore();
+  ctx.fillText('greenwich.edu.vn', 540, 1294);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -833,20 +756,9 @@ function showResult(uploadP) {
   q('.qr-wrap').classList.add('qr-loading');
   q('#rov').classList.remove('hidden');
   q('#rov').classList.remove('is-ready');
-
   uploadP.then(dlUrl => {
     q('.qr-wrap').classList.remove('qr-loading');
-    if (!dlUrl) {
-      q('#rov').classList.add('is-ready');
-      return;
-    }
-    // Wrap image URL in display page with download button
-    const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
-    QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } })
-      .then(qr => {
-        q('#qr-img').src = qr;
-        q('#rov').classList.add('is-ready');
-      });
+    if (!dlUrl) q('#rov').classList.add('is-ready');
   });
 }
 
