@@ -17,6 +17,7 @@ const S = {
   stream: null,
   posterUrl: null,
   themeIndex: Number(localStorage.getItem('greenwichbooth.themeIndex') || 0) || 0,
+  photoCount: Number(localStorage.getItem('greenwichbooth.photoCount') || 4) || 4,
   layoutIndex: Number(localStorage.getItem('greenwichbooth.layoutIndex') || 0) || 0,
   lockedThemeIndex: null,
   lockedLayoutIndex: null,
@@ -25,36 +26,83 @@ const S = {
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 4, 5];
+const PHOTO_COUNT_OPTIONS = [3, 4, 5];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },
   { label: 'Bố cục 2' },
   { label: 'Bố cục 3' },
 ];
-const POSTER_LAYOUTS = [
-  [
+const POSTER_LAYOUTS = {
+  3: [
+    [
+      { x: 64, y: 262, w: 952, h: 596, hero: true },
+      { x: 64, y: 884, w: 464, h: 300 },
+      { x: 552, y: 884, w: 464, h: 300 },
+    ],
+    [
+      { x: 64, y: 262, w: 626, h: 922, hero: true },
+      { x: 716, y: 262, w: 300, h: 449 },
+      { x: 716, y: 735, w: 300, h: 449 },
+    ],
+    [
+      { x: 64, y: 262, w: 464, h: 922, hero: true },
+      { x: 552, y: 262, w: 464, h: 449 },
+      { x: 552, y: 735, w: 464, h: 449 },
+    ],
+  ],
+  4: [
+    [
     { x: 64, y: 262, w: 952, h: 596, hero: true },
     { x: 64, y: 884, w: 300, h: 300 },
     { x: 390, y: 884, w: 300, h: 300 },
     { x: 716, y: 884, w: 300, h: 300 },
-  ],
-  [
+    ],
+    [
     { x: 64, y: 262, w: 626, h: 922, hero: true },
     { x: 716, y: 262, w: 300, h: 296 },
     { x: 716, y: 575, w: 300, h: 296 },
     { x: 716, y: 888, w: 300, h: 296 },
-  ],
-  [
+    ],
+    [
     { x: 64, y: 262, w: 464, h: 449 },
     { x: 552, y: 262, w: 464, h: 449 },
     { x: 64, y: 735, w: 464, h: 449 },
     { x: 552, y: 735, w: 464, h: 449 },
+    ],
   ],
-];
+  5: [
+    [
+      { x: 64, y: 262, w: 626, h: 596, hero: true },
+      { x: 716, y: 262, w: 300, h: 286 },
+      { x: 716, y: 572, w: 300, h: 286 },
+      { x: 64, y: 884, w: 464, h: 300 },
+      { x: 552, y: 884, w: 464, h: 300 },
+    ],
+    [
+      { x: 64, y: 262, w: 626, h: 449, hero: true },
+      { x: 64, y: 735, w: 626, h: 449, hero: true },
+      { x: 716, y: 262, w: 300, h: 296 },
+      { x: 716, y: 575, w: 300, h: 296 },
+      { x: 716, y: 888, w: 300, h: 296 },
+    ],
+    [
+      { x: 64, y: 262, w: 300, h: 296 },
+      { x: 390, y: 262, w: 300, h: 296 },
+      { x: 716, y: 262, w: 300, h: 296 },
+      { x: 64, y: 582, w: 464, h: 602, hero: true },
+      { x: 552, y: 582, w: 464, h: 602, hero: true },
+    ],
+  ],
+};
 
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nextFrame = () => new Promise(r => requestAnimationFrame(r));
+const getLayouts = () => POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[4];
+const getLayout = () => getLayouts()[S.layoutIndex] || getLayouts()[0];
+if (!PHOTO_COUNT_OPTIONS.includes(S.photoCount)) S.photoCount = 4;
+S.layoutIndex = Math.max(0, Math.min(getLayouts().length - 1, S.layoutIndex));
 const loadImage = url => new Promise((resolve, reject) => {
   const img = new Image();
   img.onload = () => resolve(img);
@@ -78,10 +126,30 @@ function syncThemePicker() {
 function syncLayoutPicker() {
   const layoutId = String(S.layoutIndex + 1);
   const grid = q('#photo-grid');
-  if (grid) grid.dataset.layout = layoutId;
+  if (grid) {
+    const layout = getLayout();
+    grid.dataset.layout = layoutId;
+    grid.dataset.photoCount = String(S.photoCount);
+    grid.style.aspectRatio = '952 / 922';
+    grid.innerHTML = layout.map((slot, i) => `
+      <div class="pv-slot" id="pvs${i}" style="grid-area:${slot.y} / ${slot.x} / ${slot.y + slot.h} / ${slot.x + slot.w}">
+        <img class="pv" id="pv${i}" alt="Ảnh ${i + 1} được chụp"/><span class="pv-badge">${i + 1}</span>
+      </div>
+    `).join('');
+  }
   qa('.layout-chip[data-layout-index]').forEach(btn => {
     const index = Number(btn.dataset.layoutIndex || 0);
     const active = index === S.layoutIndex;
+    btn.classList.toggle('is-active', active);
+    btn.setAttribute('aria-pressed', String(active));
+    btn.disabled = S.mode !== 'ready';
+  });
+}
+
+function syncPhotoCountPicker() {
+  qa('.count-chip').forEach(btn => {
+    const count = Number(btn.dataset.photoCount || 4);
+    const active = count === S.photoCount;
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
     btn.disabled = S.mode !== 'ready';
@@ -139,9 +207,20 @@ function setThemeIndex(nextIndex) {
 
 function setLayoutIndex(nextIndex) {
   if (S.mode !== 'ready') return;
-  const index = Math.max(0, Math.min(POSTER_LAYOUTS.length - 1, Number(nextIndex) || 0));
+  const index = Math.max(0, Math.min(getLayouts().length - 1, Number(nextIndex) || 0));
   S.layoutIndex = index;
   localStorage.setItem('greenwichbooth.layoutIndex', String(index));
+  syncLayoutPicker();
+}
+
+function setPhotoCount(nextCount) {
+  if (S.mode !== 'ready') return;
+  const count = Number(nextCount) || 4;
+  S.photoCount = PHOTO_COUNT_OPTIONS.includes(count) ? count : 4;
+  S.layoutIndex = Math.min(S.layoutIndex, getLayouts().length - 1);
+  localStorage.setItem('greenwichbooth.photoCount', String(S.photoCount));
+  localStorage.setItem('greenwichbooth.layoutIndex', String(S.layoutIndex));
+  syncPhotoCountPicker();
   syncLayoutPicker();
 }
 
@@ -249,6 +328,19 @@ q('#app').innerHTML = `
           </button>
         `).join('')}
       </div>
+      <div class="count-picker" aria-label="Chọn số lượng ảnh">
+        ${PHOTO_COUNT_OPTIONS.map(count => `
+          <button
+            class="count-chip"
+            type="button"
+            data-photo-count="${count}"
+            aria-pressed="${count === S.photoCount}"
+            aria-label="Chọn ${count} ảnh"
+          >
+            <span class="theme-chip-label">${count} ảnh</span>
+          </button>
+        `).join('')}
+      </div>
       <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
         ${INTERVAL_OPTIONS.map(seconds => `
           <button
@@ -289,12 +381,7 @@ q('#app').innerHTML = `
       </div>
 
       <section class="poster-shell" id="poster-preview" aria-label="Poster preview">
-        <div class="photo-grid" id="photo-grid" data-layout="${S.layoutIndex + 1}">
-          <div class="pv-slot" id="pvs0"><img class="pv" id="pv0" alt="Ảnh 1 được chụp"/><span class="pv-badge">1</span></div>
-          <div class="pv-slot" id="pvs1"><img class="pv" id="pv1" alt="Ảnh 2 được chụp"/><span class="pv-badge">2</span></div>
-          <div class="pv-slot" id="pvs2"><img class="pv" id="pv2" alt="Ảnh 3 được chụp"/><span class="pv-badge">3</span></div>
-          <div class="pv-slot" id="pvs3"><img class="pv" id="pv3" alt="Ảnh 4 được chụp"/><span class="pv-badge">4</span></div>
-        </div>
+        <div class="photo-grid" id="photo-grid" data-layout="${S.layoutIndex + 1}" data-photo-count="${S.photoCount}"></div>
       </section>
 
       <button class="shoot-btn" id="shoot-btn" aria-label="Chụp">
@@ -370,6 +457,7 @@ async function shoot() {
   q('#shoot-btn').disabled = true;
   syncThemePicker();
   syncLayoutPicker();
+  syncPhotoCountPicker();
   syncIntervalPicker();
   syncEventNameField();
   syncStudentNameField();
@@ -380,7 +468,7 @@ async function shoot() {
   q('.ctrl-col').classList.add('shooting');
   q('#cov').classList.remove('hidden');
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < S.photoCount; i++) {
     for (let c = S.interval; c > 0; c--) {
       q('#cnt-n').textContent = c;
       q('#cnt-n').dataset.tick = '1';
@@ -400,7 +488,7 @@ async function shoot() {
     q(`#pvs${i}`).classList.add('filled');
 
     q(`#d${i}`)?.classList.add('done');
-    if (i < 3) await sleep(220);
+    if (i < S.photoCount - 1) await sleep(220);
   }
 
   q('#cov').classList.add('is-processing');
@@ -423,6 +511,7 @@ async function shoot() {
     S.lockedLayoutIndex = null;
     syncThemePicker();
     syncLayoutPicker();
+    syncPhotoCountPicker();
     syncIntervalPicker();
     syncReadyCountdown();
     syncEventNameField();
@@ -445,6 +534,7 @@ async function shoot() {
     S.lockedLayoutIndex = null;
     syncThemePicker();
     syncLayoutPicker();
+    syncPhotoCountPicker();
     syncIntervalPicker();
     syncReadyCountdown();
     syncEventNameField();
@@ -475,6 +565,7 @@ async function shoot() {
   S.lockedLayoutIndex = null;
   syncThemePicker();
   syncLayoutPicker();
+  syncPhotoCountPicker();
   syncIntervalPicker();
 }
 
@@ -573,7 +664,8 @@ async function buildPoster() {
   const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
 
   const headerH = 230;
-  const pos = POSTER_LAYOUTS[S.lockedLayoutIndex ?? S.layoutIndex] || POSTER_LAYOUTS[0];
+  const layouts = POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[4];
+  const pos = layouts[S.lockedLayoutIndex ?? S.layoutIndex] || layouts[0];
 
   // ── Background + texture ──
   ctx.fillStyle = theme.bg.color;
@@ -802,6 +894,7 @@ function retake() {
   syncThemePicker();
   syncPosterPreview();
   syncLayoutPicker();
+  syncPhotoCountPicker();
   syncIntervalPicker();
   syncReadyCountdown();
   syncEventNameField();
@@ -845,6 +938,9 @@ qa('.theme-chip[data-theme-index]').forEach(btn => {
 qa('.layout-chip[data-layout-index]').forEach(btn => {
   btn.addEventListener('click', () => setLayoutIndex(btn.dataset.layoutIndex));
 });
+qa('.count-chip[data-photo-count]').forEach(btn => {
+  btn.addEventListener('click', () => setPhotoCount(btn.dataset.photoCount));
+});
 qa('.time-chip').forEach(btn => {
   btn.addEventListener('click', () => setIntervalSeconds(btn.dataset.interval));
 });
@@ -859,9 +955,10 @@ if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 syncThemePicker();
 syncPosterPreview();
 syncLayoutPicker();
+syncPhotoCountPicker();
 syncIntervalPicker();
 syncReadyCountdown();
 syncEventNameField();
 syncStudentNameField();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, showResult, setThemeIndex, setLayoutIndex, setIntervalSeconds, setEventName, setStudentName };
+if (import.meta.env.DEV) window.__t = { S, buildPoster, showResult, setThemeIndex, setLayoutIndex, setPhotoCount, setIntervalSeconds, setEventName, setStudentName };

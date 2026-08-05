@@ -292,6 +292,7 @@ html, body {
 
 .theme-picker,
 .layout-picker,
+.count-picker,
 .time-picker {
   width: 100%;
   display: grid;
@@ -300,6 +301,7 @@ html, body {
 }
 
 .layout-picker,
+.count-picker,
 .time-picker {
   margin-top: 0;
 }
@@ -354,6 +356,7 @@ html, body {
 
 .theme-chip,
 .layout-chip,
+.count-chip,
 .time-chip {
   appearance: none;
   border: 1px solid rgba(255,255,255,0.14);
@@ -372,7 +375,8 @@ html, body {
     inset 0 -10px 18px rgba(0,0,0,0.14);
 }
 
-.time-chip {
+.time-chip,
+.count-chip {
   justify-content: center;
 }
 
@@ -387,6 +391,7 @@ html, body {
 
 .theme-chip:hover:not(:disabled),
 .layout-chip:hover:not(:disabled),
+.count-chip:hover:not(:disabled),
 .time-chip:hover:not(:disabled) {
   transform: translateY(-1px);
   border-color: rgba(10,147,150,0.52);
@@ -394,6 +399,7 @@ html, body {
 
 .theme-chip.is-active,
 .layout-chip.is-active,
+.count-chip.is-active,
 .time-chip.is-active {
   color: #fffef7;
   text-shadow: 0 1px 0 rgba(0,0,0,0.28);
@@ -437,8 +443,20 @@ html, body {
     inset 0 1px 0 rgba(255,255,255,0.08);
 }
 
+.count-chip.is-active {
+  background:
+    radial-gradient(circle at 22% 22%, rgba(148,210,189,0.28), transparent 38%),
+    linear-gradient(145deg, rgba(0,95,115,0.96), rgba(4,18,26,0.98));
+  border-color: rgba(148,210,189,0.58);
+  box-shadow:
+    0 0 0 1px rgba(148,210,189,0.12),
+    0 0 16px rgba(0,95,115,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
 .theme-chip:disabled,
 .layout-chip:disabled,
+.count-chip:disabled,
 .time-chip:disabled {
   opacity: 0.55;
   cursor: not-allowed;
@@ -1097,31 +1115,10 @@ input[type="range"] {
   max-width: 100%;
   max-height: 100%;
   aspect-ratio: 952 / 922;
+  grid-template-columns: repeat(952, 1fr);
+  grid-template-rows: repeat(922, 1fr);
   min-height: 0;
   flex: 0 1 auto;
-}
-
-.photo-grid[data-layout="1"] {
-  grid-template-columns: repeat(3, minmax(0, 300fr));
-  grid-template-rows: 596fr 300fr;
-}
-
-.photo-grid[data-layout="1"] #pvs0 {
-  grid-column: 1 / 4;
-}
-
-.photo-grid[data-layout="2"] {
-  grid-template-columns: 626fr 300fr;
-  grid-template-rows: repeat(3, minmax(0, 296fr));
-}
-
-.photo-grid[data-layout="2"] #pvs0 {
-  grid-row: 1 / 4;
-}
-
-.photo-grid[data-layout="3"] {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-rows: repeat(2, minmax(0, 449fr));
 }
 
 .ctrl-col.shooting .shoot-btn { display: none; }

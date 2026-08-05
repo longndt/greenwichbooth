@@ -79,6 +79,18 @@ async function main() {
   if (previewLayout !== '2') {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
+  const photoCountLabels = await page.$$eval('.count-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
+  if (photoCountLabels.join('|') !== '3 ảnh|4 ảnh|5 ảnh') {
+    throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
+  }
+  await page.click('.count-chip[data-photo-count="5"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 5);
+  const fivePhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
+  if (fivePhotoSlots !== 5) {
+    throw new Error(`Expected 5 preview slots, found ${fivePhotoSlots}`);
+  }
+  await page.click('.count-chip[data-photo-count="4"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 4);
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
   if (timerLabels.join('|') !== 'Countdown 3s|Countdown 4s|Countdown 5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
@@ -96,10 +108,10 @@ async function main() {
   await page.click('.time-chip[data-interval="5"]');
   await page.waitForFunction(() => window.__t?.S?.interval === 5);
   const activeChipStyles = await page.$$eval(
-    '.theme-chip.is-active, .layout-chip.is-active, .time-chip.is-active',
+    '.theme-chip.is-active, .layout-chip.is-active, .count-chip.is-active, .time-chip.is-active',
     nodes => nodes.map(node => getComputedStyle(node).backgroundImage)
   );
-  if (new Set(activeChipStyles).size !== 3) {
+  if (new Set(activeChipStyles).size !== 4) {
     throw new Error(`Active chip rows should use distinct backgrounds: ${activeChipStyles.join(' | ')}`);
   }
   const layoutRects = await page.evaluate(() => {
@@ -142,8 +154,8 @@ async function main() {
       canvas.height = 900;
       const ctx = canvas.getContext('2d');
       const bg = ctx.createLinearGradient(0, 0, 900, 900);
-      const top = ['#eef0ed', '#e0e8e1', '#e9eee9', '#d6e0db'][index];
-      const bottom = ['#17241d', '#21372b', '#24352b', '#1b2d23'][index];
+      const top = ['#eef0ed', '#e0e8e1', '#e9eee9', '#d6e0db', '#dde8e4'][index];
+      const bottom = ['#17241d', '#21372b', '#24352b', '#1b2d23', '#20362d'][index];
       bg.addColorStop(0, top);
       bg.addColorStop(1, bottom);
       ctx.fillStyle = bg;
@@ -161,7 +173,8 @@ async function main() {
       return canvas.toDataURL('image/jpeg', 0.95);
     };
 
-    window.__t.S.photos = [0, 1, 2, 3].map(makeShot);
+    window.__t.setPhotoCount(5);
+    window.__t.S.photos = [0, 1, 2, 3, 4].map(makeShot);
   });
   await page.evaluate(async () => {
     await window.__t.buildPoster();
