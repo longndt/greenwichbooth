@@ -52,22 +52,22 @@ const POSTER_LAYOUTS = {
   ],
   4: [
     [
-    { x: 64, y: 262, w: 952, h: 596, hero: true },
-    { x: 64, y: 884, w: 300, h: 300 },
-    { x: 390, y: 884, w: 300, h: 300 },
-    { x: 716, y: 884, w: 300, h: 300 },
+      { x: 64, y: 262, w: 952, h: 596, hero: true },
+      { x: 64, y: 884, w: 300, h: 300 },
+      { x: 390, y: 884, w: 300, h: 300 },
+      { x: 716, y: 884, w: 300, h: 300 },
     ],
     [
-    { x: 64, y: 262, w: 626, h: 922, hero: true },
-    { x: 716, y: 262, w: 300, h: 296 },
-    { x: 716, y: 575, w: 300, h: 296 },
-    { x: 716, y: 888, w: 300, h: 296 },
+      { x: 64, y: 262, w: 626, h: 922, hero: true },
+      { x: 716, y: 262, w: 300, h: 296 },
+      { x: 716, y: 575, w: 300, h: 296 },
+      { x: 716, y: 888, w: 300, h: 296 },
     ],
     [
-    { x: 64, y: 262, w: 464, h: 449 },
-    { x: 552, y: 262, w: 464, h: 449 },
-    { x: 64, y: 735, w: 464, h: 449 },
-    { x: 552, y: 735, w: 464, h: 449 },
+      { x: 64, y: 262, w: 464, h: 449 },
+      { x: 552, y: 262, w: 464, h: 449 },
+      { x: 64, y: 735, w: 464, h: 449 },
+      { x: 552, y: 735, w: 464, h: 449 },
     ],
   ],
   5: [
@@ -110,6 +110,19 @@ const loadImage = url => new Promise((resolve, reject) => {
   img.src = url;
 });
 
+function getPreviewSlots() {
+  const layout = getLayout();
+  const previewWidth = 100;
+  const previewHeight = 100;
+  return layout.map(slot => ({
+    x: ((slot.x - 64) / 952) * previewWidth,
+    y: ((slot.y - 262) / 1138) * previewHeight,
+    w: (slot.w / 952) * previewWidth,
+    h: (slot.h / 1138) * previewHeight,
+    hero: !!slot.hero,
+  }));
+}
+
 function syncThemePicker() {
   qa('.theme-chip[data-theme-index]').forEach(btn => {
     const index = Number(btn.dataset.themeIndex || 0);
@@ -126,16 +139,20 @@ function syncThemePicker() {
 function syncLayoutPicker() {
   const layoutId = String(S.layoutIndex + 1);
   const grid = q('#photo-grid');
-  if (grid && S.mode === 'ready') {
-    const layout = getLayout();
+  if (grid) {
     grid.dataset.layout = layoutId;
     grid.dataset.photoCount = String(S.photoCount);
-    grid.style.aspectRatio = '952 / 922';
-    grid.innerHTML = layout.map((slot, i) => `
-      <div class="pv-slot" id="pvs${i}" style="grid-area:${slot.y} / ${slot.x} / ${slot.y + slot.h} / ${slot.x + slot.w}">
-        <img class="pv" id="pv${i}" alt="Ảnh ${i + 1} được chụp"/><span class="pv-badge">${i + 1}</span>
-      </div>
-    `).join('');
+    const slots = getPreviewSlots();
+    const html = Array.from({ length: S.photoCount }, (_, i) => `<div class="pv-slot" id="pvs${i}"><img class="pv" id="pv${i}" alt="Ảnh ${i + 1} được chụp"/><span class="pv-badge">${i + 1}</span></div>`).join('');
+    if (grid.innerHTML !== html) grid.innerHTML = html;
+    slots.forEach((slot, i) => {
+      const el = q(`#pvs${i}`);
+      if (!el) return;
+      el.style.left = `${slot.x}%`;
+      el.style.top = `${slot.y}%`;
+      el.style.width = `${slot.w}%`;
+      el.style.height = `${slot.h}%`;
+    });
   }
   qa('.layout-chip[data-layout-index]').forEach(btn => {
     const index = Number(btn.dataset.layoutIndex || 0);
