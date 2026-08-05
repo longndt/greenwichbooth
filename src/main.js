@@ -17,6 +17,7 @@ const S = loadState({
   photos: [],
   stream: null,
   posterUrl: null,
+  posterObjectUrl: null,
   themeIndex: 0,
   photoCount: 3,
   layoutIndex: 0,
@@ -498,7 +499,7 @@ async function shoot() {
 
   await nextFrame();
   q('#cov').classList.add('is-processing');
-  q('#cnt-n').textContent = 'Đang tạo poster...';
+  q('#cnt-n').textContent = 'Đang tạo poster';
   q('#shoot-btn').disabled = false;
   syncThemePicker();
   syncLayoutPicker();
@@ -521,10 +522,8 @@ async function shoot() {
     syncStudentNameField();
     return;
   }
-  let posterDataUrl;
   let uploadBlob;
   try {
-    posterDataUrl = await exportPosterImage(q('#cvs'));
     uploadBlob = await canvasToBlob(q('#cvs'), 0.94);
   } catch (err) {
     // ponytail: canvas taint (SVG/CORS) → degrade gracefully
@@ -545,7 +544,9 @@ async function shoot() {
   S.mode = 'done';
   syncEventNameField();
   syncStudentNameField();
-  S.posterUrl = posterDataUrl;
+  if (S.posterObjectUrl) URL.revokeObjectURL(S.posterObjectUrl);
+  S.posterObjectUrl = URL.createObjectURL(uploadBlob);
+  S.posterUrl = S.posterObjectUrl;
   try {
     const dlUrl = await uploadPoster(uploadBlob);
     if (!dlUrl) throw new Error('Upload failed');
@@ -571,18 +572,6 @@ function canvasToBlob(canvas, quality) {
   return new Promise((resolve, reject) => {
     canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error('toBlob failed')), 'image/jpeg', quality);
   });
-}
-
-async function exportPosterImage(canvas) {
-  const scale = 1;
-  const out = document.createElement('canvas');
-  out.width = canvas.width * scale;
-  out.height = canvas.height * scale;
-  const ctx = out.getContext('2d');
-  ctx.imageSmoothingEnabled = true;
-  ctx.imageSmoothingQuality = 'high';
-  ctx.drawImage(canvas, 0, 0, out.width, out.height);
-  return out.toDataURL('image/jpeg', 0.97);
 }
 
 function capFrame(cam) {
@@ -636,7 +625,9 @@ async function uploadPoster(blob) {
 }
 
 function retake() {
+  if (S.posterObjectUrl) URL.revokeObjectURL(S.posterObjectUrl);
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
+  S.posterObjectUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
   q('#cov').classList.remove('is-processing');

@@ -205,6 +205,8 @@ export async function buildPoster({
   if (theme.frame.innerW > 0) ctx.strokeRect(32, 32, width - 64, height - 64);
 }
 
+const imageCache = new Map();
+
 function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
   return new Promise((res, rej) => {
     const img = new Image();
@@ -233,10 +235,13 @@ function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
 }
 
 function loadImage(url) {
-  return new Promise((resolve, reject) => {
+  if (imageCache.has(url)) return imageCache.get(url);
+  const promise = new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = url;
   });
+  imageCache.set(url, promise);
+  return promise;
 }
