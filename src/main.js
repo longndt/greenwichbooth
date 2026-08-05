@@ -113,11 +113,20 @@ const loadImage = url => new Promise((resolve, reject) => {
 
 function getPreviewSlots() {
   const layout = getLayout();
+  const viewport = layout.reduce((box, slot) => ({
+    left: Math.min(box.left, slot.x),
+    top: Math.min(box.top, slot.y),
+    right: Math.max(box.right, slot.x + slot.w),
+    bottom: Math.max(box.bottom, slot.y + slot.h),
+  }), { left: Infinity, top: Infinity, right: 0, bottom: 0 });
+  const vw = viewport.right - viewport.left;
+  const vh = viewport.bottom - viewport.top;
+
   return layout.map(slot => ({
-    x: (slot.x / POSTER_WIDTH) * 100,
-    y: (slot.y / POSTER_HEIGHT) * 100,
-    w: (slot.w / POSTER_WIDTH) * 100,
-    h: (slot.h / POSTER_HEIGHT) * 100,
+    x: ((slot.x - viewport.left) / vw) * 100,
+    y: ((slot.y - viewport.top) / vh) * 100,
+    w: (slot.w / vw) * 100,
+    h: (slot.h / vh) * 100,
     hero: !!slot.hero,
   }));
 }
@@ -141,6 +150,12 @@ function syncLayoutPicker() {
   if (grid) {
     grid.dataset.layout = layoutId;
     grid.dataset.photoCount = String(S.photoCount);
+    const layout = getLayout();
+    const left = Math.min(...layout.map(slot => slot.x));
+    const top = Math.min(...layout.map(slot => slot.y));
+    const right = Math.max(...layout.map(slot => slot.x + slot.w));
+    const bottom = Math.max(...layout.map(slot => slot.y + slot.h));
+    grid.style.aspectRatio = `${right - left} / ${bottom - top}`;
     const slots = getPreviewSlots();
     const html = Array.from({ length: S.photoCount }, (_, i) => `<div class="pv-slot" id="pvs${i}"><img class="pv" id="pv${i}" alt="Ảnh ${i + 1} được chụp"/><span class="pv-badge">${i + 1}</span></div>`).join('');
     if (grid.innerHTML !== html) grid.innerHTML = html;
@@ -220,10 +235,10 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
   preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
   preview.style.setProperty('--preview-badge-ink', theme.bg.color);
-  q('#preview-event').textContent = S.eventName;
-  q('#preview-date').textContent = today;
-  q('#preview-place').textContent = S.studentName;
-  q('#preview-hashtag').textContent = theme.footer.hashtag.text;
+  if (q('#preview-event')) q('#preview-event').textContent = S.eventName;
+  if (q('#preview-date')) q('#preview-date').textContent = today;
+  if (q('#preview-place')) q('#preview-place').textContent = S.studentName;
+  if (q('#preview-hashtag')) q('#preview-hashtag').textContent = theme.footer.hashtag.text;
 }
 
 function setThemeIndex(nextIndex) {
@@ -426,20 +441,7 @@ q('#app').innerHTML = `
       </div>
 
       <section class="poster-shell" id="poster-preview" aria-label="Poster preview">
-        <div class="preview-brand">
-          <img class="preview-mascot" src="${mascotUrl}" alt="" aria-hidden="true">
-          <div>
-            <div class="preview-title">GREENWICH VIETNAM</div>
-            <div class="preview-tagline">Change Starts Here</div>
-          </div>
-        </div>
-        <div class="preview-meta">
-          <div id="preview-date"></div>
-          <div id="preview-place"></div>
-        </div>
-        <div class="preview-event" id="preview-event"></div>
         <div class="photo-grid" id="photo-grid" data-layout="${S.layoutIndex + 1}" data-photo-count="${S.photoCount}"></div>
-        <div class="preview-footer" id="preview-hashtag"></div>
       </section>
 
       <button class="shoot-btn" id="shoot-btn" aria-label="Chụp">
