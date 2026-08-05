@@ -592,8 +592,8 @@ html, body {
 /* ── Live poster preview ─────────────────────────────────── */
 .poster-shell {
   position: relative;
-  width: min(100%, calc((100dvh - 286px) * 4 / 5));
-  flex: 1 1 auto;
+  width: min(100%, calc((100dvh - 196px) * 4 / 5));
+  flex: 1.5 1 auto;
   min-height: 0;
   max-height: 100%;
   aspect-ratio: 4 / 5;
@@ -634,16 +634,16 @@ html, body {
 
 .preview-brand {
   position: absolute;
-  left: 4.8%;
-  top: 2.5%;
+  left: 4.4%;
+  top: 2.2%;
   width: 58%;
-  height: 11%;
+  height: 12.5%;
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 8px;
-  border-radius: 10px;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
   background: rgba(255,255,255,0.14);
   border: 1px solid rgba(255,255,255,0.18);
 }
@@ -668,42 +668,42 @@ html, body {
 
 .preview-title {
   color: var(--preview-title, var(--text));
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 900;
 }
 
 .preview-tagline {
   color: var(--preview-date, var(--dim));
-  font-size: 7px;
+  font-size: 9px;
   font-weight: 700;
   margin-top: 4px;
 }
 
 .preview-meta {
   position: absolute;
-  right: 5.9%;
-  top: 5.5%;
+  right: 5.2%;
+  top: 4.8%;
   z-index: 2;
   color: var(--preview-date, var(--dim));
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
   text-align: right;
 }
 
 .preview-meta div:last-child {
   color: var(--preview-title, var(--text));
-  font-size: 7px;
+  font-size: 9px;
   margin-top: 6px;
 }
 
 .preview-event {
   position: absolute;
-  left: 5.9%;
-  top: 11.8%;
+  left: 5.2%;
+  top: 12.9%;
   z-index: 2;
   max-width: 60%;
   color: var(--preview-subtitle, var(--gold));
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 900;
   white-space: nowrap;
   overflow: hidden;
@@ -722,18 +722,18 @@ html, body {
 
 .preview-footer {
   position: absolute;
-  left: 18.15%;
-  bottom: 2.7%;
+  left: 15.5%;
+  bottom: 2.5%;
   z-index: 2;
-  width: 63.7%;
-  height: 6.1%;
+  width: 69%;
+  height: 7.4%;
   display: grid;
   place-items: center;
-  border-radius: 8px;
+  border-radius: 10px;
   border: 1px solid var(--preview-footer-border, var(--preview-shell-accent));
   background: var(--preview-footer-bg, rgba(4,18,26,0.9));
   color: var(--preview-footer-text, var(--gold));
-  font: 900 13px / 1 'Space Grotesk', 'Be Vietnam Pro', sans-serif;
+  font: 900 16px / 1 'Space Grotesk', 'Be Vietnam Pro', sans-serif;
   white-space: nowrap;
 }
 
@@ -765,9 +765,9 @@ input[type="range"] {
 
 /* ── Shoot button ────────────────────────────────────────── */
 .shoot-btn {
-  width: clamp(112px, 12vw, 160px);
+  width: clamp(126px, 13.5vw, 180px);
   aspect-ratio: 1;
-  padding: 18px;
+  padding: 20px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.16);
   background:
@@ -835,7 +835,7 @@ input[type="range"] {
 .s-text {
   position: relative;
   z-index: 1;
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
   line-height: 1.05;
   text-align: center;
@@ -1664,19 +1664,19 @@ input[type="range"] {
 
 .poster-shell {
   flex: 0 0 auto;
-  height: min(42dvh, calc(100dvh - 350px));
-  width: min(100%, calc(min(42dvh, calc(100dvh - 350px)) * 4 / 5));
+  height: min(48dvh, calc(100dvh - 286px));
+  width: min(100%, calc(min(48dvh, calc(100dvh - 286px)) * 4 / 5));
   padding: 8px;
   border-radius: 14px;
 }
 
 .shoot-btn {
-  width: clamp(76px, 6.5vw, 96px);
-  padding: 12px;
+  width: clamp(102px, 10vw, 126px);
+  padding: 14px;
   margin: 6px auto 0;
 }
 
-.s-text { font-size: 12px; }
+.s-text { font-size: 14px; }
 
 .shoot-btn::before { inset: 8px; }
 .shoot-btn::after { inset: 17px; }
@@ -1727,14 +1727,14 @@ input[type="range"] {
   }
 
   .poster-shell {
-    height: clamp(150px, 26dvh, 230px);
-    width: min(100%, calc(clamp(150px, 26dvh, 230px) * 4 / 5));
+    height: clamp(200px, 34dvh, 360px);
+    width: min(100%, calc(clamp(200px, 34dvh, 360px) * 4 / 5));
     min-height: 150px;
-    max-height: 30dvh;
+    max-height: 34dvh;
   }
 
   .shoot-btn {
-    width: clamp(74px, 18vw, 88px);
+    width: clamp(88px, 20vw, 104px);
     margin-top: 2px;
   }
 }
