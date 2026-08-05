@@ -17,7 +17,7 @@ const S = {
   stream: null,
   posterUrl: null,
   themeIndex: Number(localStorage.getItem('greenwichbooth.themeIndex') || 0) || 0,
-  photoCount: Number(localStorage.getItem('greenwichbooth.photoCount') || 4) || 4,
+  photoCount: Number(localStorage.getItem('greenwichbooth.photoCount') || 3) || 3,
   layoutIndex: Number(localStorage.getItem('greenwichbooth.layoutIndex') || 0) || 0,
   lockedThemeIndex: null,
   lockedLayoutIndex: null,
@@ -26,7 +26,7 @@ const S = {
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 4, 5];
-const PHOTO_COUNT_OPTIONS = [3, 4, 5];
+const PHOTO_COUNT_OPTIONS = [2, 3, 4];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },
   { label: 'Bố cục 2' },
@@ -99,9 +99,9 @@ const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nextFrame = () => new Promise(r => requestAnimationFrame(r));
-const getLayouts = () => POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[4];
+const getLayouts = () => POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[3];
 const getLayout = () => getLayouts()[S.layoutIndex] || getLayouts()[0];
-if (!PHOTO_COUNT_OPTIONS.includes(S.photoCount)) S.photoCount = 4;
+if (!PHOTO_COUNT_OPTIONS.includes(S.photoCount)) S.photoCount = 3;
 S.layoutIndex = Math.max(0, Math.min(getLayouts().length - 1, S.layoutIndex));
 const loadImage = url => new Promise((resolve, reject) => {
   const img = new Image();
@@ -233,7 +233,7 @@ function setLayoutIndex(nextIndex) {
 function setPhotoCount(nextCount) {
   if (S.mode !== 'ready') return;
   const count = Number(nextCount) || 4;
-  S.photoCount = PHOTO_COUNT_OPTIONS.includes(count) ? count : 4;
+  S.photoCount = PHOTO_COUNT_OPTIONS.includes(count) ? count : 3;
   S.layoutIndex = Math.min(S.layoutIndex, getLayouts().length - 1);
   localStorage.setItem('greenwichbooth.photoCount', String(S.photoCount));
   localStorage.setItem('greenwichbooth.layoutIndex', String(S.layoutIndex));

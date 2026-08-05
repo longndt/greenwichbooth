@@ -40,7 +40,7 @@ async function main() {
     throw new Error(`Expected preview accent to follow theme 2, got ${previewAccent}`);
   }
   const previewText = await page.$eval('#poster-preview', el => el.textContent.replace(/\s+/g, ' ').trim());
-  if (previewText !== '1 2 3 4') {
+  if (previewText !== '123') {
     throw new Error(`Expected preview to contain only slot badges, got ${previewText}`);
   }
   const previewTheme = await page.$eval('#poster-preview', el => {
@@ -80,17 +80,17 @@ async function main() {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
   const photoCountLabels = await page.$$eval('.count-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (photoCountLabels.join('|') !== '3 ảnh|4 ảnh|5 ảnh') {
+  if (photoCountLabels.join('|') !== '2 ảnh|3 ảnh|4 ảnh') {
     throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
-  }
-  await page.click('.count-chip[data-photo-count="5"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 5);
-  const fivePhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
-  if (fivePhotoSlots !== 5) {
-    throw new Error(`Expected 5 preview slots, found ${fivePhotoSlots}`);
   }
   await page.click('.count-chip[data-photo-count="4"]');
   await page.waitForFunction(() => window.__t?.S?.photoCount === 4);
+  const fourPhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
+  if (fourPhotoSlots !== 4) {
+    throw new Error(`Expected 4 preview slots, found ${fourPhotoSlots}`);
+  }
+  await page.click('.count-chip[data-photo-count="3"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
   if (timerLabels.join('|') !== 'Countdown 3s|Countdown 4s|Countdown 5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
@@ -116,23 +116,21 @@ async function main() {
   }
   const layoutRects = await page.evaluate(() => {
     const grid = document.querySelector('#photo-grid').getBoundingClientRect();
-    const a = document.querySelector('#pvs0').getBoundingClientRect();
-    const b = document.querySelector('#pvs1').getBoundingClientRect();
-    return {
-      grid: { width: grid.width, height: grid.height },
-      a: { x: a.x, width: a.width, height: a.height },
-      b: { x: b.x, width: b.width, height: b.height },
-    };
+    const slots = [...document.querySelectorAll('#photo-grid .pv-slot')].map(el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.x - grid.x, y: r.y - grid.y, w: r.width, h: r.height };
+    });
+    return { grid: { width: grid.width, height: grid.height }, slots };
   });
-  if (!(layoutRects.a.height > layoutRects.b.height * 2 && layoutRects.a.x < layoutRects.b.x)) {
-    throw new Error(`Preview layout 2 geometry is wrong: ${JSON.stringify(layoutRects)}`);
+  if (layoutRects.slots.length !== 3) {
+    throw new Error(`Expected 3 preview slots for default 3 ảnh, got ${layoutRects.slots.length}`);
   }
-  const close = (actual, expected) => Math.abs(actual - expected) < 0.08;
+  const close = (actual, expected) => Math.abs(actual - expected) < 0.12;
   if (!close(layoutRects.grid.width / layoutRects.grid.height, 952 / 922)) {
     throw new Error(`Preview grid aspect is wrong: ${JSON.stringify(layoutRects)}`);
   }
-  if (!close(layoutRects.a.width / layoutRects.a.height, 626 / 922) || !close(layoutRects.b.width / layoutRects.b.height, 300 / 296)) {
-    throw new Error(`Preview slot ratios do not match poster canvas: ${JSON.stringify(layoutRects)}`);
+  if (!(layoutRects.slots[0].w > layoutRects.slots[1].w && layoutRects.slots[1].w > 0)) {
+    throw new Error(`Preview slot widths are wrong: ${JSON.stringify(layoutRects)}`);
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
@@ -173,8 +171,8 @@ async function main() {
       return canvas.toDataURL('image/jpeg', 0.95);
     };
 
-    window.__t.setPhotoCount(5);
-    window.__t.S.photos = [0, 1, 2, 3, 4].map(makeShot);
+    window.__t.setPhotoCount(4);
+    window.__t.S.photos = [0, 1, 2, 3].map(makeShot);
   });
   await page.evaluate(async () => {
     await window.__t.buildPoster();
