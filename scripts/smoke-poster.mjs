@@ -154,6 +154,10 @@ async function main() {
   if (!(layoutRects.slots[0].w > layoutRects.slots[1].w && layoutRects.slots[1].w > 0)) {
     throw new Error(`Preview slot widths are wrong: ${JSON.stringify(layoutRects)}`);
   }
+  const heroAspect = layoutRects.slots[0].w / layoutRects.slots[0].h;
+  if (Math.abs(heroAspect - (626 / 922)) > 0.02) {
+    throw new Error(`Preview slot aspect ratio does not match poster layout: ${heroAspect.toFixed(3)}`);
+  }
   const shootVisible = await page.$eval('#shoot-btn', btn => {
     const r = btn.getBoundingClientRect();
     return r.top >= 0 && r.bottom <= window.innerHeight;
