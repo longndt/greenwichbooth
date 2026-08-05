@@ -26,7 +26,7 @@ const S = {
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 4, 5];
-const PHOTO_COUNT_OPTIONS = [3, 4, 6];
+const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },
   { label: 'Bố cục 2' },
@@ -342,9 +342,7 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
-      <div class="ctrl-group">
-        <div class="ctrl-group-title">Phong cách</div>
-        <div class="theme-picker" aria-label="Chọn phong cách poster">
+      <div class="theme-picker" aria-label="Chọn phong cách poster">
           ${THEME_OPTIONS.map((theme, index) => `
             <button
               class="theme-chip"
@@ -360,24 +358,6 @@ q('#app').innerHTML = `
             </button>
           `).join('')}
         </div>
-      </div>
-
-      <div class="ctrl-group">
-        <div class="ctrl-group-title">Bố cục</div>
-        <div class="layout-picker" aria-label="Chọn bố cục poster">
-          ${LAYOUT_OPTIONS.map((layout, index) => `
-            <button
-              class="layout-chip"
-              type="button"
-              data-layout-index="${index}"
-              aria-pressed="${index === S.layoutIndex}"
-              aria-label="Chọn ${layout.label}"
-            >
-              <span class="theme-chip-label">Layout ${index + 1}</span>
-            </button>
-          `).join('')}
-        </div>
-      </div>
 
       <div class="ctrl-group">
         <div class="ctrl-group-title">Số ảnh</div>
@@ -395,6 +375,20 @@ q('#app').innerHTML = `
           `).join('')}
         </div>
       </div>
+
+      <div class="layout-picker" aria-label="Chọn bố cục poster">
+          ${LAYOUT_OPTIONS.map((layout, index) => `
+            <button
+              class="layout-chip"
+              type="button"
+              data-layout-index="${index}"
+              aria-pressed="${index === S.layoutIndex}"
+              aria-label="Chọn ${layout.label}"
+            >
+              <span class="theme-chip-label">Layout ${index + 1}</span>
+            </button>
+          `).join('')}
+        </div>
 
       <div class="ctrl-group">
         <div class="ctrl-group-title">Đếm ngược</div>
