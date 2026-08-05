@@ -219,9 +219,9 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
   preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
   preview.style.setProperty('--preview-badge-ink', theme.bg.color);
-  q('#preview-event').textContent = S.eventName || 'Greenwich Open Day';
+  q('#preview-event').textContent = S.eventName;
   q('#preview-date').textContent = today;
-  q('#preview-place').textContent = S.studentName || 'FPT Tower';
+  q('#preview-place').textContent = S.studentName;
   q('#preview-hashtag').textContent = theme.footer.hashtag.text;
 }
 
@@ -283,6 +283,7 @@ function setStudentName(nextName) {
   S.studentName = name;
   localStorage.setItem('greenwichbooth.studentName', name);
   syncStudentNameField();
+  syncPosterPreview();
 }
 
 function setEventName(nextName) {
@@ -291,6 +292,7 @@ function setEventName(nextName) {
   S.eventName = name;
   localStorage.setItem('greenwichbooth.eventName', name);
   syncEventNameField();
+  syncPosterPreview();
 }
 
 // ── Mount HTML ────────────────────────────────────────────────────────────────
@@ -330,24 +332,25 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
-      <div class="theme-picker" aria-label="Chọn phong cách poster">
-          ${THEME_OPTIONS.map((theme, index) => `
-            <button
-              class="theme-chip"
-              type="button"
-              data-theme-index="${index}"
-              aria-pressed="${index === S.themeIndex}"
-              aria-label="Chọn phong cách ${theme.label}"
-            >
-              <span class="theme-chip-dot" aria-hidden="true"></span>
-              <span class="theme-chip-text">
-                <span class="theme-chip-label">${theme.label}</span>
-              </span>
-            </button>
-          `).join('')}
-        </div>
       <div class="ctrl-grid" aria-label="Tùy chọn chụp">
-        <div class="ctrl-group">
+        <div class="ctrl-col-group">
+          <div class="theme-picker" aria-label="Chọn phong cách poster">
+            ${THEME_OPTIONS.map((theme, index) => `
+              <button
+                class="theme-chip"
+                type="button"
+                data-theme-index="${index}"
+                aria-pressed="${index === S.themeIndex}"
+                aria-label="Chọn phong cách ${theme.label}"
+              >
+                <span class="theme-chip-dot" aria-hidden="true"></span>
+                <span class="theme-chip-text">
+                  <span class="theme-chip-label">${theme.label}</span>
+                </span>
+              </button>
+            `).join('')}
+          </div>
+
           <div class="count-picker" aria-label="Chọn số lượng ảnh">
             ${PHOTO_COUNT_OPTIONS.map(count => `
               <button
@@ -363,7 +366,7 @@ q('#app').innerHTML = `
           </div>
         </div>
 
-        <div class="ctrl-group">
+        <div class="ctrl-col-group">
           <div class="layout-picker" aria-label="Chọn bố cục poster">
             ${LAYOUT_OPTIONS.map((layout, index) => `
               <button
@@ -377,9 +380,7 @@ q('#app').innerHTML = `
               </button>
             `).join('')}
           </div>
-        </div>
 
-        <div class="ctrl-group">
           <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
             ${INTERVAL_OPTIONS.map(seconds => `
               <button
