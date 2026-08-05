@@ -27,6 +27,7 @@ export const POSTER_THEMES = [
     footer: {
       bg: '#082733',
       borderColor: '#86C8B7',
+      glow: 'rgba(10,147,150,0.22)',
       url: { text: 'greenwich.edu.vn', color: '#94D2BD' },
       hashtag: { text: 'My Greenwich Moment', color: '#FFCB2F' },
     },
@@ -58,6 +59,7 @@ export const POSTER_THEMES = [
     footer: {
       bg: '#2B1B12',
       borderColor: '#FFB703',
+      glow: 'rgba(255,183,3,0.18)',
       url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
       hashtag: { text: 'My Greenwich Moment', color: '#FFD166' },
     },
@@ -89,6 +91,7 @@ export const POSTER_THEMES = [
     footer: {
       bg: '#050505',
       borderColor: '#F5C542',
+      glow: 'rgba(124,203,185,0.18)',
       url: { text: 'greenwich.edu.vn', color: '#EAF7FF' },
       hashtag: { text: 'My Greenwich Moment', color: '#F5C542' },
     },

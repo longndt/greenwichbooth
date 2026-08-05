@@ -545,6 +545,56 @@ function drawSpark(ctx, x, y, size, color) {
   ctx.restore();
 }
 
+function drawGlowOrb(ctx, x, y, radius, color, alpha = 1) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+  grad.addColorStop(0, color);
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawStar(ctx, x, y, size, color, alpha = 1) {
+  ctx.save();
+  ctx.globalAlpha = alpha;
+  ctx.translate(x, y);
+  ctx.fillStyle = color;
+  ctx.shadowColor = 'rgba(0,0,0,0.2)';
+  ctx.shadowBlur = 6;
+  ctx.beginPath();
+  ctx.moveTo(0, -size);
+  ctx.lineTo(size * 0.35, -size * 0.2);
+  ctx.lineTo(size, 0);
+  ctx.lineTo(size * 0.35, size * 0.2);
+  ctx.lineTo(0, size);
+  ctx.lineTo(-size * 0.35, size * 0.2);
+  ctx.lineTo(-size, 0);
+  ctx.lineTo(-size * 0.35, -size * 0.2);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawRibbon(ctx, x, y, w, h, color, text) {
+  ctx.save();
+  ctx.fillStyle = color;
+  roundRect(ctx, x, y, w, h, h / 2);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.font = '800 16px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillStyle = '#fffef7';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, x + w / 2, y + h / 2 + 0.5);
+  ctx.restore();
+}
+
 function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, family, color, align = 'left') {
   const display = String(text || '').trim();
   if (!display) return;
@@ -583,6 +633,11 @@ async function buildPoster() {
   ctx.fillStyle = theme.bg.color;
   ctx.fillRect(0, 0, W, H);
 
+  drawGlowOrb(ctx, 160, 140, 260, theme.frame.outer, 0.18);
+  drawGlowOrb(ctx, 920, 220, 280, theme.photos.cornerAccent.color, 0.12);
+  drawGlowOrb(ctx, 760, 1180, 320, theme.footer.glow || theme.footer.borderColor, 0.18);
+  drawGlowOrb(ctx, 540, 760, 420, 'rgba(255,255,255,0.18)', 0.08);
+
   if (theme.bg.texture.type === 'grid') {
     ctx.fillStyle = theme.bg.texture.color;
     for (let x = 0; x < W; x += theme.bg.texture.step) ctx.fillRect(x, 0, 1, H);
@@ -612,6 +667,15 @@ async function buildPoster() {
   drawHeaderText(ctx, 'GREENWICH VIETNAM', brandX, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
   drawHeaderText(ctx, 'Change Starts Here', brandX, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.date.color);
   drawHeaderText(ctx, S.eventName || 'Greenwich Open Day', 64, 166, 650, 900, 54, 34, 'Be Vietnam Pro', theme.subtitle.color);
+
+  ctx.save();
+  ctx.fillStyle = 'rgba(255,255,255,0.14)';
+  roundRect(ctx, 52, 34, 628, 148, 30);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+  ctx.restore();
 
   ctx.save();
   ctx.beginPath();
@@ -658,6 +722,15 @@ async function buildPoster() {
     return drawPhoto(ctx, p, slot.x + 8, slot.y + 8, slot.w - 16, slot.h - 16, theme.photos.radius - 4);
   }));
 
+  pos.forEach(({ x, y, w, h, hero }, i) => {
+    ctx.save();
+    ctx.clip();
+    const accent = i === 0 ? theme.frame.outer : theme.photos.cornerAccent.color;
+    drawGlowOrb(ctx, x + w * 0.18, y + h * 0.18, hero ? 160 : 120, accent, 0.08);
+    drawGlowOrb(ctx, x + w * 0.86, y + h * 0.82, hero ? 130 : 90, theme.footer.borderColor, 0.06);
+    ctx.restore();
+  });
+
   pos.forEach(({ x, y, w, h }) => {
     ctx.save();
     roundRect(ctx, x + 8, y + 8, w - 16, h - 16, theme.photos.radius - 4);
@@ -670,25 +743,39 @@ async function buildPoster() {
   // ── Photo borders + corner accents ──
   pos.forEach(({ x, y, w, h, hero }) => {
     ctx.strokeStyle = theme.photos.borderColor;
-    ctx.lineWidth = hero ? theme.photos.borderWidth + 1 : theme.photos.borderWidth;
+    ctx.lineWidth = hero ? theme.photos.borderWidth + 2 : theme.photos.borderWidth;
     roundRect(ctx, x, y, w, h, theme.photos.radius);
     ctx.stroke();
     drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
   });
+
+  // ── Accent labels ──
+  drawRibbon(ctx, 86, 372, 104, 28, theme.frame.outer, 'SHOT 01');
+  drawRibbon(ctx, 86, 694, 104, 28, theme.photos.cornerAccent.color, 'SHOT 02');
+  drawRibbon(ctx, 86, 1016, 104, 28, theme.frame.outer, 'SHOT 03');
+  drawRibbon(ctx, 86, 1338, 104, 28, theme.photos.cornerAccent.color, 'SHOT 04');
 
   // ── Footer statement ──
   const footerTextColor = theme.footer.hashtag.color;
   const footerUrlColor = theme.footer.url.color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
+  ctx.save();
+  ctx.shadowColor = theme.footer.glow || 'rgba(0,0,0,0.18)';
+  ctx.shadowBlur = 30;
   ctx.fillStyle = theme.footer.bg;
   roundRect(ctx, 176, 1228, 728, 92, 24);
   ctx.fill();
+  ctx.restore();
   ctx.strokeStyle = theme.footer.borderColor;
-  ctx.lineWidth = 3;
+  ctx.lineWidth = 4;
   ctx.stroke();
 
   drawSpark(ctx, 236, 1274, 14, theme.footer.borderColor);
+  drawSpark(ctx, 844, 1274, 14, theme.footer.borderColor);
+
+  drawStar(ctx, 146, 170, 11, theme.footer.borderColor, 0.85);
+  drawStar(ctx, 934, 170, 11, theme.photos.cornerAccent.color, 0.85);
 
   ctx.shadowColor = 'rgba(0,0,0,0.42)';
   ctx.shadowBlur = 14;
@@ -698,6 +785,12 @@ async function buildPoster() {
   ctx.strokeText(theme.footer.hashtag.text, 540, 1266);
   ctx.fillStyle = footerTextColor;
   ctx.fillText(theme.footer.hashtag.text, 540, 1266);
+
+  ctx.save();
+  ctx.fillStyle = 'rgba(255,255,255,0.08)';
+  roundRect(ctx, 302, 1210, 476, 30, 15);
+  ctx.fill();
+  ctx.restore();
 
   ctx.shadowColor = 'transparent';
   ctx.shadowBlur = 0;
@@ -713,6 +806,14 @@ async function buildPoster() {
   ctx.strokeText(theme.footer.url.text, 540, 1306);
   ctx.fillStyle = footerUrlColor;
   ctx.fillText(theme.footer.url.text, 540, 1306);
+
+  ctx.save();
+  ctx.font = '700 16px "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillStyle = theme.date.color;
+  ctx.fillText('Captured by Greenwich Booth', 540, 1232);
+  ctx.restore();
+
+  drawRibbon(ctx, 756, 76, 210, 34, theme.footer.borderColor, 'OPEN DAY EDITION');
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -755,10 +856,12 @@ function showResult(uploadP) {
   q('#qr-img').src     = '';
   q('.qr-wrap').classList.add('qr-loading');
   q('#rov').classList.remove('hidden');
+  q('#rov').classList.remove('is-ready');
 
   uploadP.then(dlUrl => {
     q('.qr-wrap').classList.remove('qr-loading');
     if (!dlUrl) {
+      q('#rov').classList.add('is-ready');
       return;
     }
     // Wrap image URL in display page with download button
@@ -766,6 +869,7 @@ function showResult(uploadP) {
     QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } })
       .then(qr => {
         q('#qr-img').src = qr;
+        q('#rov').classList.add('is-ready');
       });
   });
 }
@@ -801,6 +905,7 @@ function retake() {
   qa('.pv').forEach(p => { p.src = ''; });
   q('#cov').classList.remove('hidden');
   q('.ctrl-col').classList.remove('shooting');
+  q('#rov').classList.remove('is-ready');
   S.showPosterPreview = !isMobile();
   if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
   syncThemePicker();

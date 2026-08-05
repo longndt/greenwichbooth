@@ -625,9 +625,20 @@ input[type="range"] {
   justify-content: center;
   z-index: 100;
   padding: 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
 }
 
 .result-ov.hidden { display: none; }
+
+.result-ov:not(.hidden) {
+  pointer-events: auto;
+}
+
+.result-ov.is-ready {
+  opacity: 1;
+}
 
 .result-card {
   background: rgba(7, 31, 42, 0.92);
@@ -642,9 +653,17 @@ input[type="range"] {
   overflow-y: auto;
   scrollbar-width: none;
   box-shadow: 0 0 32px rgba(10, 147, 150, 0.24);
+  transform: translateY(10px) scale(0.98);
+  opacity: 0.9;
+  transition: transform 0.22s ease, opacity 0.22s ease;
 }
 
 .result-card::-webkit-scrollbar { display: none; }
+
+.result-ov.is-ready .result-card {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
 
 .poster-img {
   width: 100%;
@@ -654,6 +673,7 @@ input[type="range"] {
   object-fit: contain;
   background: #000;
   border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 12px 36px rgba(0,0,0,0.3);
 }
 
 .dl-row {
@@ -670,6 +690,8 @@ input[type="range"] {
   border-radius: 12px;
   padding: 8px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  position: relative;
+  overflow: hidden;
 }
 
 .qr-wrap.qr-loading {
@@ -687,6 +709,17 @@ input[type="range"] {
   border-top-color: var(--gold);
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
+}
+
+.qr-wrap::after {
+  content: 'QR';
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0;
+  color: rgba(0,95,115,0.7);
 }
 
 .qr-wrap.qr-loading #qr-img {
@@ -758,6 +791,11 @@ input[type="range"] {
   box-shadow: 0 7px 24px rgba(0,95,115,0.58);
 }
 
+.result-ov.is-ready .btn-primary,
+.result-ov.is-ready .btn-sec {
+  animation: pop-in 0.26s ease both;
+}
+
 .btn-sec {
   background: transparent;
   color: rgba(255,255,255,0.7);
@@ -770,6 +808,31 @@ input[type="range"] {
   background: transparent;
   color: var(--dim);
   border-color: var(--border);
+}
+
+@keyframes pop-in {
+  from { transform: translateY(4px) scale(0.98); opacity: 0.4; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result-ov,
+  .result-card,
+  .btn-primary,
+  .btn-sec,
+  .btn-outline,
+  .shoot-btn,
+  .theme-chip,
+  .layout-chip,
+  .time-chip {
+    transition: none;
+  }
+
+  .result-ov.is-ready .btn-primary,
+  .result-ov.is-ready .btn-sec,
+  .qr-wrap.qr-loading::before {
+    animation: none;
+  }
 }
 
 @media (min-width: 941px) {
