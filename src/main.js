@@ -113,6 +113,13 @@ const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nextFrame = () => new Promise(r => requestAnimationFrame(r));
+const fadeOutProcessing = async () => {
+  const cov = q('#cov');
+  cov.classList.add('is-hiding');
+  await sleep(260);
+  cov.classList.remove('is-processing', 'is-hiding');
+  cov.classList.add('hidden');
+};
 const getLayouts = () => POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[3];
 const getLayout = () => getLayouts()[S.layoutIndex] || getLayouts()[0];
 if (!PHOTO_COUNT_OPTIONS.includes(S.photoCount)) S.photoCount = 3;
@@ -577,22 +584,17 @@ async function shoot() {
   syncEventNameField();
   syncStudentNameField();
   S.posterUrl = posterDataUrl;
-  const uploadP = uploadPoster(uploadBlob);
-  showResult(uploadP);
-  await nextFrame();
-  q('#cov').classList.remove('is-processing');
-  q('#cov').classList.add('hidden');
-  uploadP.then(dlUrl => {
-    if (!dlUrl) return;
+  const dlUrl = await uploadPoster(uploadBlob);
+  if (dlUrl) {
     const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
-    QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } })
-      .then(qr => {
-        q('#qr-img').src = qr;
-        q('.qr-wrap').classList.remove('qr-loading');
-        q('#rov').classList.add('is-ready');
-      })
-      .catch(err => console.error('QR generation failed:', err));
-  });
+    try {
+      q('#qr-img').src = await QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } });
+    } catch (err) {
+      console.error('QR generation failed:', err);
+    }
+  }
+  await fadeOutProcessing();
+  showResult();
   S.lockedThemeIndex = null;
   S.lockedLayoutIndex = null;
   syncThemePicker();
@@ -875,17 +877,13 @@ function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
 }
 
 // ── Result screen ─────────────────────────────────────────────────────────────
-function showResult(uploadP) {
+function showResult() {
   q('#poster-img').src = S.posterUrl;
   q('#dl-link').href   = S.posterUrl;
-  q('#qr-img').src     = '';
-  q('.qr-wrap').classList.add('qr-loading');
+  q('.qr-wrap').classList.toggle('qr-loading', !q('#qr-img').src);
   q('#rov').classList.remove('hidden');
   q('#rov').classList.remove('is-ready');
-  uploadP.then(dlUrl => {
-    q('.qr-wrap').classList.remove('qr-loading');
-    if (!dlUrl) q('#rov').classList.add('is-ready');
-  });
+  requestAnimationFrame(() => q('#rov').classList.add('is-ready'));
 }
 
 async function uploadPoster(blob) {

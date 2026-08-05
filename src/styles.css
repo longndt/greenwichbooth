@@ -183,7 +183,10 @@ html, body {
   box-shadow: none;
 }
 
-.cnt-ov.hidden { display: none; }
+.cnt-ov.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 
 .cnt-num-wrap {
   position: relative;
@@ -232,8 +235,14 @@ html, body {
   right: 0;
   bottom: 0;
   left: 0;
+  opacity: 1;
   background: rgba(4,18,26,0.68);
   border-radius: 0;
+  transition: opacity 0.24s ease;
+}
+
+.cnt-ov.is-processing.is-hiding {
+  opacity: 0;
 }
 
 .cnt-ov.is-processing .cnt-num-wrap {

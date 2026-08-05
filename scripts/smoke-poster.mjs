@@ -274,7 +274,8 @@ async function main() {
   });
   const resultState = await page.evaluate(() => {
     window.__t.S.posterUrl = document.querySelector('#cvs').toDataURL('image/jpeg', 0.88);
-    window.__t.showResult(Promise.resolve('https://example.com/poster.jpg'));
+    document.querySelector('#qr-img').src = window.__t.S.posterUrl;
+    window.__t.showResult();
     return {
       hidden: document.querySelector('#rov').classList.contains('hidden'),
       loading: document.querySelector('.qr-wrap').classList.contains('qr-loading'),
@@ -284,8 +285,8 @@ async function main() {
   if (resultState.hidden) {
     throw new Error('Result screen did not open');
   }
-  if (!resultState.loading) {
-    throw new Error('QR loading state did not start');
+  if (resultState.loading || !resultState.qrSrc) {
+    throw new Error(`Result should wait for QR before opening: ${JSON.stringify(resultState)}`);
   }
 
   if (consoleErrors.length || pageErrors.length) {
