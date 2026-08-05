@@ -227,6 +227,40 @@ html, body {
 
 .cnt-n[data-tick] { transform: scale(1.25); }
 
+.cnt-ov.is-processing {
+  inset: 0;
+  background: rgba(4,18,26,0.68);
+  border-radius: 0;
+}
+
+.cnt-ov.is-processing .cnt-num-wrap {
+  width: auto;
+  height: auto;
+  min-width: 188px;
+  padding: 16px 20px;
+  gap: 12px;
+  border-radius: 8px;
+  background: rgba(4,18,26,0.82);
+}
+
+.cnt-ov.is-processing .cnt-num-wrap::before {
+  content: '';
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255,203,47,0.22);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.85s linear infinite;
+}
+
+.cnt-ov.is-processing .cnt-mascot { display: none; }
+
+.cnt-ov.is-processing .cnt-n {
+  font-size: 15px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
 /* ── Camera error ────────────────────────────────────────── */
 .cam-err {
   position: absolute;

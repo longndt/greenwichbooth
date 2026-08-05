@@ -403,6 +403,8 @@ async function shoot() {
     if (i < 3) await sleep(220);
   }
 
+  q('#cov').classList.add('is-processing');
+  q('#cnt-n').textContent = 'Đang tạo poster...';
   q('#shoot-btn').disabled = false;
   S.lockedThemeIndex = S.themeIndex;
   S.lockedLayoutIndex = S.layoutIndex;
@@ -413,6 +415,7 @@ async function shoot() {
     await buildPoster();
   } catch (err) {
     console.error('buildPoster failed:', err);
+    q('#cov').classList.remove('is-processing');
     q('#cov').classList.add('hidden');
     alert('Không thể tạo poster, hãy chụp lại.');
     S.mode = 'ready';
@@ -434,6 +437,7 @@ async function shoot() {
   } catch (err) {
     // ponytail: canvas taint (SVG/CORS) → degrade gracefully
     console.error('toDataURL failed:', err);
+    q('#cov').classList.remove('is-processing');
     q('#cov').classList.add('hidden');
     alert('Không thể xuất ảnh, hãy chụp lại.');
     S.mode = 'ready';
@@ -454,6 +458,7 @@ async function shoot() {
   const uploadP = uploadPoster(uploadBlob);
   showResult(uploadP);
   await nextFrame();
+  q('#cov').classList.remove('is-processing');
   q('#cov').classList.add('hidden');
   uploadP.then(dlUrl => {
     if (!dlUrl) return;
@@ -710,9 +715,6 @@ async function buildPoster() {
   ctx.font = '900 48px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
   ctx.fillStyle = footerTextColor;
   ctx.fillText(theme.footer.hashtag.text, 540, 1268);
-  ctx.font = '700 16px "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillStyle = theme.date.color;
-  ctx.fillText('greenwich.edu.vn', 540, 1294);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
@@ -788,6 +790,7 @@ function retake() {
   S.mode = 'ready'; S.photos = []; S.posterUrl = null; S.lockedThemeIndex = null; S.lockedLayoutIndex = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
+  q('#cov').classList.remove('is-processing');
   q('#shoot-btn').disabled = false;
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
