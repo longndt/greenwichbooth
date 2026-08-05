@@ -2,27 +2,26 @@ import QRCode from 'qrcode';
 import mascotUrl from './assets/mascot.png';
 import './styles.css';
 import { POSTER_THEMES } from './concepts.js';
+import { POSTER_HEIGHT, POSTER_LAYOUTS, POSTER_WIDTH } from './poster/config.js';
+import { buildPoster } from './poster/render.js';
+import { loadState, saveState } from './state.js';
 
 // Face detection removed — simplified accessory positioning (fixed positioning)
 
 // ── State ─────────────────────────────────────────────────────────────────────
 const isMobile = () => window.innerWidth <= 768;
 
-const S = {
+const S = loadState({
   mode: 'ready',
   interval: 3,
-  eventName: localStorage.getItem('greenwichbooth.eventName') || '',
-  studentName: localStorage.getItem('greenwichbooth.studentName') || '',
   photos: [],
   stream: null,
   posterUrl: null,
-  themeIndex: Number(localStorage.getItem('greenwichbooth.themeIndex') || 0) || 0,
-  photoCount: Number(localStorage.getItem('greenwichbooth.photoCount') || 3) || 3,
-  layoutIndex: Number(localStorage.getItem('greenwichbooth.layoutIndex') || 0) || 0,
-  lockedThemeIndex: null,
-  lockedLayoutIndex: null,
+  themeIndex: 0,
+  photoCount: 3,
+  layoutIndex: 0,
   showPosterPreview: !isMobile(),
-};
+});
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 5];
@@ -31,63 +30,6 @@ const LAYOUT_OPTIONS = [
   { label: 'Layout 1' },
   { label: 'Layout 2' },
 ];
-const POSTER_WIDTH = 1080;
-const POSTER_HEIGHT = 1350;
-const POSTER_LAYOUTS = {
-  2: [
-    [
-      { x: 64, y: 262, w: 464, h: 922, hero: true },
-      { x: 552, y: 262, w: 464, h: 922, hero: true },
-    ],
-    [
-      { x: 64, y: 262, w: 684, h: 922, hero: true },
-      { x: 776, y: 262, w: 240, h: 922 },
-    ],
-  ],
-  3: [
-    [
-      { x: 64, y: 262, w: 952, h: 596, hero: true },
-      { x: 64, y: 884, w: 464, h: 300 },
-      { x: 552, y: 884, w: 464, h: 300 },
-    ],
-    [
-      { x: 64, y: 262, w: 626, h: 922, hero: true },
-      { x: 716, y: 262, w: 300, h: 449 },
-      { x: 716, y: 735, w: 300, h: 449 },
-    ],
-  ],
-  4: [
-    [
-      { x: 64, y: 262, w: 952, h: 596, hero: true },
-      { x: 64, y: 884, w: 300, h: 300 },
-      { x: 390, y: 884, w: 300, h: 300 },
-      { x: 716, y: 884, w: 300, h: 300 },
-    ],
-    [
-      { x: 64, y: 262, w: 626, h: 922, hero: true },
-      { x: 716, y: 262, w: 300, h: 296 },
-      { x: 716, y: 575, w: 300, h: 296 },
-      { x: 716, y: 888, w: 300, h: 296 },
-    ],
-  ],
-  5: [
-    [
-      { x: 64, y: 262, w: 626, h: 596, hero: true },
-      { x: 716, y: 262, w: 300, h: 286 },
-      { x: 716, y: 572, w: 300, h: 286 },
-      { x: 64, y: 884, w: 464, h: 300 },
-      { x: 552, y: 884, w: 464, h: 300 },
-    ],
-    [
-      { x: 64, y: 262, w: 626, h: 449, hero: true },
-      { x: 64, y: 735, w: 626, h: 449, hero: true },
-      { x: 716, y: 262, w: 300, h: 296 },
-      { x: 716, y: 575, w: 300, h: 296 },
-      { x: 716, y: 888, w: 300, h: 296 },
-    ],
-  ],
-};
-
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -101,15 +43,19 @@ const fadeOutProcessing = async () => {
 };
 const getLayouts = () => POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[3];
 const getLayout = () => getLayouts()[S.layoutIndex] || getLayouts()[0];
+const renderPoster = () => buildPoster({
+  canvas: q('#cvs'),
+  photos: S.photos,
+  theme: POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0],
+  layout: getLayout(),
+  eventName: S.eventName,
+  studentName: S.studentName,
+  mascotUrl,
+  width: POSTER_WIDTH,
+  height: POSTER_HEIGHT,
+});
 if (!PHOTO_COUNT_OPTIONS.includes(S.photoCount)) S.photoCount = 3;
 S.layoutIndex = Math.max(0, Math.min(getLayouts().length - 1, S.layoutIndex));
-const loadImage = url => new Promise((resolve, reject) => {
-  const img = new Image();
-  img.onload = () => resolve(img);
-  img.onerror = reject;
-  img.src = url;
-});
-
 function getPreviewSlots() {
   const layout = getLayout();
   const viewport = layout.reduce((box, slot) => ({
@@ -244,7 +190,7 @@ function setThemeIndex(nextIndex) {
   if (S.mode !== 'ready') return;
   const index = Math.max(0, Math.min(POSTER_THEMES.length - 1, Number(nextIndex) || 0));
   S.themeIndex = index;
-  localStorage.setItem('greenwichbooth.themeIndex', String(index));
+  saveState('themeIndex', index);
   syncThemePicker();
   syncPosterPreview();
 }
@@ -254,7 +200,7 @@ function setLayoutIndex(nextIndex) {
   if (S.photoCount === 1) return;
   const index = Math.max(0, Math.min(getLayouts().length - 1, Number(nextIndex) || 0));
   S.layoutIndex = index;
-  localStorage.setItem('greenwichbooth.layoutIndex', String(index));
+  saveState('layoutIndex', index);
   syncLayoutPicker();
 }
 
@@ -264,8 +210,8 @@ function setPhotoCount(nextCount) {
   S.photoCount = PHOTO_COUNT_OPTIONS.includes(count) ? count : 3;
   if (S.photoCount === 1) S.layoutIndex = 0;
   S.layoutIndex = Math.min(S.layoutIndex, getLayouts().length - 1);
-  localStorage.setItem('greenwichbooth.photoCount', String(S.photoCount));
-  localStorage.setItem('greenwichbooth.layoutIndex', String(S.layoutIndex));
+  saveState('photoCount', S.photoCount);
+  saveState('layoutIndex', S.layoutIndex);
   syncPhotoCountPicker();
   syncLayoutPicker();
 }
@@ -296,7 +242,7 @@ function setStudentName(nextName) {
   if (S.mode !== 'ready') return;
   const name = String(nextName || '').replace(/\s+/g, ' ').slice(0, 32);
   S.studentName = name;
-  localStorage.setItem('greenwichbooth.studentName', name);
+  saveState('studentName', name);
   syncStudentNameField();
   syncPosterPreview();
 }
@@ -305,7 +251,7 @@ function setEventName(nextName) {
   if (S.mode !== 'ready') return;
   const name = String(nextName || '').replace(/\s+/g, ' ').slice(0, 44);
   S.eventName = name;
-  localStorage.setItem('greenwichbooth.eventName', name);
+  saveState('eventName', name);
   syncEventNameField();
   syncPosterPreview();
 }
@@ -554,22 +500,18 @@ async function shoot() {
   q('#cov').classList.add('is-processing');
   q('#cnt-n').textContent = 'Đang tạo poster...';
   q('#shoot-btn').disabled = false;
-  S.lockedThemeIndex = S.themeIndex;
-  S.lockedLayoutIndex = S.layoutIndex;
   syncThemePicker();
   syncLayoutPicker();
   syncIntervalPicker();
   await nextFrame();
   try {
-    await buildPoster();
+    await renderPoster();
   } catch (err) {
     console.error('buildPoster failed:', err);
     q('#cov').classList.remove('is-processing');
     q('#cov').classList.add('hidden');
     alert('Không thể tạo poster, hãy chụp lại.');
     S.mode = 'ready';
-    S.lockedThemeIndex = null;
-    S.lockedLayoutIndex = null;
     syncThemePicker();
     syncLayoutPicker();
     syncPhotoCountPicker();
@@ -591,8 +533,6 @@ async function shoot() {
     q('#cov').classList.add('hidden');
     alert('Không thể xuất ảnh, hãy chụp lại.');
     S.mode = 'ready';
-    S.lockedThemeIndex = null;
-    S.lockedLayoutIndex = null;
     syncThemePicker();
     syncLayoutPicker();
     syncPhotoCountPicker();
@@ -621,8 +561,6 @@ async function shoot() {
   }
   await fadeOutProcessing();
   showResult();
-  S.lockedThemeIndex = null;
-  S.lockedLayoutIndex = null;
   syncThemePicker();
   syncLayoutPicker();
   syncPhotoCountPicker();
@@ -662,253 +600,8 @@ function capFrame(cam) {
   return raw.toDataURL('image/jpeg', 0.98);
 }
 
-function roundRect(ctx, x, y, w, h, r) {
-  const radius = Math.min(r, w / 2, h / 2);
-  ctx.beginPath();
-  ctx.moveTo(x + radius, y);
-  ctx.arcTo(x + w, y, x + w, y + h, radius);
-  ctx.arcTo(x + w, y + h, x, y + h, radius);
-  ctx.arcTo(x, y + h, x, y, radius);
-  ctx.arcTo(x, y, x + w, y, radius);
-  ctx.closePath();
-}
-
-function drawCornerAccents(ctx, x, y, w, h, color, size = 28, lw = 3) {
-  if (size <= 0 || lw <= 0) return;
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = lw;
-  ctx.lineCap = 'square';
-  ctx.lineJoin = 'miter';
-  // TL
-  ctx.beginPath(); ctx.moveTo(x + size, y); ctx.lineTo(x, y); ctx.lineTo(x, y + size); ctx.stroke();
-  // TR
-  ctx.beginPath(); ctx.moveTo(x + w - size, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + size); ctx.stroke();
-  // BL
-  ctx.beginPath(); ctx.moveTo(x, y + h - size); ctx.lineTo(x, y + h); ctx.lineTo(x + size, y + h); ctx.stroke();
-  // BR
-  ctx.beginPath(); ctx.moveTo(x + w - size, y + h); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w, y + h - size); ctx.stroke();
-  ctx.restore();
-}
-
-function drawGlowOrb(ctx, x, y, radius, color, alpha = 1) {
-  ctx.save();
-  ctx.globalAlpha = alpha;
-  const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
-  grad.addColorStop(0, color);
-  grad.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, family, color, align = 'left') {
-  const display = String(text || '').trim();
-  if (!display) return;
-
-  ctx.save();
-  let size = fontSize;
-  do {
-    ctx.font = `${fontWeight} ${size}px "${family}", Arial, sans-serif`;
-    if (ctx.measureText(display).width <= maxW) break;
-    size -= 2;
-  } while (size >= minSize);
-
-  ctx.textAlign = align;
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = color;
-  ctx.fillText(display, x, y, maxW);
-  ctx.restore();
-}
-
 // ── Poster composition (4:5) — Selected concept + rendering
-async function buildPoster() {
-  await document.fonts.ready;
-  const mascot = await loadImage(mascotUrl);
-
-  const cvs = q('#cvs');
-  cvs.width = POSTER_WIDTH; cvs.height = POSTER_HEIGHT;
-  const ctx = cvs.getContext('2d');
-  const W = POSTER_WIDTH, H = POSTER_HEIGHT;
-
-  const theme = POSTER_THEMES[S.lockedThemeIndex ?? S.themeIndex] || POSTER_THEMES[0];
-
-  const headerH = 230;
-  const layouts = POSTER_LAYOUTS[S.photoCount] || POSTER_LAYOUTS[4];
-  const pos = layouts[S.lockedLayoutIndex ?? S.layoutIndex] || layouts[0];
-
-  // ── Background + texture ──
-  ctx.fillStyle = theme.bg.color;
-  ctx.fillRect(0, 0, W, H);
-
-  drawGlowOrb(ctx, 160, 140, 260, theme.frame.outer, 0.18);
-  drawGlowOrb(ctx, 920, 220, 280, theme.photos.cornerAccent.color, 0.12);
-  drawGlowOrb(ctx, 760, 1180, 320, theme.footer.glow || theme.footer.borderColor, 0.18);
-  drawGlowOrb(ctx, 540, 760, 420, 'rgba(255,255,255,0.18)', 0.08);
-
-  if (theme.bg.texture.type === 'grid') {
-    ctx.fillStyle = theme.bg.texture.color;
-    for (let x = 0; x < W; x += theme.bg.texture.step) ctx.fillRect(x, 0, 1, H);
-    for (let y = 0; y < H; y += theme.bg.texture.step) ctx.fillRect(0, y, W, 1);
-  } else if (theme.bg.texture.type === 'dots') {
-    ctx.fillStyle = theme.bg.texture.color;
-    const s = theme.bg.texture.step;
-    for (let x = 0; x < W; x += s) for (let y = 0; y < H; y += s) ctx.fillRect(x, y, 2, 2);
-  }
-
-  // ── Header top bar ──
-  ctx.fillStyle = theme.header.topBar.color;
-  ctx.fillRect(0, 0, W, theme.header.topBar.height);
-
-  // ── Header bottom bar ──
-  if (theme.header.bottomBar) {
-    const grad = ctx.createLinearGradient(0, headerH - theme.header.bottomBar.height, 0, headerH);
-    grad.addColorStop(0, theme.header.bottomBar.colors[0]);
-    grad.addColorStop(1, theme.header.bottomBar.colors[1]);
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, headerH - theme.header.bottomBar.height, W, theme.header.bottomBar.height);
-  }
-
-  // ── Brand + metadata ──
-  const brandX = 160;
-  ctx.shadowColor = 'transparent';
-  drawHeaderText(ctx, 'GREENWICH VIETNAM', brandX, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
-  drawHeaderText(ctx, 'Change Starts Here', brandX, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.subtitle.color);
-  drawHeaderText(ctx, S.eventName, 370, 166, 590, 900, 54, 34, 'Be Vietnam Pro', theme.subtitle.color, 'center');
-
-  ctx.save();
-  ctx.fillStyle = 'rgba(255,255,255,0.14)';
-  roundRect(ctx, 52, 34, 628, 148, 30);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  ctx.restore();
-
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(96, 88, 48, 0, Math.PI * 2);
-  ctx.fillStyle = 'rgba(255,255,255,0.07)';
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,203,47,0.55)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  ctx.clip();
-  ctx.drawImage(mascot, 56, 42, 80, 80);
-  ctx.restore();
-
-  // ── Date + location metadata ──
-  const d = new Date();
-  const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
-  const metaX = 1016;
-  drawHeaderText(ctx, today, metaX, 82, 260, 800, 34, 24, 'Space Grotesk', theme.date.color, 'right');
-  drawHeaderText(ctx, S.studentName, metaX, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.footer.borderColor, 'right');
-
-  // ── Photo slot shadows ──
-  pos.forEach(({ x, y, w, h, hero }) => {
-    ctx.save();
-    ctx.shadowColor = theme.photos.slotShadow;
-    ctx.shadowBlur = hero ? 34 : 22;
-    ctx.shadowOffsetY = 0;
-    ctx.fillStyle = theme.photos.slotBg;
-    roundRect(ctx, x - 8, y - 8, w + 16, h + 16, theme.photos.radius + 2);
-    ctx.fill();
-    ctx.restore();
-  });
-
-  // ── Photo backgrounds ──
-  pos.forEach(({ x, y, w, h }) => {
-    ctx.fillStyle = theme.photos.slotBg;
-    roundRect(ctx, x, y, w, h, theme.photos.radius);
-    ctx.fill();
-  });
-
-  // ── Draw photos ──
-  const photos = S.photos;
-  await Promise.all(photos.map((p, i) => {
-    const slot = pos[i];
-    return drawPhoto(ctx, p, slot.x + 8, slot.y + 8, slot.w - 16, slot.h - 16, theme.photos.radius - 4);
-  }));
-
-  pos.forEach(({ x, y, w, h, hero }, i) => {
-    ctx.save();
-    ctx.clip();
-    const accent = i === 0 ? theme.frame.outer : theme.photos.cornerAccent.color;
-    drawGlowOrb(ctx, x + w * 0.18, y + h * 0.18, hero ? 160 : 120, accent, 0.08);
-    drawGlowOrb(ctx, x + w * 0.86, y + h * 0.82, hero ? 130 : 90, theme.footer.borderColor, 0.06);
-    ctx.restore();
-  });
-
-  pos.forEach(({ x, y, w, h }) => {
-    ctx.save();
-    roundRect(ctx, x + 8, y + 8, w - 16, h - 16, theme.photos.radius - 4);
-    ctx.clip();
-    ctx.fillStyle = 'rgba(0,31,20,0.09)';
-    ctx.fillRect(x + 8, y + 8, w - 16, h - 16);
-    ctx.restore();
-  });
-
-  // ── Photo borders + corner accents ──
-  pos.forEach(({ x, y, w, h, hero }) => {
-    ctx.strokeStyle = theme.photos.borderColor;
-    ctx.lineWidth = hero ? theme.photos.borderWidth + 2 : theme.photos.borderWidth;
-    roundRect(ctx, x, y, w, h, theme.photos.radius);
-    ctx.stroke();
-    drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
-  });
-
-  // ── Footer statement ──
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.save();
-  ctx.shadowColor = 'rgba(0,0,0,0.08)';
-  ctx.shadowBlur = 10;
-  ctx.fillStyle = 'rgba(255,255,255,0.16)';
-  roundRect(ctx, 220, 1238, 640, 70, 18);
-  ctx.fill();
-  ctx.restore();
-
-  ctx.shadowColor = 'rgba(0,0,0,0.16)';
-  ctx.shadowBlur = 6;
-  ctx.font = '700 42px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillStyle = theme.footer.hashtag.color;
-  ctx.fillText(theme.footer.hashtag.text, 540, 1273);
-
-  // ── Outer frame borders ──
-  ctx.strokeStyle = theme.frame.outer;
-  ctx.lineWidth = theme.frame.outerW;
-  ctx.strokeRect(20, 20, W - 40, H - 40);
-  ctx.strokeStyle = theme.frame.inner;
-  ctx.lineWidth = theme.frame.innerW;
-  if (theme.frame.innerW > 0) ctx.strokeRect(32, 32, W - 64, H - 64);
-}
-
-function drawPhoto(ctx, url, x, y, w, h, radius = 0) {
-  return new Promise((res, rej) => {
-    const img = new Image();
-    img.onload = () => {
-      try {
-        const scale = Math.max(w / img.width, h / img.height);
-        const dw = img.width * scale, dh = img.height * scale;
-        ctx.save();
-        if (radius > 0) {
-          roundRect(ctx, x, y, w, h, radius);
-        } else {
-          ctx.beginPath();
-          ctx.rect(x, y, w, h);
-        }
-        ctx.clip();
-        ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
-        ctx.restore();
-        res();
-      } catch (e) { rej(e); }
-    };
-    img.onerror = rej;
-    img.src = url;
-  });
-}
+// poster renderer moved to src/poster/render.js
 
 // ── Result screen ─────────────────────────────────────────────────────────────
 function showResult() {
@@ -943,7 +636,7 @@ async function uploadPoster(blob) {
 }
 
 function retake() {
-  S.mode = 'ready'; S.photos = []; S.posterUrl = null; S.lockedThemeIndex = null; S.lockedLayoutIndex = null;
+  S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   q('#rov').classList.add('hidden');
   q('#qr-img').src = '';
   q('#cov').classList.remove('is-processing');
@@ -1025,4 +718,4 @@ syncReadyCountdown();
 syncEventNameField();
 syncStudentNameField();
 startCam();
-if (import.meta.env.DEV) window.__t = { S, buildPoster, showResult, setThemeIndex, setLayoutIndex, setPhotoCount, setIntervalSeconds, setEventName, setStudentName };
+if (import.meta.env.DEV) window.__t = { S, buildPoster: renderPoster, showResult, setThemeIndex, setLayoutIndex, setPhotoCount, setIntervalSeconds, setEventName, setStudentName };

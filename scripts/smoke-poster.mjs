@@ -66,8 +66,8 @@ async function main() {
   }
 
   const layoutCount = await page.$$eval('.layout-chip', nodes => nodes.length);
-  if (layoutCount !== 3) {
-    throw new Error(`Expected 3 layout chips, found ${layoutCount}`);
+  if (layoutCount !== 2) {
+    throw new Error(`Expected 2 layout chips, found ${layoutCount}`);
   }
   await page.click('.count-chip[data-photo-count="3"]');
   await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
@@ -79,10 +79,10 @@ async function main() {
     throw new Error(`Layout picker should stay available for 3 ảnh: ${JSON.stringify(lockedLayoutState)}`);
   }
   const blockedLayoutIndex = await page.evaluate(() => {
-    window.__t.setLayoutIndex(2);
+    window.__t.setLayoutIndex(1);
     return window.__t.S.layoutIndex;
   });
-  if (blockedLayoutIndex !== 2) {
+  if (blockedLayoutIndex !== 1) {
     throw new Error(`Layout index should change on 3 ảnh, got ${blockedLayoutIndex}`);
   }
   const threePhotoLayout = await page.evaluate(() => {
@@ -120,7 +120,7 @@ async function main() {
     throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
   }
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (timerLabels.join('|') !== '3s|5s') {
+  if (timerLabels.join('|') !== '3 giây|5 giây') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   const countdownMascot = await page.$eval('#cnt-mascot', img => ({
