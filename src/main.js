@@ -337,85 +337,89 @@ q('#app').innerHTML = `
 
     <!-- Controls -->
     <div class="ctrl-col">
-      <div class="theme-picker" aria-label="Chọn phong cách poster">
-        ${THEME_OPTIONS.map((theme, index) => `
-          <button
-            class="theme-chip"
-            type="button"
-            data-theme-index="${index}"
-            aria-pressed="${index === S.themeIndex}"
-            aria-label="Chọn phong cách ${theme.label}"
-          >
-            <span class="theme-chip-dot" aria-hidden="true"></span>
-            <span class="theme-chip-text">
-              <span class="theme-chip-label">${theme.label}</span>
-            </span>
-          </button>
-        `).join('')}
-      </div>
-      <div class="layout-picker" aria-label="Chọn bố cục poster">
-        ${LAYOUT_OPTIONS.map((layout, index) => `
-          <button
-            class="layout-chip"
-            type="button"
-            data-layout-index="${index}"
-            aria-pressed="${index === S.layoutIndex}"
-            aria-label="Chọn ${layout.label}"
-          >
-            <span class="theme-chip-label">Layout ${index + 1}</span>
-          </button>
-        `).join('')}
-      </div>
-      <div class="count-picker" aria-label="Chọn số lượng ảnh">
-        ${PHOTO_COUNT_OPTIONS.map(count => `
-          <button
-            class="count-chip"
-            type="button"
-            data-photo-count="${count}"
-            aria-pressed="${count === S.photoCount}"
-            aria-label="Chọn ${count} ảnh"
-          >
-            <span class="theme-chip-label">${count} ảnh</span>
-          </button>
-        `).join('')}
-      </div>
-      <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
-        ${INTERVAL_OPTIONS.map(seconds => `
-          <button
-            class="time-chip"
-            type="button"
-            data-interval="${seconds}"
-            aria-pressed="${seconds === S.interval}"
-            aria-label="Chọn ${seconds} giây"
-          >
-            <span class="theme-chip-dot" aria-hidden="true"></span>
-            <span class="theme-chip-label">Countdown ${seconds}s</span>
-          </button>
-        `).join('')}
-      </div>
-
-      <div class="name-field">
-        <input
-          id="event-name"
-          class="name-input"
-          type="text"
-          inputmode="text"
-          maxlength="44"
-          placeholder="Tên sự kiện"
-          aria-label="Tên sự kiện để hiển thị trên poster"
-        >
+      <div class="option-grid">
+        <div class="theme-picker" aria-label="Chọn phong cách poster">
+          ${THEME_OPTIONS.map((theme, index) => `
+            <button
+              class="theme-chip"
+              type="button"
+              data-theme-index="${index}"
+              aria-pressed="${index === S.themeIndex}"
+              aria-label="Chọn phong cách ${theme.label}"
+            >
+              <span class="theme-chip-dot" aria-hidden="true"></span>
+              <span class="theme-chip-text">
+                <span class="theme-chip-label">${theme.label}</span>
+              </span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="layout-picker" aria-label="Chọn bố cục poster">
+          ${LAYOUT_OPTIONS.map((layout, index) => `
+            <button
+              class="layout-chip"
+              type="button"
+              data-layout-index="${index}"
+              aria-pressed="${index === S.layoutIndex}"
+              aria-label="Chọn ${layout.label}"
+            >
+              <span class="theme-chip-label">Layout ${index + 1}</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="count-picker" aria-label="Chọn số lượng ảnh">
+          ${PHOTO_COUNT_OPTIONS.map(count => `
+            <button
+              class="count-chip"
+              type="button"
+              data-photo-count="${count}"
+              aria-pressed="${count === S.photoCount}"
+              aria-label="Chọn ${count} ảnh"
+            >
+              <span class="theme-chip-label">${count} ảnh</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
+          ${INTERVAL_OPTIONS.map(seconds => `
+            <button
+              class="time-chip"
+              type="button"
+              data-interval="${seconds}"
+              aria-pressed="${seconds === S.interval}"
+              aria-label="Chọn ${seconds} giây"
+            >
+              <span class="theme-chip-dot" aria-hidden="true"></span>
+              <span class="theme-chip-label">Countdown ${seconds}s</span>
+            </button>
+          `).join('')}
+        </div>
       </div>
 
-      <div class="name-field">
-        <input
-          id="student-name"
-          class="name-input"
-          type="text"
-          inputmode="text"
-          maxlength="32"
-          placeholder="Tên địa điểm"
-          aria-label="Tên địa điểm để hiển thị trên poster"
-        >
+      <div class="name-grid">
+        <div class="name-field">
+          <input
+            id="event-name"
+            class="name-input"
+            type="text"
+            inputmode="text"
+            maxlength="44"
+            placeholder="Tên sự kiện"
+            aria-label="Tên sự kiện để hiển thị trên poster"
+          >
+        </div>
+
+        <div class="name-field">
+          <input
+            id="student-name"
+            class="name-input"
+            type="text"
+            inputmode="text"
+            maxlength="32"
+            placeholder="Tên địa điểm"
+            aria-label="Tên địa điểm để hiển thị trên poster"
+          >
+        </div>
       </div>
 
       <section class="poster-shell" id="poster-preview" aria-label="Poster preview">
