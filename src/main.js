@@ -28,9 +28,8 @@ const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 5];
 const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
-  { label: 'Bố cục 1' },
-  { label: 'Bố cục 2' },
-  { label: 'Bố cục 3' },
+  { label: 'Layout 1' },
+  { label: 'Layout 2' },
 ];
 const POSTER_WIDTH = 1080;
 const POSTER_HEIGHT = 1350;
@@ -44,10 +43,6 @@ const POSTER_LAYOUTS = {
       { x: 64, y: 262, w: 684, h: 922, hero: true },
       { x: 776, y: 262, w: 240, h: 922 },
     ],
-    [
-      { x: 64, y: 262, w: 240, h: 922 },
-      { x: 320, y: 262, w: 684, h: 922, hero: true },
-    ],
   ],
   3: [
     [
@@ -59,11 +54,6 @@ const POSTER_LAYOUTS = {
       { x: 64, y: 262, w: 626, h: 922, hero: true },
       { x: 716, y: 262, w: 300, h: 449 },
       { x: 716, y: 735, w: 300, h: 449 },
-    ],
-    [
-      { x: 64, y: 262, w: 464, h: 922, hero: true },
-      { x: 552, y: 262, w: 464, h: 449 },
-      { x: 552, y: 735, w: 464, h: 449 },
     ],
   ],
   4: [
@@ -78,12 +68,6 @@ const POSTER_LAYOUTS = {
       { x: 716, y: 262, w: 300, h: 296 },
       { x: 716, y: 575, w: 300, h: 296 },
       { x: 716, y: 888, w: 300, h: 296 },
-    ],
-    [
-      { x: 64, y: 262, w: 464, h: 449 },
-      { x: 552, y: 262, w: 464, h: 449 },
-      { x: 64, y: 735, w: 464, h: 449 },
-      { x: 552, y: 735, w: 464, h: 449 },
     ],
   ],
   5: [
@@ -100,13 +84,6 @@ const POSTER_LAYOUTS = {
       { x: 716, y: 262, w: 300, h: 296 },
       { x: 716, y: 575, w: 300, h: 296 },
       { x: 716, y: 888, w: 300, h: 296 },
-    ],
-    [
-      { x: 64, y: 262, w: 300, h: 296 },
-      { x: 390, y: 262, w: 300, h: 296 },
-      { x: 716, y: 262, w: 300, h: 296 },
-      { x: 64, y: 582, w: 464, h: 602, hero: true },
-      { x: 552, y: 582, w: 464, h: 602, hero: true },
     ],
   ],
 };
@@ -385,13 +362,12 @@ q('#app').innerHTML = `
               aria-pressed="${index === S.layoutIndex}"
               aria-label="Chọn ${layout.label}"
             >
-              <span class="theme-chip-label">Layout ${index + 1}</span>
+              <span class="theme-chip-label">${layout.label}</span>
             </button>
           `).join('')}
         </div>
 
       <div class="ctrl-group">
-        <div class="ctrl-group-title">Đếm ngược</div>
         <div class="time-picker" aria-label="Chọn thời gian đếm ngược">
           ${INTERVAL_OPTIONS.map(seconds => `
             <button
@@ -402,7 +378,7 @@ q('#app').innerHTML = `
               aria-label="Chọn ${seconds} giây"
             >
               <span class="theme-chip-dot" aria-hidden="true"></span>
-              <span class="theme-chip-label">${seconds}s</span>
+              <span class="theme-chip-label">${seconds} giây</span>
             </button>
           `).join('')}
         </div>
