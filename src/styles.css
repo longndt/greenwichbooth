@@ -236,7 +236,8 @@ html, body {
   bottom: 0;
   left: 0;
   opacity: 1;
-  background: rgba(4,18,26,0.68);
+  background: rgba(4,18,26,0.78);
+  backdrop-filter: blur(10px) saturate(1.15);
   border-radius: 0;
   transition: opacity 0.24s ease;
 }
@@ -246,31 +247,59 @@ html, body {
 }
 
 .cnt-ov.is-processing .cnt-num-wrap {
-  width: auto;
+  width: min(86vw, 360px);
   height: auto;
-  min-width: 188px;
-  padding: 16px 20px;
-  gap: 12px;
-  border-radius: 8px;
-  background: rgba(4,18,26,0.82);
+  min-height: 178px;
+  padding: 28px 30px 24px;
+  gap: 16px;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(9,43,56,0.94), rgba(4,18,26,0.96));
+  box-shadow:
+    0 28px 70px rgba(0,0,0,0.42),
+    0 0 0 1px rgba(10,147,150,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .cnt-ov.is-processing .cnt-num-wrap::before {
   content: '';
-  width: 28px;
-  height: 28px;
-  border: 3px solid rgba(255,203,47,0.22);
+  width: 52px;
+  height: 52px;
+  border: 4px solid rgba(255,255,255,0.12);
   border-top-color: var(--gold);
+  border-right-color: var(--emerald);
   border-radius: 50%;
-  animation: spin 0.85s linear infinite;
+  box-shadow: 0 0 26px rgba(10,147,150,0.28);
+  animation: spin 0.78s linear infinite;
+}
+
+.cnt-ov.is-processing .cnt-num-wrap::after {
+  content: 'Đang xử lý ảnh và tạo mã QR';
+  width: 100%;
+  padding-top: 28px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background:
+    linear-gradient(90deg, transparent, rgba(255,203,47,0.9), transparent) 0 10px / 54% 3px no-repeat,
+    linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08)) 0 10px / 100% 3px no-repeat;
+  color: rgba(240,245,242,0.62);
+  font: 700 12px / 1.35 'Be Vietnam Pro', sans-serif;
+  text-align: center;
+  animation: processing-bar 1.3s ease-in-out infinite;
 }
 
 .cnt-ov.is-processing .cnt-mascot { display: none; }
 
 .cnt-ov.is-processing .cnt-n {
-  font-size: 15px;
-  line-height: 1.2;
+  font-size: 22px;
+  line-height: 1.18;
+  font-weight: 900;
+  text-align: center;
   white-space: nowrap;
+  letter-spacing: 0;
+  text-shadow: 0 1px 14px rgba(255,203,47,0.18);
 }
 
 /* ── Camera error ────────────────────────────────────────── */
@@ -1230,6 +1259,11 @@ input[type="range"] {
 
 
 @keyframes spin { to { transform: rotate(360deg); } }
+
+@keyframes processing-bar {
+  0% { background-position: -54% 10px, 0 10px; }
+  100% { background-position: 154% 10px, 0 10px; }
+}
 
 /* ── Smooth Transitions & Animations ───────────────────────── */
 
