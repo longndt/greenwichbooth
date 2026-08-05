@@ -25,7 +25,7 @@ const S = {
 };
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
-const INTERVAL_OPTIONS = [3, 4, 5];
+const INTERVAL_OPTIONS = [3, 5];
 const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
   { label: 'Bố cục 1' },

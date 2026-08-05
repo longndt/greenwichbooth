@@ -37,38 +37,6 @@ export const POSTER_THEMES = [
     id: 2,
     name: 'Theme 2',
     bg: {
-      color: '#F4E7D0',
-      texture: { type: 'dots', color: 'rgba(184,92,25,0.10)', step: 44 },
-    },
-    header: {
-      bg: '#F4E7D0',
-      topBar: { color: '#D28A2E', height: 6 },
-      bottomBar: { colors: ['rgba(184,92,25,0.20)', 'rgba(184,92,25,0.20)'], height: 2 },
-    },
-    title: { color: '#006A7F' },
-    subtitle: { color: '#A84A17' },
-    date: { color: '#7A4A21' },
-    photos: {
-      slotShadow: 'rgba(122,74,33,0.18)',
-      slotBg: '#FFF8EA',
-      borderColor: '#D28A2E',
-      borderWidth: 3,
-      radius: 14,
-      cornerAccent: { color: '#006A7F', size: 24, lw: 2 },
-    },
-    footer: {
-      bg: '#2B1B12',
-      borderColor: '#FFB703',
-      glow: 'rgba(255,183,3,0.18)',
-      url: { text: 'greenwich.edu.vn', color: '#FFFFFF' },
-      hashtag: { text: 'My Greenwich Moment', color: '#FFD166' },
-    },
-    frame: { outer: '#006A7F', outerW: 6, inner: '#D28A2E', innerW: 2 },
-  },
-  {
-    id: 3,
-    name: 'Theme 3',
-    bg: {
       color: '#F3FBF8',
       texture: { type: 'dots', color: 'rgba(10,147,150,0.08)', step: 42 },
     },

@@ -964,8 +964,8 @@ input[type="range"] {
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(300px, 42dvh, 420px);
-    max-height: 420px;
+    height: clamp(200px, 36dvh, 360px);
+    max-height: 360px;
   }
 
   .shoot-btn {
@@ -1464,8 +1464,8 @@ input[type="range"] {
 @media (max-width: 940px) {
   .poster-shell {
     order: 0;
-    height: clamp(300px, 38dvh, 460px);
-    max-height: 40vh;
+    height: clamp(180px, 30dvh, 320px);
+    max-height: 32vh;
   }
   .shoot-btn { order: 1; }
 }
@@ -1542,7 +1542,7 @@ input[type="range"] {
 
 .poster-shell {
   flex: 0 0 auto;
-  height: min(50dvh, calc(100dvh - 286px));
+  height: min(42dvh, calc(100dvh - 350px));
   padding: 8px;
   border-radius: 14px;
 }
@@ -1565,7 +1565,7 @@ input[type="range"] {
   }
 
   .poster-shell {
-    height: min(54dvh, calc(100dvh - 274px));
+    height: min(42dvh, calc(100dvh - 350px));
   }
 }
 

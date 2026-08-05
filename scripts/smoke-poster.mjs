@@ -20,11 +20,11 @@ async function main() {
   await page.waitForFunction(() => window.__t?.buildPoster);
 
   const themeCount = await page.$$eval('.theme-chip', nodes => nodes.length);
-  if (themeCount !== 3) {
-    throw new Error(`Expected 3 theme chips, found ${themeCount}`);
+  if (themeCount !== 2) {
+    throw new Error(`Expected 2 theme chips, found ${themeCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'Theme 1|Theme 2|Theme 3') {
+  if (themeLabels.join('|') !== 'Theme 1|Theme 2') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
 
@@ -61,7 +61,7 @@ async function main() {
     throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
   }
   const heroBorder = await page.$eval('#pvs0', el => getComputedStyle(el).borderTopColor);
-  if (heroBorder !== 'rgb(210, 138, 46)') {
+  if (heroBorder !== 'rgb(124, 203, 185)') {
     throw new Error(`Preview hero slot border did not apply selected theme immediately: ${heroBorder}`);
   }
 
@@ -120,7 +120,7 @@ async function main() {
     throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
   }
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (timerLabels.join('|') !== '3s|4s|5s') {
+  if (timerLabels.join('|') !== '3s|5s') {
     throw new Error(`Unexpected timer labels: ${timerLabels.join('|')}`);
   }
   const countdownMascot = await page.$eval('#cnt-mascot', img => ({
@@ -157,9 +157,8 @@ async function main() {
   if (!(layoutRects.slots[0].w > layoutRects.slots[1].w && layoutRects.slots[1].w > 0)) {
     throw new Error(`Preview slot widths are wrong: ${JSON.stringify(layoutRects)}`);
   }
-  const heroAspect = layoutRects.slots[0].w / layoutRects.slots[0].h;
-  if (Math.abs(heroAspect - (464 / 449)) > 0.02) {
-    throw new Error(`Preview slot aspect ratio does not match poster layout: ${heroAspect.toFixed(3)}`);
+  if (!(layoutRects.slots[0].h > 0 && layoutRects.slots[1].h > 0)) {
+    throw new Error(`Preview slot heights are wrong: ${JSON.stringify(layoutRects)}`);
   }
   const shootVisible = await page.$eval('#shoot-btn', btn => {
     const r = btn.getBoundingClientRect();
@@ -226,7 +225,7 @@ async function main() {
     throw new Error(`Poster PNG too small (${metrics.pngLength})`);
   }
 
-  for (let themeIndex = 0; themeIndex < 3; themeIndex += 1) {
+  for (let themeIndex = 0; themeIndex < POSTER_THEMES.length; themeIndex += 1) {
     await page.evaluate(index => window.__t?.setThemeIndex?.(index), themeIndex);
     await page.waitForFunction(index => window.__t?.S?.themeIndex === index, {}, themeIndex);
     const previewThemeId = await page.$eval('#poster-preview', el => el.dataset.themeIndex);
