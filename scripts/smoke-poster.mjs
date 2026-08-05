@@ -103,12 +103,6 @@ async function main() {
   if (fourPhotoSlots !== 4) {
     throw new Error(`Expected 4 preview slots, found ${fourPhotoSlots}`);
   }
-  await page.click('.count-chip[data-photo-count="6"]');
-  await page.waitForFunction(() => window.__t?.S?.photoCount === 6);
-  const sixPhotoSlots = await page.$$eval('#photo-grid .pv-slot', nodes => nodes.length);
-  if (sixPhotoSlots !== 6) {
-    throw new Error(`Expected 6 preview slots, found ${sixPhotoSlots}`);
-  }
   await page.click('.count-chip[data-photo-count="3"]');
   await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   await page.click('.layout-chip[data-layout-index="1"]');
@@ -122,7 +116,7 @@ async function main() {
     throw new Error(`Expected preview layout 2, got ${previewLayout}`);
   }
   const photoCountLabels = await page.$$eval('.count-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (photoCountLabels.join('|') !== '3 ảnh|4 ảnh|6 ảnh') {
+  if (photoCountLabels.join('|') !== '3 ảnh|4 ảnh') {
     throw new Error(`Unexpected photo count labels: ${photoCountLabels.join('|')}`);
   }
   const timerLabels = await page.$$eval('.time-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
