@@ -775,8 +775,8 @@ async function buildPoster() {
   const brandX = 160;
   ctx.shadowColor = 'transparent';
   drawHeaderText(ctx, 'GREENWICH VIETNAM', brandX, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
-  drawHeaderText(ctx, 'Change Starts Here', brandX, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.date.color);
-  drawHeaderText(ctx, S.eventName || 'Greenwich Open Day', 64, 166, 650, 900, 54, 34, 'Be Vietnam Pro', theme.subtitle.color);
+  drawHeaderText(ctx, 'Change Starts Here', brandX, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.subtitle.color);
+  drawHeaderText(ctx, S.eventName, 370, 166, 590, 900, 54, 34, 'Be Vietnam Pro', theme.subtitle.color, 'center');
 
   ctx.save();
   ctx.fillStyle = 'rgba(255,255,255,0.14)';
@@ -804,7 +804,7 @@ async function buildPoster() {
   const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
   const metaX = 1016;
   drawHeaderText(ctx, today, metaX, 82, 260, 800, 34, 24, 'Space Grotesk', theme.date.color, 'right');
-  drawHeaderText(ctx, S.studentName || 'FPT Tower', metaX, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.title.color, 'right');
+  drawHeaderText(ctx, S.studentName, metaX, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.footer.borderColor, 'right');
 
   // ── Photo slot shadows ──
   pos.forEach(({ x, y, w, h, hero }) => {
@@ -860,25 +860,21 @@ async function buildPoster() {
   });
 
   // ── Footer statement ──
-  const footerTextColor = theme.footer.hashtag.color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.save();
-  ctx.shadowColor = theme.footer.glow || 'rgba(0,0,0,0.18)';
-  ctx.shadowBlur = 18;
-  ctx.fillStyle = theme.footer.bg;
-  roundRect(ctx, 196, 1232, 688, 82, 22);
+  ctx.shadowColor = 'rgba(0,0,0,0.08)';
+  ctx.shadowBlur = 10;
+  ctx.fillStyle = 'rgba(255,255,255,0.16)';
+  roundRect(ctx, 220, 1238, 640, 70, 18);
   ctx.fill();
   ctx.restore();
-  ctx.strokeStyle = theme.footer.borderColor;
-  ctx.lineWidth = 2;
-  ctx.stroke();
 
-  ctx.shadowColor = 'rgba(0,0,0,0.42)';
-  ctx.shadowBlur = 10;
-  ctx.font = '900 48px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
-  ctx.fillStyle = footerTextColor;
-  ctx.fillText(theme.footer.hashtag.text, 540, 1268);
+  ctx.shadowColor = 'rgba(0,0,0,0.16)';
+  ctx.shadowBlur = 6;
+  ctx.font = '700 42px "Space Grotesk", "Be Vietnam Pro", Arial, sans-serif';
+  ctx.fillStyle = theme.footer.hashtag.color;
+  ctx.fillText(theme.footer.hashtag.text, 540, 1273);
 
   // ── Outer frame borders ──
   ctx.strokeStyle = theme.frame.outer;
