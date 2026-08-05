@@ -533,6 +533,8 @@ async function shoot() {
     if (i < S.photoCount - 1) await sleep(220);
   }
 
+  await nextFrame();
+  await sleep(260);
   q('#cov').classList.add('is-processing');
   q('#cnt-n').textContent = 'Đang tạo poster...';
   q('#shoot-btn').disabled = false;
