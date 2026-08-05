@@ -69,6 +69,31 @@ async function main() {
   if (layoutCount !== 3) {
     throw new Error(`Expected 3 layout chips, found ${layoutCount}`);
   }
+  await page.click('.count-chip[data-photo-count="2"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 2);
+  const twoPhotoLayouts = await page.evaluate(() => {
+    const read = () => [...document.querySelectorAll('#photo-grid .pv-slot')].map(el => {
+      const grid = document.querySelector('#photo-grid').getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      return { x: r.x - grid.x, w: r.width };
+    });
+    return {
+      layout1: read(),
+      layout2: (window.__t.setLayoutIndex(1), read()),
+      layout3: (window.__t.setLayoutIndex(2), read()),
+    };
+  });
+  if (!(twoPhotoLayouts.layout1[0].w > 0 && Math.abs(twoPhotoLayouts.layout1[0].w - twoPhotoLayouts.layout1[1].w) < 5)) {
+    throw new Error(`Two-photo layout 1 should be balanced: ${JSON.stringify(twoPhotoLayouts.layout1)}`);
+  }
+  if (!(twoPhotoLayouts.layout2[0].w > twoPhotoLayouts.layout2[1].w && twoPhotoLayouts.layout2[0].x < twoPhotoLayouts.layout2[1].x)) {
+    throw new Error(`Two-photo layout 2 should be left-large/right-small: ${JSON.stringify(twoPhotoLayouts.layout2)}`);
+  }
+  if (!(twoPhotoLayouts.layout3[0].w < twoPhotoLayouts.layout3[1].w && twoPhotoLayouts.layout3[0].x < twoPhotoLayouts.layout3[1].x)) {
+    throw new Error(`Two-photo layout 3 should be left-small/right-large: ${JSON.stringify(twoPhotoLayouts.layout3)}`);
+  }
+  await page.click('.count-chip[data-photo-count="3"]');
+  await page.waitForFunction(() => window.__t?.S?.photoCount === 3);
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());

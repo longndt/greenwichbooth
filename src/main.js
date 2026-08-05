@@ -33,6 +33,20 @@ const LAYOUT_OPTIONS = [
   { label: 'Bố cục 3' },
 ];
 const POSTER_LAYOUTS = {
+  2: [
+    [
+      { x: 64, y: 262, w: 464, h: 922, hero: true },
+      { x: 552, y: 262, w: 464, h: 922, hero: true },
+    ],
+    [
+      { x: 64, y: 262, w: 684, h: 922, hero: true },
+      { x: 776, y: 262, w: 240, h: 922 },
+    ],
+    [
+      { x: 64, y: 262, w: 240, h: 922 },
+      { x: 320, y: 262, w: 684, h: 922, hero: true },
+    ],
+  ],
   3: [
     [
       { x: 64, y: 262, w: 952, h: 596, hero: true },
