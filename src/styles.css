@@ -111,16 +111,16 @@ html, body {
   flex: 1;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1.65fr) minmax(360px, 0.85fr);
-  gap: 0 22px;
-  align-items: start;
+  grid-template-columns: minmax(0, 1.95fr) minmax(320px, 0.65fr);
+  gap: 0 18px;
+  align-items: stretch;
 }
 
 /* ── Camera column ───────────────────────────────────────── */
 .cam-col {
   display: grid;
-  place-items: start center;
-  padding: 12px 8px 12px 14px;
+  place-items: stretch center;
+  padding: 12px 6px 8px 14px;
   min-height: 0;
 }
 
@@ -1618,7 +1618,7 @@ input[type="range"] {
 
 .ctrl-col {
   gap: 12px;
-  padding: 10px 18px 10px 0;
+  padding: 10px 14px 18px 0;
   justify-content: flex-start;
 }
 
@@ -1675,7 +1675,7 @@ input[type="range"] {
 .shoot-btn {
   width: clamp(102px, 10vw, 126px);
   padding: 14px;
-  margin: 6px auto 0;
+  margin: 14px auto 0;
 }
 
 .s-text { font-size: 14px; }
@@ -1687,6 +1687,18 @@ input[type="range"] {
   .cam-box {
     width: min(100%, calc((100dvh - 152px) * 4 / 3));
     max-height: calc(100dvh - 152px);
+  }
+
+  .cam-col {
+    height: 100%;
+  }
+
+  .ctrl-col {
+    height: 100%;
+  }
+
+  .poster-shell {
+    flex: 0 0 auto;
   }
 
   .poster-shell {
