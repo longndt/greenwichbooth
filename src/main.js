@@ -53,7 +53,7 @@ const renderPoster = () => buildPoster({
   photos: S.photos,
   theme: POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0],
   layout: getLayout(),
-  eventName: S.eventName.trim() || 'Greenwich Moment',
+  eventName: S.eventName.trim() || 'Khoảnh khắc Greenwich',
   studentName: S.studentName,
   footerText: S.studentName.trim() || formatToday(),
   mascotUrl,
@@ -186,7 +186,7 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
   preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
   preview.style.setProperty('--preview-badge-ink', theme.bg.color);
-  if (q('#preview-event')) q('#preview-event').textContent = S.eventName.trim() || 'Greenwich Moment';
+  if (q('#preview-event')) q('#preview-event').textContent = S.eventName.trim() || 'Khoảnh khắc Greenwich';
   if (q('#preview-date')) q('#preview-date').textContent = today;
   if (q('#preview-place')) q('#preview-place').textContent = S.studentName;
   if (q('#preview-hashtag')) q('#preview-hashtag').textContent = S.studentName.trim() || today;
@@ -268,7 +268,7 @@ q('#app').innerHTML = `
     <div class="hdr-brand">
       <img class="hdr-lion" src="${mascotUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
-        <span class="hdr-name">Khoảnh khắc Greenwich</span>
+        <span class="hdr-name">Greenwich Photobooth</span>
       </div>
     </div>
   </header>
