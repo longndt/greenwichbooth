@@ -697,12 +697,13 @@ html, body {
   display: none;
   position: absolute;
   left: 4.4%;
+  right: 4.4%;
   top: 2.2%;
-  width: 58%;
   height: 12.5%;
   z-index: 2;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   padding: 8px 10px;
   border-radius: 12px;
@@ -732,6 +733,7 @@ html, body {
   color: var(--preview-title, var(--text));
   font-size: 12px;
   font-weight: 900;
+  text-align: right;
 }
 
 .preview-tagline {
@@ -739,6 +741,7 @@ html, body {
   font-size: 9px;
   font-weight: 700;
   margin-top: 4px;
+  text-align: right;
 }
 
 .preview-meta {

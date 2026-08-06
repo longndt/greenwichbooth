@@ -114,13 +114,13 @@ export async function buildPoster({
   }
 
   ctx.shadowColor = 'transparent';
-  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 205, 64, 475, 800, 30, 24, 'Be Vietnam Pro', theme.title.color);
-  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', 205, 104, 375, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color);
+  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', width - 56, 64, 520, 800, 30, 24, 'Be Vietnam Pro', theme.title.color, 'right');
+  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', width - 56, 104, 420, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color, 'right');
   drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
   ctx.save();
   ctx.fillStyle = 'rgba(255,255,255,0.14)';
-  roundRect(ctx, 52, 34, 628, 148, 30);
+  roundRect(ctx, width - 620, 34, 568, 118, 30);
   ctx.fill();
   ctx.strokeStyle = 'rgba(255,255,255,0.18)';
   ctx.lineWidth = 1;
