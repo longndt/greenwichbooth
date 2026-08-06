@@ -28,8 +28,8 @@ const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 5];
 const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
-  { label: 'Layout 1' },
   { label: 'Layout 2' },
+  { label: 'Layout 1' },
 ];
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
@@ -368,7 +368,7 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="44"
-            placeholder="Tên sự kiện"
+            placeholder="Sự kiện"
             aria-label="Tên sự kiện để hiển thị trên poster"
           >
         </div>
@@ -380,7 +380,7 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="32"
-            placeholder="Tên địa điểm"
+            placeholder="Địa điểm"
             aria-label="Tên địa điểm để hiển thị trên poster"
           >
         </div>

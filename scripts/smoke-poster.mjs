@@ -169,7 +169,7 @@ async function main() {
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
-  if (placeholders.join('|') !== 'Tên sự kiện|Tên địa điểm') {
+  if (placeholders.join('|') !== 'Sự kiện|Địa điểm') {
     throw new Error(`Unexpected input placeholders: ${placeholders.join('|')}`);
   }
 
