@@ -25,7 +25,7 @@ async function main() {
     throw new Error(`Expected 2 theme chips, found ${themeChipCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'màu A|màu B') {
+  if (themeLabels.join('|') !== 'mẫu A|mẫu B') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
   const themeCount = await page.$$eval('.theme-chip', nodes => nodes.length);
@@ -36,8 +36,8 @@ async function main() {
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'màu B') {
-    throw new Error(`Expected màu B active, got ${activeTheme}`);
+  if (activeTheme !== 'mẫu B') {
+    throw new Error(`Expected mẫu B active, got ${activeTheme}`);
   }
   const theme2 = POSTER_THEMES[1];
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
@@ -204,7 +204,7 @@ async function main() {
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
-  if (placeholders.join('|') !== 'Sự kiện/Địa điểm|Tên sinh viên/Lời nhắn') {
+  if (placeholders.join('|') !== 'Họ tên/Thông điệp|Sự kiện/Địa điểm') {
     throw new Error(`Unexpected input placeholders: ${placeholders.join('|')}`);
   }
 
@@ -290,10 +290,6 @@ async function main() {
       previewVars.accent !== expectedTheme.photos.cornerAccent.color
     ) {
       throw new Error(`Preview theme variables do not match theme ${themeIndex + 1}: ${JSON.stringify(previewVars)}`);
-    }
-    const previewHashtag = await page.$eval('#preview-hashtag', el => el.textContent.trim());
-    if (previewHashtag !== 'Greenwich moment') {
-      throw new Error(`Preview footer should default to Greenwich moment: ${previewHashtag}`);
     }
     await page.evaluate(async () => {
       await window.__t.buildPoster();

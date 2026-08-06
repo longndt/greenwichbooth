@@ -35,6 +35,10 @@ const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nextFrame = () => new Promise(r => requestAnimationFrame(r));
 const raf = () => new Promise(r => requestAnimationFrame(r));
+const formatToday = () => {
+  const d = new Date();
+  return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
+};
 const fadeOutProcessing = async () => {
   const cov = q('#cov');
   cov.classList.add('is-hiding');
@@ -49,9 +53,9 @@ const renderPoster = () => buildPoster({
   photos: S.photos,
   theme: POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0],
   layout: getLayout(),
-  eventName: S.eventName,
+  eventName: S.eventName.trim() || 'Greenwich Moment',
   studentName: S.studentName,
-  footerText: S.studentName.trim() || (POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0]).footer.hashtag.text,
+  footerText: S.studentName.trim() || formatToday(),
   mascotUrl,
   width: POSTER_WIDTH,
   height: POSTER_HEIGHT,
@@ -159,8 +163,7 @@ function syncPosterPreview() {
   if (!preview) return;
 
   const theme = POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0];
-  const d = new Date();
-  const today = `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+  const today = formatToday();
 
   preview.dataset.themeIndex = String(theme.id);
   preview.style.setProperty('--preview-shell-bg', theme.bg.color);
@@ -183,10 +186,10 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
   preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
   preview.style.setProperty('--preview-badge-ink', theme.bg.color);
-  if (q('#preview-event')) q('#preview-event').textContent = S.eventName;
+  if (q('#preview-event')) q('#preview-event').textContent = S.eventName.trim() || 'Greenwich Moment';
   if (q('#preview-date')) q('#preview-date').textContent = today;
   if (q('#preview-place')) q('#preview-place').textContent = S.studentName;
-  if (q('#preview-hashtag')) q('#preview-hashtag').textContent = S.studentName.trim() || theme.footer.hashtag.text;
+  if (q('#preview-hashtag')) q('#preview-hashtag').textContent = S.studentName.trim() || today;
 }
 
 function setThemeIndex(nextIndex) {
@@ -369,8 +372,8 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="44"
-            placeholder="Sự kiện/Địa điểm"
-            aria-label="Tên sự kiện để hiển thị trên poster"
+            placeholder="Họ tên/Thông điệp"
+            aria-label="Họ tên hoặc thông điệp để hiển thị trên poster"
           >
         </div>
 
@@ -381,8 +384,8 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="32"
-            placeholder="Lời nhắn/Họ tên"
-            aria-label="Lời nhắn hoặc họ tên để hiển thị trên poster"
+            placeholder="Sự kiện/Địa điểm"
+            aria-label="Sự kiện hoặc địa điểm để hiển thị trên poster"
           >
         </div>
       </div>

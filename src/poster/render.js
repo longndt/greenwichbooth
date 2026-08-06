@@ -129,10 +129,6 @@ export async function buildPoster({
   ctx.drawImage(mascot, 56, 42, 80, 80);
   ctx.restore();
 
-  const d = new Date();
-  const today = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-  drawHeaderText(ctx, today, 1016, 82, 260, 800, 32, 22, 'Space Grotesk', theme.date.color, 'right');
-
   layout.forEach(({ x, y, w, h, hero }) => {
     ctx.save();
     ctx.shadowColor = theme.photos.slotShadow;

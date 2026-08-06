@@ -57,7 +57,7 @@ export const POSTER_THEMES = [
     event: { color: '#9E4A2C' },
     text: {
       school: 'GREENWICH VIETNAM',
-      subtitle: 'Where ideas move',
+      subtitle: 'Change Starts Here',
       footer: 'Greenwich moment',
     },
     meta: { color: '#0A5B66' },
