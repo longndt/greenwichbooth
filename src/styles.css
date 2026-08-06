@@ -558,12 +558,12 @@ html, body {
 
 .theme-chip.is-active {
   background:
-    radial-gradient(circle at 22% 22%, rgba(255,255,255,0.26), transparent 34%),
-    linear-gradient(145deg, var(--chip-a, var(--emerald)), var(--chip-b, var(--gold)));
+    radial-gradient(circle at 22% 22%, rgba(224,196,135,0.18), transparent 38%),
+    linear-gradient(145deg, rgba(128,104,63,0.94), rgba(49,47,38,0.98));
   border-color: var(--chip-b, var(--gold));
   box-shadow:
-    0 0 0 1px rgba(255,255,255,0.12),
-    0 0 20px rgba(0,126,143,0.32),
+    0 0 0 1px rgba(224,196,135,0.08),
+    0 0 20px rgba(128,104,63,0.18),
     inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
