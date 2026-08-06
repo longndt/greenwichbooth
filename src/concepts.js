@@ -44,13 +44,13 @@ export const POSTER_THEMES = [
     id: 2,
     name: 'mẫu B',
     bg: {
-      color: '#E7F4F0',
-      texture: { type: 'grid', color: 'rgba(24,78,93,0.075)', step: 34 },
+      color: '#EEE7FA',
+      texture: { type: 'grid', color: 'rgba(143,92,200,0.12)', step: 34 },
     },
     header: {
-      bg: '#E7F4F0',
+      bg: '#EEE7FA',
       topBar: { color: '#8F5CC8', height: 7 },
-      bottomBar: { colors: ['rgba(24,78,93,0.08)', 'rgba(143,92,200,0.18)'], height: 2 },
+      bottomBar: { colors: ['rgba(143,92,200,0.10)', 'rgba(143,92,200,0.28)'], height: 2 },
     },
     title: { color: '#184E5D' },
     subtitle: { color: '#A15C28' },
@@ -64,7 +64,7 @@ export const POSTER_THEMES = [
     date: { color: '#A15C28' },
     photos: {
       slotShadow: 'rgba(168,103,29,0.14)',
-      slotBg: '#FAFFFD',
+      slotBg: '#FFFBFF',
       borderColor: '#8F5CC8',
       borderWidth: 3,
       radius: 10,
