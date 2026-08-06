@@ -13,8 +13,8 @@ export const POSTER_THEMES = [
       topBar: { color: '#00A676', height: 7 },
       bottomBar: { colors: ['rgba(0,127,95,0.10)', 'rgba(0,127,95,0.30)'], height: 2 },
     },
-    title: { color: '#184E5D' },
-    subtitle: { color: '#A15C28' },
+    title: { color: '#3F6F54' },
+    subtitle: { color: '#5F7F73' },
     event: { color: '#1E7A8C' },
     text: {
       school: 'GREENWICH VIETNAM',
@@ -52,8 +52,8 @@ export const POSTER_THEMES = [
       topBar: { color: '#2A6BFF', height: 7 },
       bottomBar: { colors: ['rgba(42,107,255,0.10)', 'rgba(42,107,255,0.30)'], height: 2 },
     },
-    title: { color: '#184E5D' },
-    subtitle: { color: '#A15C28' },
+    title: { color: '#485A8F' },
+    subtitle: { color: '#7A607E' },
     event: { color: '#1E7A8C' },
     text: {
       school: 'GREENWICH VIETNAM',
