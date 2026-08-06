@@ -499,7 +499,7 @@ async function shoot() {
 
   await nextFrame();
   q('#cov').classList.add('is-processing');
-  q('#cnt-n').textContent = 'Đang tạo poster';
+  q('#cnt-n').textContent = 'Đang tạo ảnh';
   q('#shoot-btn').disabled = false;
   syncThemePicker();
   syncLayoutPicker();

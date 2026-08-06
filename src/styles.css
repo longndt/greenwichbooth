@@ -278,20 +278,6 @@ html, body {
   animation: spin 0.78s linear infinite;
 }
 
-.cnt-ov.is-processing .cnt-num-wrap::after {
-  content: 'Vui lòng chờ';
-  width: 100%;
-  padding-top: 28px;
-  border-top: 1px solid rgba(255,255,255,0.08);
-  background:
-    linear-gradient(90deg, transparent, rgba(255,203,47,0.9), transparent) 0 10px / 54% 3px no-repeat,
-    linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,255,255,0.08)) 0 10px / 100% 3px no-repeat;
-  color: rgba(240,245,242,0.62);
-  font: 700 12px / 1.35 'Be Vietnam Pro', sans-serif;
-  text-align: center;
-  animation: processing-bar 1.3s ease-in-out infinite;
-}
-
 .cnt-ov.is-processing .cnt-mascot { display: none; }
 
 .cnt-ov.is-processing .cnt-n {
@@ -1396,11 +1382,6 @@ input[type="range"] {
 
 
 @keyframes spin { to { transform: rotate(360deg); } }
-
-@keyframes processing-bar {
-  0% { background-position: -54% 10px, 0 10px; }
-  100% { background-position: 154% 10px, 0 10px; }
-}
 
 /* ── Smooth Transitions & Animations ───────────────────────── */
 
