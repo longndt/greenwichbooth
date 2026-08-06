@@ -69,6 +69,7 @@ export async function buildPoster({
 }) {
   await document.fonts.ready;
   const mascot = await loadImage(mascotUrl);
+  const isDarkTheme = Number(theme?.id) === 2;
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
@@ -76,10 +77,22 @@ export async function buildPoster({
   ctx.fillStyle = theme.bg.color;
   ctx.fillRect(0, 0, width, height);
 
-  drawGlowOrb(ctx, 160, 140, 260, theme.frame.outer, 0.18);
-  drawGlowOrb(ctx, 920, 220, 280, theme.photos.cornerAccent.color, 0.12);
-  drawGlowOrb(ctx, 760, 1180, 320, theme.footer.glow || theme.footer.borderColor, 0.18);
-  drawGlowOrb(ctx, 540, 760, 420, 'rgba(255,255,255,0.18)', 0.08);
+  if (isDarkTheme) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.04)';
+    ctx.fillRect(0, 0, width, 16);
+    ctx.fillRect(0, height - 16, width, 16);
+    ctx.restore();
+    drawGlowOrb(ctx, 170, 120, 320, theme.frame.outer || theme.photos.cornerAccent.color, 0.18);
+    drawGlowOrb(ctx, 920, 190, 320, theme.photos.cornerAccent.color, 0.16);
+    drawGlowOrb(ctx, 860, 1180, 360, theme.footer.glow || theme.footer.borderColor, 0.22);
+    drawGlowOrb(ctx, 520, 760, 520, 'rgba(255,255,255,0.16)', 0.06);
+  } else {
+    drawGlowOrb(ctx, 160, 140, 260, theme.frame.outer, 0.18);
+    drawGlowOrb(ctx, 920, 220, 280, theme.photos.cornerAccent.color, 0.12);
+    drawGlowOrb(ctx, 760, 1180, 320, theme.footer.glow || theme.footer.borderColor, 0.18);
+    drawGlowOrb(ctx, 540, 760, 420, 'rgba(255,255,255,0.18)', 0.08);
+  }
 
   if (theme.bg.texture.type === 'grid') {
     ctx.fillStyle = theme.bg.texture.color;
@@ -132,7 +145,7 @@ export async function buildPoster({
   layout.forEach(({ x, y, w, h, hero }) => {
     ctx.save();
     ctx.shadowColor = theme.photos.slotShadow;
-    ctx.shadowBlur = hero ? 34 : 22;
+    ctx.shadowBlur = isDarkTheme ? (hero ? 42 : 28) : (hero ? 34 : 22);
     ctx.shadowOffsetY = 0;
     ctx.fillStyle = theme.photos.slotBg;
     roundRect(ctx, x - 8, y - 8, w + 16, h + 16, theme.photos.radius + 2);
@@ -171,10 +184,19 @@ export async function buildPoster({
 
   layout.forEach(({ x, y, w, h, hero }) => {
     ctx.strokeStyle = theme.photos.borderColor;
-    ctx.lineWidth = hero ? theme.photos.borderWidth + 2 : theme.photos.borderWidth;
+    ctx.lineWidth = hero ? theme.photos.borderWidth + (isDarkTheme ? 3 : 2) : theme.photos.borderWidth;
     roundRect(ctx, x, y, w, h, theme.photos.radius);
     ctx.stroke();
-    drawCornerAccents(ctx, x, y, w, h, theme.photos.cornerAccent.color, theme.photos.cornerAccent.size, theme.photos.cornerAccent.lw);
+    drawCornerAccents(
+      ctx,
+      x,
+      y,
+      w,
+      h,
+      theme.photos.cornerAccent.color,
+      isDarkTheme ? theme.photos.cornerAccent.size + 6 : theme.photos.cornerAccent.size,
+      theme.photos.cornerAccent.lw,
+    );
   });
 
   ctx.textAlign = 'center';
