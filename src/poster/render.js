@@ -36,6 +36,15 @@ export function drawGlowOrb(ctx, x, y, radius, color, alpha = 1) {
   ctx.restore();
 }
 
+export function drawSlotBorder(ctx, x, y, w, h, radius, color, lineWidth) {
+  ctx.save();
+  roundRect(ctx, x + 1, y + 1, w - 2, h - 2, radius - 1);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.stroke();
+  ctx.restore();
+}
+
 export function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minSize, family, color, align = 'left') {
   const display = String(text || '').trim();
   if (!display) return;
@@ -168,6 +177,10 @@ export async function buildPoster({
     const slot = layout[i];
     return drawPhoto(ctx, p, slot.x + 8, slot.y + 8, slot.w - 16, slot.h - 16, theme.photos.radius - 4);
   }));
+
+  layout.forEach(({ x, y, w, h }) => {
+    drawSlotBorder(ctx, x, y, w, h, theme.photos.radius, theme.photos.borderColor, theme.photos.borderWidth || 2);
+  });
 
   layout.forEach(({ x, y, w, h, hero }, i) => {
     ctx.save();
