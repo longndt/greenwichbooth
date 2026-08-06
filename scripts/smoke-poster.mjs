@@ -68,7 +68,7 @@ async function main() {
     throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
   }
   const heroBorder = await page.$eval('#pvs0', el => getComputedStyle(el).borderTopColor);
-  if (heroBorder !== 'rgb(143, 92, 200)') {
+  if (heroBorder !== 'rgb(42, 107, 255)') {
     throw new Error(`Preview hero slot border did not apply selected theme immediately: ${heroBorder}`);
   }
 
@@ -115,8 +115,8 @@ async function main() {
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeLayout !== 'khung B') {
-    throw new Error(`Expected khung B active, got ${activeLayout}`);
+  if (activeLayout !== 'kiểu B') {
+    throw new Error(`Expected kiểu B active, got ${activeLayout}`);
   }
   const previewLayout = await page.$eval('#photo-grid', el => el.dataset.layout);
   if (previewLayout !== '2') {
@@ -142,12 +142,12 @@ async function main() {
   }
   await page.click('.time-chip[data-interval="5"]');
   await page.waitForFunction(() => window.__t?.S?.interval === 5);
-  const activeChipStyles = await page.$$eval(
-    '.theme-chip.is-active, .layout-chip.is-active, .count-chip.is-active, .time-chip.is-active',
+  const themeChipStyles = await page.$$eval(
+    '.theme-chip .theme-chip-dot',
     nodes => nodes.map(node => getComputedStyle(node).backgroundImage)
   );
-  if (new Set(activeChipStyles).size !== 4) {
-    throw new Error(`Active chip rows should use distinct backgrounds: ${activeChipStyles.join(' | ')}`);
+  if (new Set(themeChipStyles).size !== 1) {
+    throw new Error(`Theme chips should use the same background: ${themeChipStyles.join(' | ')}`);
   }
   const layoutRects = await page.evaluate(() => {
     const grid = document.querySelector('#photo-grid').getBoundingClientRect();

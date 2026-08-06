@@ -86,9 +86,8 @@ function syncThemePicker() {
   qa('.theme-chip[data-theme-index]').forEach(btn => {
     const index = Number(btn.dataset.themeIndex || 0);
     const active = index === S.themeIndex;
-    const theme = POSTER_THEMES[index] || POSTER_THEMES[0];
-    btn.style.setProperty('--chip-a', theme.photos.borderColor);
-    btn.style.setProperty('--chip-b', theme.photos.cornerAccent.color);
+    btn.style.setProperty('--chip-a', '#00A676');
+    btn.style.setProperty('--chip-b', '#007F5F');
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
     btn.disabled = S.mode !== 'ready';
