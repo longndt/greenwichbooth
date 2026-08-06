@@ -13,9 +13,9 @@ export const POSTER_THEMES = [
       topBar: { color: '#00A676', height: 7 },
       bottomBar: { colors: ['rgba(0,127,95,0.10)', 'rgba(0,127,95,0.30)'], height: 2 },
     },
-    title: { color: '#0A5B66' },
-    subtitle: { color: '#9C6120' },
-    event: { color: '#B85C19' },
+    title: { color: '#184E5D' },
+    subtitle: { color: '#A15C28' },
+    event: { color: '#2A6BFF' },
     text: {
       school: 'GREENWICH VIETNAM',
       subtitle: 'Change Starts Here',
