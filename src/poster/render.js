@@ -105,7 +105,7 @@ export async function buildPoster({
   ctx.shadowColor = 'transparent';
   drawHeaderText(ctx, 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
   drawHeaderText(ctx, 'Change Starts Here', 160, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.subtitle.color);
-  drawHeaderText(ctx, eventName, 370, 166, 590, 900, 54, 34, 'Be Vietnam Pro', theme.subtitle.color, 'center');
+  drawHeaderText(ctx, eventName, width / 2, 205, 820, 900, 48, 30, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
   ctx.save();
   ctx.fillStyle = 'rgba(255,255,255,0.14)';

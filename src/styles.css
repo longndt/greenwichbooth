@@ -687,13 +687,14 @@ html, body {
 .preview-event {
   display: none;
   position: absolute;
-  left: 5.2%;
-  top: 12.9%;
+  left: 12%;
+  top: 15.2%;
   z-index: 2;
-  max-width: 60%;
-  color: var(--preview-subtitle, var(--gold));
-  font-size: 16px;
+  width: 76%;
+  color: var(--preview-event, var(--preview-title, var(--gold)));
+  font-size: 15px;
   font-weight: 900;
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1305,7 +1306,12 @@ input[type="range"] {
   display: block;
 }
 
-.ctrl-col.shooting .shoot-btn { display: none; }
+.ctrl-col.shooting .shoot-btn {
+  opacity: 0.45;
+  filter: blur(1px) saturate(0.8);
+  pointer-events: none;
+  transform: scale(0.985);
+}
 .ctrl-col.shooting { justify-content: flex-start; }
 
 /* ── Photo slot — 2×2 grid item ─────────────────────────── */

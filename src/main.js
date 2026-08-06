@@ -175,6 +175,7 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-shell-badge', theme.header.topBar.color);
   preview.style.setProperty('--preview-title', theme.title.color);
   preview.style.setProperty('--preview-subtitle', theme.subtitle.color);
+  preview.style.setProperty('--preview-event', theme.event?.color || theme.title.color);
   preview.style.setProperty('--preview-date', theme.date.color);
   preview.style.setProperty('--preview-footer-text', theme.footer.hashtag.color);
   preview.style.setProperty('--preview-footer-border', theme.footer.borderColor);
