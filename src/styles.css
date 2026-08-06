@@ -1128,8 +1128,8 @@ input[type="range"] {
 
 @media (min-width: 1440px) {
   .main {
-    grid-template-columns: minmax(0, 1.5fr) minmax(420px, 0.9fr);
-    gap: 0 28px;
+    grid-template-columns: minmax(0, 1.55fr) minmax(380px, 0.82fr);
+    gap: 0 24px;
   }
 
   .cam-col {
@@ -1137,8 +1137,32 @@ input[type="range"] {
   }
 
   .ctrl-col {
-    gap: 12px;
-    padding-top: 12px;
+    gap: 6px;
+    padding-top: 4px;
+  }
+
+  .ctrl-grid {
+    gap: 10px;
+  }
+
+  .theme-picker,
+  .layout-picker,
+  .count-picker,
+  .time-picker {
+    gap: 6px;
+  }
+
+  .name-grid {
+    gap: 6px;
+  }
+
+  .name-field {
+    padding: 8px 10px;
+  }
+
+  .name-input {
+    padding: 10px 10px 9px;
+    font-size: 13px;
   }
 
   .cam-box {
@@ -1148,41 +1172,65 @@ input[type="range"] {
 
   .poster-shell {
     flex: 0 0 auto;
-    height: min(70dvh, 760px);
-    width: min(100%, calc(min(70dvh, 760px) * 952 / 922));
+    height: clamp(180px, 34dvh, 420px);
+    width: min(100%, calc(clamp(180px, 34dvh, 420px) * 952 / 922));
     max-height: none;
   }
 
   .shoot-btn {
-    width: clamp(96px, 7vw, 120px);
-    margin-top: 12px;
+    width: clamp(82px, 5vw, 104px);
+    margin-top: 4px;
   }
 
-  .s-text { font-size: 14px; }
-  .s-text span:last-child { font-size: 16px; }
+  .s-text { font-size: 11px; }
+  .s-text span:last-child { font-size: 13px; }
 }
 
 @media (min-width: 1024px) and (max-width: 1439px) {
   .ctrl-col {
-    gap: 10px;
-    padding-top: 8px;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .ctrl-grid {
+    gap: 12px;
+  }
+
+  .theme-picker,
+  .layout-picker,
+  .count-picker,
+  .time-picker {
+    gap: 6px;
+  }
+
+  .name-grid {
+    gap: 6px;
+  }
+
+  .name-field {
+    padding: 8px 10px;
+  }
+
+  .name-input {
+    padding: 10px 10px 9px;
+    font-size: 13px;
   }
 
   .poster-shell {
     flex: 0 0 auto;
-    height: clamp(220px, 34dvh, 380px);
-    width: min(100%, calc(clamp(220px, 34dvh, 380px) * 952 / 922));
-    max-height: 380px;
+    height: clamp(160px, 22dvh, 260px);
+    width: min(100%, calc(clamp(160px, 22dvh, 260px) * 952 / 922));
+    max-height: 260px;
   }
 
   .shoot-btn {
     flex-shrink: 0;
-    width: clamp(92px, 8vw, 116px);
-    margin: 8px auto 0;
+    width: clamp(76px, 5.5vw, 96px);
+    margin: 4px auto 0;
   }
 
-  .s-text { font-size: 13px; }
-  .s-text span:last-child { font-size: 15px; }
+  .s-text { font-size: 11px; }
+  .s-text span:last-child { font-size: 13px; }
 }
 
 @media (max-width: 1023px) {
@@ -1237,7 +1285,7 @@ input[type="range"] {
 
   .shoot-btn {
     width: min(32vw, 128px);
-    margin: 12px auto 6px;
+    margin: 8px auto 4px;
   }
 }
 
@@ -1728,6 +1776,13 @@ input[type="range"] {
   .poster-shell {
     height: min(66dvh, calc(100dvh - 208px));
     width: min(100%, calc(min(66dvh, calc(100dvh - 208px)) * 952 / 922));
+  }
+}
+
+@media (min-width: 1440px) {
+  .poster-shell {
+    height: clamp(180px, 34dvh, 420px);
+    width: min(100%, calc(clamp(180px, 34dvh, 420px) * 952 / 922));
   }
 }
 
