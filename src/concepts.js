@@ -26,10 +26,10 @@ export const POSTER_THEMES = [
     photos: {
       slotShadow: 'rgba(0,127,95,0.18)',
       slotBg: '#FFFDF6',
-      borderColor: '#00A676',
+      borderColor: '#7ABDA4',
       borderWidth: 3,
       radius: 10,
-      cornerAccent: { color: '#007F5F', size: 22, lw: 2 },
+      cornerAccent: { color: '#5FA88D', size: 22, lw: 2 },
     },
     footer: {
       bg: '#082733',
@@ -65,10 +65,10 @@ export const POSTER_THEMES = [
     photos: {
       slotShadow: 'rgba(42,107,255,0.16)',
       slotBg: '#FFFBFF',
-      borderColor: '#2A6BFF',
+      borderColor: '#8AA4E8',
       borderWidth: 3,
       radius: 10,
-      cornerAccent: { color: '#123C9C', size: 22, lw: 2 },
+      cornerAccent: { color: '#687FC0', size: 22, lw: 2 },
     },
     footer: {
       bg: '#082733',
