@@ -558,12 +558,12 @@ html, body {
 
 .theme-chip.is-active {
   background:
-    radial-gradient(circle at 22% 22%, rgba(224,196,135,0.18), transparent 38%),
-    linear-gradient(145deg, rgba(128,104,63,0.94), rgba(49,47,38,0.98));
-  border-color: var(--chip-b, var(--gold));
+    radial-gradient(circle at 22% 22%, rgba(148,210,189,0.28), transparent 38%),
+    var(--chip-bg, linear-gradient(145deg, rgba(5,108,83,0.96), rgba(4,18,26,0.98)));
+  border-color: #0A7F5F;
   box-shadow:
-    0 0 0 1px rgba(224,196,135,0.08),
-    0 0 20px rgba(128,104,63,0.18),
+    0 0 0 1px rgba(148,210,189,0.10),
+    0 0 20px rgba(10,127,95,0.20),
     inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
@@ -613,12 +613,12 @@ html, body {
   height: 14px;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(145deg, var(--chip-a, var(--gold)), var(--chip-b, var(--emerald)));
-  box-shadow: 0 0 12px rgba(255,203,47,0.25);
+  background: linear-gradient(145deg, var(--chip-a, #94D2BD), var(--chip-b, #0A7F5F));
+  box-shadow: 0 0 12px rgba(10,127,95,0.25);
 }
 
 .theme-chip.is-active .theme-chip-dot {
-  box-shadow: 0 0 14px rgba(255,203,47,0.48);
+  box-shadow: 0 0 14px rgba(10,127,95,0.48);
 }
 
 .theme-chip-text {

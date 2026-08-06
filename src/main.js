@@ -86,8 +86,9 @@ function syncThemePicker() {
   qa('.theme-chip[data-theme-index]').forEach(btn => {
     const index = Number(btn.dataset.themeIndex || 0);
     const active = index === S.themeIndex;
-    btn.style.setProperty('--chip-a', '#00A676');
-    btn.style.setProperty('--chip-b', '#007F5F');
+    btn.style.setProperty('--chip-a', '#94D2BD');
+    btn.style.setProperty('--chip-b', '#0A7F5F');
+    btn.style.setProperty('--chip-bg', 'linear-gradient(145deg, rgba(5, 108, 83, 0.96), rgba(4, 18, 26, 0.98))');
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
     btn.disabled = S.mode !== 'ready';
@@ -185,6 +186,12 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-slot-border', theme.photos.borderColor);
   preview.style.setProperty('--preview-slot-accent', theme.photos.cornerAccent.color);
   preview.style.setProperty('--preview-badge-ink', theme.bg.color);
+  const shootBtn = q('#shoot-btn');
+  if (shootBtn) {
+    shootBtn.style.setProperty('--shoot-a', '#8EDBFF');
+    shootBtn.style.setProperty('--shoot-b', '#2A6BFF');
+    shootBtn.style.setProperty('--shoot-glow', 'rgba(42,107,255,0.20)');
+  }
   if (q('#preview-event')) q('#preview-event').textContent = S.eventName.trim() || 'Khoảnh khắc Greenwich';
   if (q('#preview-date')) q('#preview-date').textContent = today;
   if (q('#preview-place')) q('#preview-place').textContent = S.studentName;
