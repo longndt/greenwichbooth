@@ -513,7 +513,7 @@ async function shoot() {
 
   await nextFrame();
   q('#cov').classList.add('is-processing');
-  q('#cnt-n').textContent = 'Đang tạo ảnh';
+  q('#cnt-n').textContent = 'Đang xử lý';
   q('#shoot-btn').disabled = false;
   syncThemePicker();
   syncLayoutPicker();
