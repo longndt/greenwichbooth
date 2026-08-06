@@ -284,6 +284,11 @@ q('#app').innerHTML = `
           <div class="cnt-num-wrap">
             <div class="cnt-n" id="cnt-n">${S.interval}</div>
             <img class="cnt-mascot" id="cnt-mascot" src="${mascotUrl}" alt="" aria-hidden="true">
+            <div class="cnt-copy" id="cnt-copy" aria-hidden="true">
+              <span class="cnt-copy-title">Đang tạo ảnh</span>
+              <span class="cnt-copy-sub">Đang dựng poster của bạn</span>
+              <span class="cnt-bar"><i></i></span>
+            </div>
           </div>
         </div>
 
