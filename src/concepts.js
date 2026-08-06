@@ -25,7 +25,7 @@ export const POSTER_THEMES = [
     date: { color: '#8A5B1E' },
     photos: {
       slotShadow: 'rgba(0,127,95,0.18)',
-      slotBg: '#FFFDF6',
+      slotBg: '#D8EFE5',
       borderColor: '#7ABDA4',
       borderWidth: 3,
       radius: 10,
@@ -64,7 +64,7 @@ export const POSTER_THEMES = [
     date: { color: '#A15C28' },
     photos: {
       slotShadow: 'rgba(42,107,255,0.16)',
-      slotBg: '#FFFBFF',
+      slotBg: '#DCE6FF',
       borderColor: '#8AA4E8',
       borderWidth: 3,
       radius: 10,
