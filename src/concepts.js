@@ -3,7 +3,7 @@
 export const POSTER_THEMES = [
   {
     id: 1,
-    name: 'mẫu A',
+    name: 'màu 1',
     bg: {
       color: '#F7F2E9',
       texture: { type: 'grid', color: 'rgba(10,91,102,0.06)', step: 34 },
@@ -42,7 +42,7 @@ export const POSTER_THEMES = [
   },
   {
     id: 2,
-    name: 'mẫu B',
+    name: 'màu 2',
     bg: {
       color: '#F7F2E9',
       texture: { type: 'grid', color: 'rgba(10,91,102,0.06)', step: 34 },
