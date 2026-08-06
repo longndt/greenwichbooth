@@ -51,7 +51,10 @@ export function drawHeaderText(ctx, text, x, y, maxW, fontWeight, fontSize, minS
   ctx.textAlign = align;
   ctx.textBaseline = 'middle';
   ctx.fillStyle = color;
+  ctx.strokeStyle = 'rgba(255,255,255,0.26)';
+  ctx.lineWidth = 1.2;
   ctx.fillText(display, x, y, maxW);
+  ctx.strokeText(display, x, y, maxW);
   ctx.restore();
 }
 
@@ -132,11 +135,16 @@ export async function buildPoster({
   ctx.arc(96, 88, 48, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(255,255,255,0.07)';
   ctx.fill();
-  ctx.strokeStyle = 'rgba(255,203,47,0.55)';
-  ctx.lineWidth = 2;
+  ctx.strokeStyle = 'rgba(120,74,12,0.88)';
+  ctx.lineWidth = 3;
   ctx.stroke();
   ctx.clip();
   ctx.drawImage(mascot, 56, 42, 80, 80);
+  ctx.strokeStyle = 'rgba(255,203,47,0.75)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(96, 88, 46, 0, Math.PI * 2);
+  ctx.stroke();
   ctx.restore();
 
   layout.forEach(({ x, y, w, h, hero }) => {
