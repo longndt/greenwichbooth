@@ -115,8 +115,8 @@ async function main() {
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeLayout !== 'khung B') {
-    throw new Error(`Expected khung B active, got ${activeLayout}`);
+  if (activeLayout !== 'khung 2') {
+    throw new Error(`Expected khung 2 active, got ${activeLayout}`);
   }
   const previewLayout = await page.$eval('#photo-grid', el => el.dataset.layout);
   if (previewLayout !== '2') {

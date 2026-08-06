@@ -27,8 +27,8 @@ const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 5];
 const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
-  { label: 'khung A' },
-  { label: 'khung B' },
+  { label: 'khung 1' },
+  { label: 'khung 2' },
 ];
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
