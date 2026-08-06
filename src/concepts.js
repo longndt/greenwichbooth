@@ -31,7 +31,7 @@ export const POSTER_THEMES = [
       url: { text: 'greenwich.edu.vn', color: '#94D2BD' },
       hashtag: { text: 'My Greenwich Moment', color: '#F7FFFE' },
     },
-    frame: { outer: '#0A9396', outerW: 6, inner: '#D6A72C', innerW: 2 },
+    frame: { outer: 'transparent', outerW: 0, inner: '#D6A72C', innerW: 2 },
   },
   {
     id: 2,
@@ -63,6 +63,6 @@ export const POSTER_THEMES = [
       url: { text: 'greenwich.edu.vn', color: '#EAF7FF' },
       hashtag: { text: 'My Greenwich Moment', color: '#F7FFFE' },
     },
-    frame: { outer: '#7CCBB9', outerW: 5, inner: '#D28A2E', innerW: 2 },
+    frame: { outer: 'transparent', outerW: 0, inner: '#D28A2E', innerW: 2 },
   },
 ];

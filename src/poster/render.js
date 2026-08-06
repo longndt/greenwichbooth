@@ -197,12 +197,6 @@ export async function buildPoster({
   ctx.fillStyle = theme.footer.hashtag.color;
   ctx.fillText(theme.footer.hashtag.text, 540, 1273);
 
-  ctx.strokeStyle = theme.frame.outer;
-  ctx.lineWidth = theme.frame.outerW;
-  ctx.strokeRect(20, 20, width - 40, height - 40);
-  ctx.strokeStyle = theme.frame.inner;
-  ctx.lineWidth = theme.frame.innerW;
-  if (theme.frame.innerW > 0) ctx.strokeRect(32, 32, width - 64, height - 64);
 }
 
 const imageCache = new Map();
