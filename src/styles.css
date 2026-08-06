@@ -395,6 +395,14 @@ html, body {
   color: rgba(255,255,255,0.38);
 }
 
+.name-input:-webkit-autofill,
+.name-input:-webkit-autofill:hover,
+.name-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text);
+  box-shadow: 0 0 0 1000px rgba(0,0,0,0.2) inset;
+  transition: background-color 9999s ease-out;
+}
+
 .name-input:focus {
   border: 0;
   box-shadow: 0 0 0 3px rgba(255,203,47,0.1);
