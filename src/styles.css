@@ -845,8 +845,8 @@ input[type="range"] {
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.16);
   background:
-    radial-gradient(circle at 22% 22%, rgba(255,255,255,0.18), transparent 38%),
-    linear-gradient(145deg, rgba(247,242,233,0.98), rgba(230,219,200,0.98));
+    radial-gradient(circle at 22% 22%, rgba(224,196,135,0.18), transparent 38%),
+    linear-gradient(145deg, rgba(128,104,63,0.94), rgba(49,47,38,0.98));
   color: white;
   font-family: 'Be Vietnam Pro', 'Space Grotesk', sans-serif;
   cursor: pointer;
@@ -858,10 +858,10 @@ input[type="range"] {
   margin: auto 0;
   transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
   box-shadow:
-    0 22px 60px rgba(198,176,136,0.28),
-    0 0 0 12px rgba(214,167,44,0.08),
-    inset 0 1px 0 rgba(255,255,255,0.26),
-    inset 0 -20px 28px rgba(0,0,0,0.08);
+    0 22px 60px rgba(128,104,63,0.34),
+    0 0 0 12px rgba(224,196,135,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    inset 0 -20px 28px rgba(0,0,0,0.18);
   position: relative;
   overflow: hidden;
 }
@@ -871,7 +871,7 @@ input[type="range"] {
   position: absolute;
   inset: 9px;
   border-radius: 50%;
-  border: 1px solid rgba(214,167,44,0.24);
+  border: 1px solid rgba(224,196,135,0.22);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     inset 0 -1px 0 rgba(0,0,0,0.18);
