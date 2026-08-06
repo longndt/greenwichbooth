@@ -725,7 +725,7 @@ html, body {
   border: 1px solid var(--preview-footer-border, var(--preview-shell-accent));
   background: var(--preview-footer-bg, rgba(4,18,26,0.9));
   color: var(--preview-footer-text, var(--gold));
-  font: 900 13px / 1 'Space Grotesk', 'Be Vietnam Pro', sans-serif;
+  font: 700 16px / 1 'Caveat', 'Be Vietnam Pro', sans-serif;
   letter-spacing: 0.06em;
   white-space: nowrap;
   box-shadow: 0 10px 24px rgba(0,0,0,0.18);
