@@ -18,6 +18,7 @@ const S = loadState({
   stream: null,
   posterUrl: null,
   posterObjectUrl: null,
+  photoObjectUrls: [],
   themeIndex: 0,
   photoCount: 3,
   layoutIndex: 0,
@@ -115,15 +116,14 @@ function syncLayoutPicker() {
       el.style.height = `${slot.h}%`;
     });
   }
-  const locked = S.photoCount === 1;
   const picker = q('.layout-picker');
-  if (picker) picker.classList.toggle('is-locked', locked);
+  if (picker) picker.classList.remove('is-locked');
   qa('.layout-chip[data-layout-index]').forEach(btn => {
     const index = Number(btn.dataset.layoutIndex || 0);
     const active = index === S.layoutIndex;
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-pressed', String(active));
-    btn.disabled = S.mode !== 'ready' || locked;
+    btn.disabled = S.mode !== 'ready';
   });
 }
 
@@ -152,7 +152,7 @@ function syncReadyCountdown() {
   q('#cov')?.classList.remove('hidden');
   q('#cnt-mascot')?.classList.remove('is-visible');
   const n = q('#cnt-n');
-  if (n) n.textContent = `${S.interval}s`;
+  if (n) n.textContent = String(S.interval);
 }
 
 function syncPosterPreview() {
@@ -201,7 +201,6 @@ function setThemeIndex(nextIndex) {
 
 function setLayoutIndex(nextIndex) {
   if (S.mode !== 'ready') return;
-  if (S.photoCount === 1) return;
   const index = Math.max(0, Math.min(getLayouts().length - 1, Number(nextIndex) || 0));
   S.layoutIndex = index;
   saveState('layoutIndex', index);
@@ -212,7 +211,6 @@ function setPhotoCount(nextCount) {
   if (S.mode !== 'ready') return;
   const count = Number(nextCount) || 3;
   S.photoCount = PHOTO_COUNT_OPTIONS.includes(count) ? count : 3;
-  if (S.photoCount === 1) S.layoutIndex = 0;
   S.layoutIndex = Math.min(S.layoutIndex, getLayouts().length - 1);
   saveState('photoCount', S.photoCount);
   saveState('layoutIndex', S.layoutIndex);
@@ -471,6 +469,7 @@ async function shoot() {
   syncIntervalPicker();
   syncEventNameField();
   syncStudentNameField();
+  clearPhotoObjectUrls();
   S.photos = [];
   qa('.pv-slot').forEach(s => s.classList.remove('filled'));
   qa('.pv').forEach(p => { p.src = ''; });
@@ -500,7 +499,7 @@ async function shoot() {
     await sleep(180);
     q('#cnt-mascot').classList.remove('is-visible');
 
-    S.photos.push(capFrame(cam));
+    S.photos.push(await capFrame(cam));
     if (navigator.vibrate) navigator.vibrate([50]);
 
     q(`#pv${i}`).src = S.photos[i];
@@ -587,7 +586,7 @@ function canvasToBlob(canvas, quality) {
   });
 }
 
-function capFrame(cam) {
+async function capFrame(cam) {
   const vw = cam.videoWidth, vh = cam.videoHeight;
   const sz = Math.min(vw, vh);
 
@@ -599,7 +598,15 @@ function capFrame(cam) {
   rx.translate(sz, 0); rx.scale(-1, 1);
   rx.drawImage(cam, (vw - sz) / 2, (vh - sz) / 2, sz, sz, 0, 0, sz, sz);
 
-  return raw.toDataURL('image/jpeg', 0.98);
+  const blob = await canvasToBlob(raw, 0.92);
+  const url = URL.createObjectURL(blob);
+  S.photoObjectUrls.push(url);
+  return url;
+}
+
+function clearPhotoObjectUrls() {
+  S.photoObjectUrls.forEach(url => URL.revokeObjectURL(url));
+  S.photoObjectUrls = [];
 }
 
 // ── Poster composition (4:5) — Selected concept + rendering
@@ -639,6 +646,7 @@ async function uploadPoster(blob) {
 
 function retake() {
   if (S.posterObjectUrl) URL.revokeObjectURL(S.posterObjectUrl);
+  clearPhotoObjectUrls();
   S.mode = 'ready'; S.photos = []; S.posterUrl = null;
   S.posterObjectUrl = null;
   q('#rov').classList.add('hidden');
