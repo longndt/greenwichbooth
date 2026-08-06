@@ -105,7 +105,7 @@ export async function buildPoster({
   ctx.shadowColor = 'transparent';
   drawHeaderText(ctx, 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
   drawHeaderText(ctx, 'Change Starts Here', 160, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.subtitle.color);
-  drawHeaderText(ctx, eventName, width / 2, 205, 820, 900, 48, 30, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
+  drawHeaderText(ctx, eventName, width / 2, 212, 820, 900, 50, 32, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
   ctx.save();
   ctx.fillStyle = 'rgba(255,255,255,0.14)';
@@ -130,8 +130,8 @@ export async function buildPoster({
 
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-  drawHeaderText(ctx, today, 1016, 82, 260, 800, 34, 24, 'Space Grotesk', theme.date.color, 'right');
-  drawHeaderText(ctx, studentName, 1016, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.footer.borderColor, 'right');
+  drawHeaderText(ctx, today, 1016, 82, 240, 800, 28, 20, 'Space Grotesk', theme.date.color, 'right');
+  drawHeaderText(ctx, studentName, 1016, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.meta?.color || theme.footer.borderColor, 'right');
 
   layout.forEach(({ x, y, w, h, hero }) => {
     ctx.save();

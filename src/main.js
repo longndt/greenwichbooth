@@ -176,6 +176,7 @@ function syncPosterPreview() {
   preview.style.setProperty('--preview-title', theme.title.color);
   preview.style.setProperty('--preview-subtitle', theme.subtitle.color);
   preview.style.setProperty('--preview-event', theme.event?.color || theme.title.color);
+  preview.style.setProperty('--preview-meta', theme.meta?.color || theme.date.color);
   preview.style.setProperty('--preview-date', theme.date.color);
   preview.style.setProperty('--preview-footer-text', theme.footer.hashtag.color);
   preview.style.setProperty('--preview-footer-border', theme.footer.borderColor);
@@ -281,7 +282,7 @@ q('#app').innerHTML = `
 
         <div class="cnt-ov" id="cov">
           <div class="cnt-num-wrap">
-            <div class="cnt-n" id="cnt-n">${S.interval}s</div>
+            <div class="cnt-n" id="cnt-n">${S.interval}</div>
             <img class="cnt-mascot" id="cnt-mascot" src="${mascotUrl}" alt="" aria-hidden="true">
           </div>
         </div>
