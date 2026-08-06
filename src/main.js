@@ -7,7 +7,7 @@ import { buildPoster } from './poster/render.js';
 import { loadState, saveState } from './state.js';
 
 // ── State ─────────────────────────────────────────────────────────────────────
-const isMobile = () => window.innerWidth <= 768;
+const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 let showPosterPreview = !isMobile();
 
 const S = loadState({
