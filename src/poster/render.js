@@ -104,9 +104,6 @@ export async function buildPoster({
     for (let x = 0; x < width; x += s) for (let y = 0; y < height; y += s) ctx.fillRect(x, y, 2, 2);
   }
 
-  ctx.fillStyle = theme.header.topBar.color;
-  ctx.fillRect(0, 0, width, theme.header.topBar.height);
-
   if (theme.header.bottomBar) {
     const headerH = 230;
     const grad = ctx.createLinearGradient(0, headerH - theme.header.bottomBar.height, 0, headerH);
@@ -117,8 +114,8 @@ export async function buildPoster({
   }
 
   ctx.shadowColor = 'transparent';
-  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Be Vietnam Pro', theme.title.color);
-  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', 160, 104, 420, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color);
+  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 180, 64, 500, 800, 30, 24, 'Be Vietnam Pro', theme.title.color);
+  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', 180, 104, 400, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color);
   drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
   ctx.save();
