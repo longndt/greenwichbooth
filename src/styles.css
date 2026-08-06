@@ -317,6 +317,7 @@ html, body {
   gap: 10px;
   padding: 10px 18px 10px 0;
   min-height: 0;
+  height: calc(100dvh - 56px);
 }
 
 .name-grid {
@@ -672,14 +673,14 @@ html, body {
   right: 5.2%;
   top: 4.8%;
   z-index: 2;
-  color: var(--preview-date, var(--dim));
+  color: var(--preview-meta, var(--preview-date, var(--dim)));
   font-size: 10px;
   font-weight: 900;
   text-align: right;
 }
 
 .preview-meta div:last-child {
-  color: var(--preview-title, var(--text));
+  color: var(--preview-meta, var(--preview-title, var(--text)));
   font-size: 9px;
   margin-top: 6px;
 }
@@ -687,12 +688,12 @@ html, body {
 .preview-event {
   display: none;
   position: absolute;
-  left: 12%;
-  top: 15.2%;
+  left: 10%;
+  top: 16.2%;
   z-index: 2;
-  width: 76%;
+  width: 80%;
   color: var(--preview-event, var(--preview-title, var(--gold)));
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 900;
   text-align: center;
   white-space: nowrap;
@@ -824,6 +825,33 @@ input[type="range"] {
 }
 .shoot-btn:active:not(:disabled) { transform: translateY(0) scale(0.98); }
 .shoot-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.shoot-btn:disabled,
+.btn-primary:disabled,
+.btn-sec:disabled,
+.btn-outline:disabled,
+.theme-chip:disabled,
+.layout-chip:disabled,
+.count-chip:disabled,
+.time-chip:disabled,
+.name-input:disabled {
+  filter: blur(1px) saturate(0.85);
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
 
 .s-text {
   position: relative;

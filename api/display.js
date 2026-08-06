@@ -6,6 +6,15 @@ export default async function handler(req, res) {
   let parsed;
   try { parsed = new URL(url); } catch { return res.status(400).send('Invalid url'); }
   if (parsed.protocol !== 'https:') return res.status(400).send('Only https urls are allowed');
+  const allowedHosts = new Set([
+    process.env.BLOB_PUBLIC_HOST,
+    'blob.vercel-storage.com',
+    'public.blob.vercel-storage.com',
+    'vercel-blob.com',
+  ].filter(Boolean));
+  if (allowedHosts.size && !allowedHosts.has(parsed.host)) {
+    return res.status(400).send('Host not allowed');
+  }
 
   // Filename from the validated URL's pathname (excludes query/fragment, so `//` or
   // `/` inside the query string cannot poison the extraction). Sanitise for safety.

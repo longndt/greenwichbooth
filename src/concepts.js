@@ -1,4 +1,4 @@
-// Poster themes — one shared 1080x1440 renderer in main.js, theme tokens only.
+// Poster themes: token data only; renderer lives in src/poster/render.js.
 
 export const POSTER_THEMES = [
   {
@@ -16,6 +16,7 @@ export const POSTER_THEMES = [
     title: { color: '#073B4C' },
     subtitle: { color: '#B85C19' },
     event: { color: '#005F73' },
+    meta: { color: '#375B63' },
     date: { color: '#375B63' },
     photos: {
       slotShadow: 'rgba(10,147,150,0.18)',
@@ -29,7 +30,6 @@ export const POSTER_THEMES = [
       bg: '#082733',
       borderColor: '#86C8B7',
       glow: 'rgba(10,147,150,0.22)',
-      url: { text: 'greenwich.edu.vn', color: '#94D2BD' },
       hashtag: { text: 'My Greenwich Moment', color: '#073B4C' },
     },
     frame: { outer: 'transparent', outerW: 0, inner: '#D6A72C', innerW: 2 },
@@ -49,6 +49,7 @@ export const POSTER_THEMES = [
     title: { color: '#0A5B66' },
     subtitle: { color: '#C7751A' },
     event: { color: '#D28A2E' },
+    meta: { color: '#0A5B66' },
     date: { color: '#0A5B66' },
     photos: {
       slotShadow: 'rgba(10,91,102,0.14)',
@@ -62,7 +63,6 @@ export const POSTER_THEMES = [
       bg: '#050505',
       borderColor: '#F5C542',
       glow: 'rgba(124,203,185,0.18)',
-      url: { text: 'greenwich.edu.vn', color: '#EAF7FF' },
       hashtag: { text: 'My Greenwich Moment', color: '#062A30' },
     },
     frame: { outer: 'transparent', outerW: 0, inner: '#D28A2E', innerW: 2 },

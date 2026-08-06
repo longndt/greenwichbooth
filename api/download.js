@@ -6,9 +6,21 @@ export default async function handler(req, res) {
   let parsed;
   try { parsed = new URL(url); } catch { return res.status(400).send('Invalid url'); }
   if (parsed.protocol !== 'https:') return res.status(400).send('Only https urls are allowed');
+  const allowedHosts = new Set([
+    process.env.BLOB_PUBLIC_HOST,
+    'blob.vercel-storage.com',
+    'public.blob.vercel-storage.com',
+    'vercel-blob.com',
+  ].filter(Boolean));
+  if (allowedHosts.size && !allowedHosts.has(parsed.host)) {
+    return res.status(400).send('Host not allowed');
+  }
 
   try {
-    const img = await fetch(url);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+    const img = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
     if (!img.ok) return res.status(img.status).send('Failed to fetch image');
 
     const blob = await img.arrayBuffer();

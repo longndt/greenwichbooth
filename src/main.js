@@ -6,10 +6,9 @@ import { POSTER_HEIGHT, POSTER_LAYOUTS, POSTER_WIDTH } from './poster/config.js'
 import { buildPoster } from './poster/render.js';
 import { loadState, saveState } from './state.js';
 
-// Face detection removed — simplified accessory positioning (fixed positioning)
-
 // ── State ─────────────────────────────────────────────────────────────────────
 const isMobile = () => window.innerWidth <= 768;
+let showPosterPreview = !isMobile();
 
 const S = loadState({
   mode: 'ready',
@@ -22,7 +21,6 @@ const S = loadState({
   themeIndex: 0,
   photoCount: 3,
   layoutIndex: 0,
-  showPosterPreview: !isMobile(),
 });
 
 const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
@@ -461,7 +459,7 @@ async function shoot() {
   if (!cam.srcObject || cam.videoWidth === 0) return;
 
   S.mode = 'shooting';
-  S.showPosterPreview = true;
+  showPosterPreview = true;
   q('#shoot-btn').disabled = true;
   syncThemePicker();
   syncLayoutPicker();
@@ -609,9 +607,6 @@ function clearPhotoObjectUrls() {
   S.photoObjectUrls = [];
 }
 
-// ── Poster composition (4:5) — Selected concept + rendering
-// poster renderer moved to src/poster/render.js
-
 // ── Result screen ─────────────────────────────────────────────────────────────
 function showResult() {
   q('#poster-img').src = S.posterUrl;
@@ -658,8 +653,8 @@ function retake() {
   q('#cov').classList.remove('hidden');
   q('.ctrl-col').classList.remove('shooting');
   q('#rov').classList.remove('is-ready');
-  S.showPosterPreview = !isMobile();
-  if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
+  showPosterPreview = !isMobile();
+  if (!showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
   syncThemePicker();
   syncPosterPreview();
   syncLayoutPicker();
@@ -720,7 +715,7 @@ window.addEventListener('orientationchange', () => {
 });
 
 // ── Init ──────────────────────────────────────────────────────────────────────
-if (!S.showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
+if (!showPosterPreview) q('.ctrl-col').classList.add('hide-preview');
 syncThemePicker();
 syncPosterPreview();
 syncLayoutPicker();

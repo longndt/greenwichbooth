@@ -20,13 +20,17 @@ async function main() {
   await page.goto(BASE_URL, { waitUntil: 'networkidle0' });
   await page.waitForFunction(() => window.__t?.buildPoster);
 
-  const themeCount = await page.$$eval('.theme-chip', nodes => nodes.length);
-  if (themeCount !== 2) {
-    throw new Error(`Expected 2 theme chips, found ${themeCount}`);
+  const themeChipCount = await page.$$eval('.theme-chip', nodes => nodes.length);
+  if (themeChipCount !== 2) {
+    throw new Error(`Expected 2 theme chips, found ${themeChipCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
   if (themeLabels.join('|') !== 'màu A|màu B') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
+  }
+  const themeCount = await page.$$eval('.theme-chip', nodes => nodes.length);
+  if (themeCount !== 2) {
+    throw new Error(`Expected 2 theme chips, found ${themeCount}`);
   }
 
   await page.click('.theme-chip[data-theme-index="1"]');
@@ -51,13 +55,15 @@ async function main() {
       border: styles.getPropertyValue('--preview-slot-border').trim(),
       accent: styles.getPropertyValue('--preview-slot-accent').trim(),
       frame: styles.getPropertyValue('--preview-shell-border').trim(),
+      event: styles.getPropertyValue('--preview-event').trim(),
     };
   });
   if (
     previewTheme.surface !== theme2.photos.slotBg ||
     previewTheme.border !== theme2.photos.borderColor ||
     previewTheme.accent !== theme2.photos.cornerAccent.color ||
-    previewTheme.frame !== theme2.frame.outer
+    previewTheme.frame !== theme2.frame.outer ||
+    previewTheme.event !== theme2.event.color
   ) {
     throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
   }
@@ -179,6 +185,13 @@ async function main() {
   });
   if (!shootVisible) {
     throw new Error('Shoot button is not fully visible');
+  }
+  const shootDisabled = await page.$eval('#shoot-btn', btn => ({
+    disabled: btn.disabled,
+    blur: getComputedStyle(btn).filter,
+  }));
+  if (shootDisabled.disabled || shootDisabled.blur !== 'none') {
+    throw new Error(`Shoot button should be enabled before shooting: ${JSON.stringify(shootDisabled)}`);
   }
   const shootOffset = await page.$eval('#shoot-btn', btn => {
     const parent = btn.parentElement;
