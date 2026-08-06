@@ -119,16 +119,18 @@ export async function buildPoster({
   ctx.shadowColor = 'transparent';
   drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
   drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', 160, 104, 420, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color);
-  drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Space Grotesk', theme.event?.color || theme.title.color, 'center');
+  drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
-  ctx.save();
-  ctx.fillStyle = 'rgba(255,255,255,0.14)';
-  roundRect(ctx, 52, 34, 628, 148, 30);
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-  ctx.lineWidth = 1;
-  ctx.stroke();
-  ctx.restore();
+  if (theme.header.panel !== false) {
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.14)';
+    roundRect(ctx, 52, 34, 628, 148, 30);
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.restore();
+  }
 
   ctx.save();
   ctx.beginPath();
@@ -201,13 +203,15 @@ export async function buildPoster({
 
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.save();
-  ctx.shadowColor = 'rgba(0,0,0,0.08)';
-  ctx.shadowBlur = 10;
-  ctx.fillStyle = 'rgba(255,255,255,0.16)';
-  roundRect(ctx, 220, 1238, 640, 70, 18);
-  ctx.fill();
-  ctx.restore();
+  if (theme.footer.panel !== false) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(0,0,0,0.08)';
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = 'rgba(255,255,255,0.16)';
+    roundRect(ctx, 220, 1238, 640, 70, 18);
+    ctx.fill();
+    ctx.restore();
+  }
 
   ctx.shadowColor = 'rgba(0,0,0,0.16)';
   ctx.shadowBlur = 6;
