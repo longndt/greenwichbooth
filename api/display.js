@@ -6,13 +6,9 @@ export default async function handler(req, res) {
   let parsed;
   try { parsed = new URL(url); } catch { return res.status(400).send('Invalid url'); }
   if (parsed.protocol !== 'https:') return res.status(400).send('Only https urls are allowed');
-  const allowedHosts = new Set([
-    process.env.BLOB_PUBLIC_HOST,
-    'blob.vercel-storage.com',
-    'public.blob.vercel-storage.com',
-    'vercel-blob.com',
-  ].filter(Boolean));
-  if (allowedHosts.size && !allowedHosts.has(parsed.host)) {
+  const allowedHost = process.env.BLOB_PUBLIC_HOST;
+  const isVercelBlob = parsed.hostname === 'vercel-blob.com' || parsed.hostname.endsWith('.vercel-storage.com');
+  if (allowedHost ? parsed.hostname !== allowedHost : !isVercelBlob) {
     return res.status(400).send('Host not allowed');
   }
 
