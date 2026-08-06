@@ -842,8 +842,8 @@ input[type="range"] {
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.16);
   background:
-    radial-gradient(circle at 22% 22%, rgba(125,211,252,0.34), transparent 36%),
-    linear-gradient(145deg, rgba(79,70,229,0.98), rgba(17,24,39,0.98));
+    radial-gradient(circle at 22% 22%, rgba(224,196,135,0.18), transparent 38%),
+    linear-gradient(145deg, rgba(128,104,63,0.94), rgba(49,47,38,0.98));
   color: white;
   font-family: 'Be Vietnam Pro', 'Space Grotesk', sans-serif;
   cursor: pointer;
@@ -855,9 +855,8 @@ input[type="range"] {
   margin: auto 0;
   transition: transform 0.18s, box-shadow 0.18s, filter 0.18s;
   box-shadow:
-    0 22px 60px rgba(17,24,39,0.5),
-    0 0 0 12px rgba(125,211,252,0.08),
-    0 0 44px rgba(79,70,229,0.32),
+    0 22px 60px rgba(128,104,63,0.34),
+    0 0 0 12px rgba(224,196,135,0.08),
     inset 0 1px 0 rgba(255,255,255,0.22),
     inset 0 -20px 28px rgba(0,0,0,0.18);
   position: relative;
@@ -869,7 +868,7 @@ input[type="range"] {
   position: absolute;
   inset: 11px;
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.18);
+  border: 1px solid rgba(224,196,135,0.22);
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,0.12),
     inset 0 -1px 0 rgba(0,0,0,0.18);
@@ -881,20 +880,19 @@ input[type="range"] {
   position: absolute;
   inset: 22px;
   border-radius: 50%;
-  border: 1px solid rgba(125,211,252,0.22);
+  border: 1px solid rgba(255,255,255,0.14);
   background: radial-gradient(circle at 50% 28%, rgba(255,255,255,0.18), transparent 42%);
   box-shadow: inset 0 0 0 1px rgba(255,255,255,0.04);
   transition: transform 0.18s, opacity 0.18s;
 }
 
 .shoot-btn:hover:not(:disabled)::before { transform: scale(0.96); }
-.shoot-btn:hover:not(:disabled)::after { transform: scale(0.92); }
+.shoot-btn:hover:not(:disabled)::after { transform: scale(0.94); }
 .shoot-btn:hover:not(:disabled) {
   transform: translateY(-2px) scale(1.05);
   box-shadow:
-    0 28px 68px rgba(17,24,39,0.56),
-    0 0 0 14px rgba(125,211,252,0.1),
-    0 0 52px rgba(79,70,229,0.36),
+    0 28px 68px rgba(128,104,63,0.4),
+    0 0 0 14px rgba(224,196,135,0.1),
     inset 0 1px 0 rgba(255,255,255,0.28),
     inset 0 -22px 28px rgba(0,0,0,0.16);
   filter: saturate(1.08);
@@ -904,7 +902,7 @@ input[type="range"] {
   text-shadow:
     0 1px 0 rgba(0, 0, 0, 0.24),
     0 0 18px rgba(255, 255, 255, 0.3),
-    0 0 24px rgba(255, 203, 47, 0.22);
+    0 0 24px rgba(224, 196, 135, 0.22);
 }
 .shoot-btn:active:not(:disabled) { transform: translateY(0) scale(0.98); }
 .shoot-btn:disabled { opacity: 0.5; cursor: not-allowed; }
