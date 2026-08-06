@@ -25,15 +25,15 @@ async function main() {
     throw new Error(`Expected 2 theme chips, found ${themeCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'Mẫu 1|Mẫu 2') {
+  if (themeLabels.join('|') !== 'Màu 1|Màu 2') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
 
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'Mẫu 2') {
-    throw new Error(`Expected Mẫu 2 active, got ${activeTheme}`);
+  if (activeTheme !== 'Màu 2') {
+    throw new Error(`Expected Màu 2 active, got ${activeTheme}`);
   }
   const theme2 = POSTER_THEMES[1];
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
