@@ -15,7 +15,7 @@ export const POSTER_THEMES = [
     },
     title: { color: '#184E5D' },
     subtitle: { color: '#A15C28' },
-    event: { color: '#2A6BFF' },
+    event: { color: '#1E7A8C' },
     text: {
       school: 'GREENWICH VIETNAM',
       subtitle: 'Change Starts Here',
@@ -54,7 +54,7 @@ export const POSTER_THEMES = [
     },
     title: { color: '#184E5D' },
     subtitle: { color: '#A15C28' },
-    event: { color: '#2A6BFF' },
+    event: { color: '#1E7A8C' },
     text: {
       school: 'GREENWICH VIETNAM',
       subtitle: 'Change Starts Here',

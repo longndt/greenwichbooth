@@ -114,9 +114,9 @@ export async function buildPoster({
   }
 
   ctx.shadowColor = 'transparent';
-  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', width - 56, 64, 520, 800, 30, 24, 'Be Vietnam Pro', theme.title.color, 'right');
-  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', width - 56, 104, 420, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color, 'right');
-  drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
+  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', width - 56, 64, 520, 800, 30, 24, 'Public Sans', theme.title.color, 'right');
+  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', width - 56, 104, 420, 700, 22, 14, 'Public Sans', theme.subtitle.color, 'right');
+  drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Public Sans', theme.event?.color || theme.title.color, 'center');
 
   ctx.save();
   ctx.fillStyle = 'rgba(255,255,255,0.14)';
@@ -208,7 +208,7 @@ export async function buildPoster({
 
   ctx.shadowColor = 'rgba(0,0,0,0.16)';
   ctx.shadowBlur = 6;
-  const footerFamily = theme.footer.script?.family || '"Be Vietnam Pro", Arial, sans-serif';
+  const footerFamily = theme.footer.script?.family || '"Public Sans", Arial, sans-serif';
   const footerStyle = theme.footer.script?.italic ? 'italic ' : '';
   ctx.font = `${footerStyle}700 46px ${footerFamily}`;
   ctx.fillStyle = theme.footer.script?.color || theme.footer.hashtag.color;
