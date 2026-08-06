@@ -25,15 +25,15 @@ async function main() {
     throw new Error(`Expected 2 theme chips, found ${themeCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'Màu 1|Màu 2') {
+  if (themeLabels.join('|') !== 'màu A|màu B') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
 
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'Màu 2') {
-    throw new Error(`Expected Màu 2 active, got ${activeTheme}`);
+  if (activeTheme !== 'màu B') {
+    throw new Error(`Expected màu B active, got ${activeTheme}`);
   }
   const theme2 = POSTER_THEMES[1];
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
@@ -109,8 +109,8 @@ async function main() {
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeLayout !== 'Khung 2') {
-    throw new Error(`Expected Khung 2 active, got ${activeLayout}`);
+  if (activeLayout !== 'khung B') {
+    throw new Error(`Expected khung B active, got ${activeLayout}`);
   }
   const previewLayout = await page.$eval('#photo-grid', el => el.dataset.layout);
   if (previewLayout !== '2') {

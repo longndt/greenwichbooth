@@ -28,8 +28,8 @@ const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 5];
 const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
-  { label: 'Khung 1' },
-  { label: 'Khung 2' },
+  { label: 'khung A' },
+  { label: 'khung B' },
 ];
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
@@ -222,6 +222,7 @@ function setIntervalSeconds(nextInterval) {
   if (S.mode !== 'ready') return;
   const seconds = Number(nextInterval) || 3;
   S.interval = INTERVAL_OPTIONS.includes(seconds) ? seconds : 3;
+  saveState('interval', S.interval);
   syncIntervalPicker();
   syncReadyCountdown();
 }
