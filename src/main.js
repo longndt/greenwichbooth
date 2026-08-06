@@ -381,8 +381,8 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="32"
-            placeholder="Tên sinh viên/Lời nhắn"
-            aria-label="Lời nhắn hoặc tên sinh viên để hiển thị trên poster"
+            placeholder="Lời nhắn/Họ tên"
+            aria-label="Lời nhắn hoặc họ tên để hiển thị trên poster"
           >
         </div>
       </div>
@@ -561,8 +561,8 @@ async function shoot() {
   try {
     const dlUrl = await uploadPoster(uploadBlob);
     if (!dlUrl) throw new Error('Upload failed');
-    const displayUrl = `${window.location.origin}/api/display?url=${encodeURIComponent(dlUrl)}`;
-    q('#qr-img').src = await QRCode.toDataURL(displayUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } });
+    const downloadUrl = `${window.location.origin}/api/download?url=${encodeURIComponent(dlUrl)}`;
+    q('#qr-img').src = await QRCode.toDataURL(downloadUrl, { margin: 1, width: 240, color: { dark: '#005F73', light: '#fff' } });
   } catch (err) {
     console.error('QR preparation failed:', err);
     q('#cov').classList.remove('is-processing');

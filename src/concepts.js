@@ -3,7 +3,7 @@
 export const POSTER_THEMES = [
   {
     id: 1,
-    name: 'màu A',
+    name: 'mẫu A',
     bg: {
       color: '#F8F3E6',
       texture: { type: 'grid', color: 'rgba(10,147,150,0.07)', step: 36 },
@@ -16,6 +16,11 @@ export const POSTER_THEMES = [
     title: { color: '#0A5B66' },
     subtitle: { color: '#B85C19' },
     event: { color: '#C24E2C' },
+    text: {
+      school: 'GREENWICH VIETNAM',
+      subtitle: 'Change Starts Here',
+      footer: 'Greenwich moment',
+    },
     meta: { color: '#375B63' },
     date: { color: '#7A4E1C' },
     photos: {
@@ -31,13 +36,13 @@ export const POSTER_THEMES = [
       borderColor: '#86C8B7',
       glow: 'rgba(10,147,150,0.22)',
       hashtag: { text: 'Greenwich moment', color: '#0A5B66' },
-      script: { family: '"Caveat", "Be Vietnam Pro", sans-serif', color: '#B85C19' },
+      script: { family: '"Cormorant Garamond", serif', color: '#B85C19', italic: true },
     },
     frame: { outer: 'transparent', outerW: 0, inner: '#D6A72C', innerW: 2 },
   },
   {
     id: 2,
-    name: 'màu B',
+    name: 'mẫu B',
     bg: {
       color: '#F3FBF8',
       texture: { type: 'dots', color: 'rgba(10,147,150,0.08)', step: 42 },
@@ -50,6 +55,11 @@ export const POSTER_THEMES = [
     title: { color: '#0A5B66' },
     subtitle: { color: '#C7751A' },
     event: { color: '#9E4A2C' },
+    text: {
+      school: 'GREENWICH VIETNAM',
+      subtitle: 'Where ideas move',
+      footer: 'Greenwich moment',
+    },
     meta: { color: '#0A5B66' },
     date: { color: '#4E6A6E' },
     photos: {
@@ -65,7 +75,7 @@ export const POSTER_THEMES = [
       borderColor: '#F5C542',
       glow: 'rgba(124,203,185,0.18)',
       hashtag: { text: 'Greenwich moment', color: '#0A5B66' },
-      script: { family: '"Caveat", "Be Vietnam Pro", sans-serif', color: '#C7751A' },
+      script: { family: '"Cormorant Garamond", serif', color: '#C7751A', italic: true },
     },
     frame: { outer: 'transparent', outerW: 0, inner: '#D28A2E', innerW: 2 },
   },

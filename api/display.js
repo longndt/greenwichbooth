@@ -120,7 +120,7 @@ export default async function handler(req, res) {
     <h1>📸 Greenwich Booth Poster</h1>
     <img src="${imgSrc}" alt="Poster" />
     <div class="btn-group">
-      <a href="/api/download?url=${encodeURIComponent(url)}" download class="btn btn-download">⬇️ Tải về máy</a>
+      <a href="/api/download?url=${encodeURIComponent(url)}" download class="btn btn-download">⬇️ Tải ảnh</a>
       <button id="back-btn" class="btn btn-back">← Quay lại</button>
     </div>
   </div>

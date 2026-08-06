@@ -104,8 +104,8 @@ export async function buildPoster({
   }
 
   ctx.shadowColor = 'transparent';
-  drawHeaderText(ctx, 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
-  drawHeaderText(ctx, 'Change Starts Here', 160, 104, 420, 700, 18, 14, 'Be Vietnam Pro', theme.subtitle.color);
+  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
+  drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', 160, 104, 420, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color);
   drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 50, 32, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
   ctx.save();
@@ -193,9 +193,11 @@ export async function buildPoster({
 
   ctx.shadowColor = 'rgba(0,0,0,0.16)';
   ctx.shadowBlur = 6;
-  ctx.font = `700 46px ${theme.footer.script?.family || '"Be Vietnam Pro", Arial, sans-serif'}`;
+  const footerFamily = theme.footer.script?.family || '"Be Vietnam Pro", Arial, sans-serif';
+  const footerStyle = theme.footer.script?.italic ? 'italic ' : '';
+  ctx.font = `${footerStyle}700 46px ${footerFamily}`;
   ctx.fillStyle = theme.footer.script?.color || theme.footer.hashtag.color;
-  ctx.fillText(footerText || theme.footer.hashtag.text, 540, 1276);
+  ctx.fillText(footerText || theme.footer.text || theme.footer.hashtag.text, 540, 1276);
 
 }
 
