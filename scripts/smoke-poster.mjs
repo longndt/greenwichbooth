@@ -204,7 +204,7 @@ async function main() {
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));
-  if (placeholders.join('|') !== 'Sự kiện|Địa điểm') {
+  if (placeholders.join('|') !== 'Sự kiện/Địa điểm|Tên sinh viên/Lời nhắn') {
     throw new Error(`Unexpected input placeholders: ${placeholders.join('|')}`);
   }
 
@@ -214,6 +214,8 @@ async function main() {
   await page.waitForFunction(() => window.__t?.S?.studentName === 'Nguyen ');
   await page.evaluate(() => window.__t?.setStudentName?.('Nguyen Van A'));
   await page.waitForFunction(() => window.__t?.S?.studentName === 'Nguyen Van A');
+  await page.evaluate(() => window.__t?.setStudentName?.(''));
+  await page.waitForFunction(() => window.__t?.S?.studentName === '');
 
   await page.evaluate(() => {
     const makeShot = index => {
@@ -288,6 +290,10 @@ async function main() {
       previewVars.accent !== expectedTheme.photos.cornerAccent.color
     ) {
       throw new Error(`Preview theme variables do not match theme ${themeIndex + 1}: ${JSON.stringify(previewVars)}`);
+    }
+    const previewHashtag = await page.$eval('#preview-hashtag', el => el.textContent.trim());
+    if (previewHashtag !== 'Greenwich moment') {
+      throw new Error(`Preview footer should default to Greenwich moment: ${previewHashtag}`);
     }
     await page.evaluate(async () => {
       await window.__t.buildPoster();

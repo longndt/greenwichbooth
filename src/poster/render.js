@@ -62,6 +62,7 @@ export async function buildPoster({
   layout,
   eventName,
   studentName,
+  footerText,
   mascotUrl,
   width,
   height,
@@ -130,8 +131,7 @@ export async function buildPoster({
 
   const d = new Date();
   const today = `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-  drawHeaderText(ctx, today, 1016, 82, 240, 800, 28, 20, 'Space Grotesk', theme.date.color, 'right');
-  drawHeaderText(ctx, studentName, 1016, 130, 260, 800, 24, 18, 'Be Vietnam Pro', theme.meta?.color || theme.footer.borderColor, 'right');
+  drawHeaderText(ctx, today, 1016, 82, 260, 800, 32, 22, 'Space Grotesk', theme.date.color, 'right');
 
   layout.forEach(({ x, y, w, h, hero }) => {
     ctx.save();
@@ -195,7 +195,7 @@ export async function buildPoster({
   ctx.shadowBlur = 6;
   ctx.font = `700 46px ${theme.footer.script?.family || '"Be Vietnam Pro", Arial, sans-serif'}`;
   ctx.fillStyle = theme.footer.script?.color || theme.footer.hashtag.color;
-  ctx.fillText(theme.footer.hashtag.text, 540, 1276);
+  ctx.fillText(footerText || theme.footer.hashtag.text, 540, 1276);
 
 }
 

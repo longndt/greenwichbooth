@@ -51,6 +51,7 @@ const renderPoster = () => buildPoster({
   layout: getLayout(),
   eventName: S.eventName,
   studentName: S.studentName,
+  footerText: S.studentName.trim() || (POSTER_THEMES[S.themeIndex] || POSTER_THEMES[0]).footer.hashtag.text,
   mascotUrl,
   width: POSTER_WIDTH,
   height: POSTER_HEIGHT,
@@ -185,7 +186,7 @@ function syncPosterPreview() {
   if (q('#preview-event')) q('#preview-event').textContent = S.eventName;
   if (q('#preview-date')) q('#preview-date').textContent = today;
   if (q('#preview-place')) q('#preview-place').textContent = S.studentName;
-  if (q('#preview-hashtag')) q('#preview-hashtag').textContent = theme.footer.hashtag.text;
+  if (q('#preview-hashtag')) q('#preview-hashtag').textContent = S.studentName.trim() || theme.footer.hashtag.text;
 }
 
 function setThemeIndex(nextIndex) {
@@ -368,7 +369,7 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="44"
-            placeholder="Sự kiện"
+            placeholder="Sự kiện/Địa điểm"
             aria-label="Tên sự kiện để hiển thị trên poster"
           >
         </div>
@@ -380,8 +381,8 @@ q('#app').innerHTML = `
             type="text"
             inputmode="text"
             maxlength="32"
-            placeholder="Địa điểm"
-            aria-label="Tên địa điểm để hiển thị trên poster"
+            placeholder="Tên sinh viên/Lời nhắn"
+            aria-label="Lời nhắn hoặc tên sinh viên để hiển thị trên poster"
           >
         </div>
       </div>
