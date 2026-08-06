@@ -68,7 +68,7 @@ async function main() {
     throw new Error(`Preview theme colors do not match poster theme: ${JSON.stringify(previewTheme)}`);
   }
   const heroBorder = await page.$eval('#pvs0', el => getComputedStyle(el).borderTopColor);
-  if (heroBorder !== 'rgb(217, 177, 90)') {
+  if (heroBorder !== 'rgb(143, 92, 200)') {
     throw new Error(`Preview hero slot border did not apply selected theme immediately: ${heroBorder}`);
   }
 
