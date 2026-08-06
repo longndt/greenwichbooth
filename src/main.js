@@ -268,7 +268,7 @@ q('#app').innerHTML = `
     <div class="hdr-brand">
       <img class="hdr-lion" src="${mascotUrl}" alt="" aria-hidden="true">
       <div class="hdr-text">
-        <span class="hdr-name">Greenwich Photobooth</span>
+        <span class="hdr-name">Khoảnh khắc Greenwich</span>
       </div>
     </div>
   </header>
