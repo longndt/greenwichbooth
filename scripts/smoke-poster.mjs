@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 import { POSTER_THEMES } from '../src/concepts.js';
+import { POSTER_LAYOUTS } from '../src/poster/config.js';
 
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:5173';
 
@@ -24,15 +25,15 @@ async function main() {
     throw new Error(`Expected 2 theme chips, found ${themeCount}`);
   }
   const themeLabels = await page.$$eval('.theme-chip .theme-chip-label', nodes => nodes.map(node => node.textContent.trim()));
-  if (themeLabels.join('|') !== 'Theme 1|Theme 2') {
+  if (themeLabels.join('|') !== 'Mẫu 1|Mẫu 2') {
     throw new Error(`Unexpected theme labels: ${themeLabels.join('|')}`);
   }
 
   await page.click('.theme-chip[data-theme-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.themeIndex === 1);
   const activeTheme = await page.$eval('.theme-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeTheme !== 'Theme 2') {
-    throw new Error(`Expected Theme 2 active, got ${activeTheme}`);
+  if (activeTheme !== 'Mẫu 2') {
+    throw new Error(`Expected Mẫu 2 active, got ${activeTheme}`);
   }
   const theme2 = POSTER_THEMES[1];
   const previewAccent = await page.$eval('#poster-preview', el => getComputedStyle(el).getPropertyValue('--preview-shell-accent').trim());
@@ -108,8 +109,8 @@ async function main() {
   await page.click('.layout-chip[data-layout-index="1"]');
   await page.waitForFunction(() => window.__t?.S?.layoutIndex === 1);
   const activeLayout = await page.$eval('.layout-chip.is-active .theme-chip-label', el => el.textContent.trim());
-  if (activeLayout !== 'Layout 2') {
-    throw new Error(`Expected layout 2 active, got ${activeLayout}`);
+  if (activeLayout !== 'Khung 2') {
+    throw new Error(`Expected Khung 2 active, got ${activeLayout}`);
   }
   const previewLayout = await page.$eval('#photo-grid', el => el.dataset.layout);
   if (previewLayout !== '2') {
@@ -160,12 +161,33 @@ async function main() {
   if (!(layoutRects.slots[0].h > 0 && layoutRects.slots[1].h > 0)) {
     throw new Error(`Preview slot heights are wrong: ${JSON.stringify(layoutRects)}`);
   }
+  const activePosterLayout = POSTER_LAYOUTS[3][1];
+  const photoArea = activePosterLayout.reduce((box, slot) => ({
+    left: Math.min(box.left, slot.x),
+    top: Math.min(box.top, slot.y),
+    right: Math.max(box.right, slot.x + slot.w),
+    bottom: Math.max(box.bottom, slot.y + slot.h),
+  }), { left: Infinity, top: Infinity, right: 0, bottom: 0 });
+  const previewRatio = layoutRects.grid.width / layoutRects.grid.height;
+  const renderRatio = (photoArea.right - photoArea.left) / (photoArea.bottom - photoArea.top);
+  if (Math.abs(previewRatio - renderRatio) > 0.02) {
+    throw new Error(`Preview photo area ratio drifted from poster layout: ${previewRatio.toFixed(4)} vs ${renderRatio.toFixed(4)}`);
+  }
   const shootVisible = await page.$eval('#shoot-btn', btn => {
     const r = btn.getBoundingClientRect();
     return r.top >= 0 && r.bottom <= window.innerHeight;
   });
   if (!shootVisible) {
     throw new Error('Shoot button is not fully visible');
+  }
+  const shootOffset = await page.$eval('#shoot-btn', btn => {
+    const parent = btn.parentElement;
+    const btnRect = btn.getBoundingClientRect();
+    const parentRect = parent.getBoundingClientRect();
+    return btnRect.top - parentRect.top;
+  });
+  if (shootOffset < 12) {
+    throw new Error(`Shoot button did not move down enough: ${shootOffset.toFixed(1)}px`);
   }
 
   const placeholders = await page.$$eval('.name-input', nodes => nodes.map(node => node.placeholder));

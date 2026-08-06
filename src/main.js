@@ -28,13 +28,14 @@ const THEME_OPTIONS = POSTER_THEMES.map(theme => ({ label: theme.name }));
 const INTERVAL_OPTIONS = [3, 5];
 const PHOTO_COUNT_OPTIONS = [3, 4];
 const LAYOUT_OPTIONS = [
-  { label: 'Layout 2' },
-  { label: 'Layout 1' },
+  { label: 'Khung 1' },
+  { label: 'Khung 2' },
 ];
 const q  = s => document.querySelector(s);
 const qa = s => [...document.querySelectorAll(s)];
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const nextFrame = () => new Promise(r => requestAnimationFrame(r));
+const raf = () => new Promise(r => requestAnimationFrame(r));
 const fadeOutProcessing = async () => {
   const cov = q('#cov');
   cov.classList.add('is-hiding');
@@ -296,23 +297,6 @@ q('#app').innerHTML = `
     <div class="ctrl-col">
       <div class="ctrl-grid" aria-label="Tùy chọn chụp">
         <div class="ctrl-col-group">
-          <div class="theme-picker" aria-label="Chọn phong cách poster">
-            ${THEME_OPTIONS.map((theme, index) => `
-              <button
-                class="theme-chip"
-                type="button"
-                data-theme-index="${index}"
-                aria-pressed="${index === S.themeIndex}"
-                aria-label="Chọn phong cách ${theme.label}"
-              >
-                <span class="theme-chip-dot" aria-hidden="true"></span>
-                <span class="theme-chip-text">
-                  <span class="theme-chip-label">${theme.label}</span>
-                </span>
-              </button>
-            `).join('')}
-          </div>
-
           <div class="count-picker" aria-label="Chọn số lượng ảnh">
             ${PHOTO_COUNT_OPTIONS.map(count => `
               <button
@@ -326,9 +310,7 @@ q('#app').innerHTML = `
               </button>
             `).join('')}
           </div>
-        </div>
 
-        <div class="ctrl-col-group">
           <div class="layout-picker" aria-label="Chọn bố cục poster">
             ${LAYOUT_OPTIONS.map((layout, index) => `
               <button
@@ -339,6 +321,25 @@ q('#app').innerHTML = `
                 aria-label="Chọn ${layout.label}"
               >
                 <span class="theme-chip-label">${layout.label}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="ctrl-col-group">
+          <div class="theme-picker" aria-label="Chọn phong cách poster">
+            ${THEME_OPTIONS.map((theme, index) => `
+              <button
+                class="theme-chip"
+                type="button"
+                data-theme-index="${index}"
+                aria-pressed="${index === S.themeIndex}"
+                aria-label="Chọn mẫu ${theme.label}"
+              >
+                <span class="theme-chip-dot" aria-hidden="true"></span>
+                <span class="theme-chip-text">
+                  <span class="theme-chip-label">${theme.label}</span>
+                </span>
               </button>
             `).join('')}
           </div>
@@ -475,12 +476,21 @@ async function shoot() {
   q('#cov').classList.remove('hidden');
 
   for (let i = 0; i < S.photoCount; i++) {
-    for (let c = S.interval; c > 0; c--) {
-      q('#cnt-n').textContent = String(c);
-      q('#cnt-n').dataset.tick = '1';
-      await sleep(650);
-      delete q('#cnt-n').dataset.tick;
-      await sleep(40);
+    const startedAt = performance.now();
+    let lastShown = S.interval + 1;
+    while (true) {
+      const elapsed = (performance.now() - startedAt) / 1000;
+      const remaining = Math.max(0, S.interval - elapsed);
+      const shown = Math.ceil(remaining);
+      if (shown !== lastShown) {
+        q('#cnt-n').textContent = String(shown);
+        q('#cnt-n').dataset.tick = '1';
+        await raf();
+        delete q('#cnt-n').dataset.tick;
+        lastShown = shown;
+      }
+      if (remaining <= 0) break;
+      await sleep(Math.min(remaining * 1000, 32));
     }
     q('#cnt-n').textContent = '';
     q('#cnt-mascot').classList.add('is-visible');
