@@ -1660,11 +1660,28 @@ input[type="range"] {
 @media (max-width: 940px) {
   .poster-shell {
     order: 0;
-    height: clamp(180px, 30dvh, 320px);
-    width: min(100%, calc(clamp(180px, 30dvh, 320px) * 952 / 922));
-    max-height: 32vh;
+    height: clamp(160px, 22dvh, 260px);
+    width: min(100%, calc(clamp(160px, 22dvh, 260px) * 952 / 922));
+    max-height: 24vh;
   }
-  .shoot-btn { order: 1; }
+  .shoot-btn {
+    order: 1;
+    width: clamp(82px, 12vw, 96px);
+    margin-top: 4px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 940px) {
+  .poster-shell {
+    height: clamp(120px, 12dvh, 164px);
+    width: min(100%, calc(clamp(120px, 12dvh, 164px) * 952 / 922));
+    max-height: 14vh;
+  }
+
+  .shoot-btn {
+    width: clamp(82px, 12vw, 96px);
+    margin-top: 4px;
+  }
 }
 
 /* ── Accessibility: keyboard focus + reduced motion ─────────────── */
@@ -1801,8 +1818,8 @@ input[type="range"] {
   }
 
   .ctrl-col {
-    gap: 10px;
-    padding: 18px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
   }
 
   .option-grid,
@@ -1815,8 +1832,8 @@ input[type="range"] {
   }
 
   .name-input {
-    padding: 12px 12px;
-    font-size: 14px;
+    padding: 10px 11px;
+    font-size: 13px;
   }
 
   .poster-shell {
@@ -1827,7 +1844,7 @@ input[type="range"] {
   }
 
   .shoot-btn {
-    width: clamp(88px, 20vw, 104px);
-    margin-top: 10px;
+    width: clamp(82px, 20vw, 96px);
+    margin-top: 4px;
   }
 }
