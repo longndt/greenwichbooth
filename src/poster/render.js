@@ -180,20 +180,10 @@ export async function buildPoster({
   });
 
   layout.forEach(({ x, y, w, h, hero }) => {
-    ctx.strokeStyle = theme.photos.borderColor;
-    ctx.lineWidth = hero ? theme.photos.borderWidth : theme.photos.borderWidth - 1;
+    ctx.save();
     roundRect(ctx, x, y, w, h, theme.photos.radius);
-    ctx.stroke();
-    drawCornerAccents(
-      ctx,
-      x,
-      y,
-      w,
-      h,
-      theme.photos.cornerAccent.color,
-      theme.photos.cornerAccent.size,
-      theme.photos.cornerAccent.lw,
-    );
+    ctx.clip();
+    ctx.restore();
   });
 
   ctx.textAlign = 'center';
