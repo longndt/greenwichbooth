@@ -49,7 +49,7 @@ export const POSTER_THEMES = [
     },
     header: {
       bg: '#101B2A',
-      topBar: { color: '#E7B845', height: 6 },
+      topBar: { color: '#D6A72C', height: 7 },
       bottomBar: { colors: ['rgba(125,206,190,0.10)', 'rgba(231,184,69,0.16)'], height: 0 },
       panel: false,
     },
@@ -66,10 +66,10 @@ export const POSTER_THEMES = [
     photos: {
       slotShadow: 'rgba(125,206,190,0.18)',
       slotBg: '#172437',
-      borderColor: '#8DD6C7',
+      borderColor: '#D6A72C',
       borderWidth: 3,
       radius: 16,
-      cornerAccent: { color: '#E7B845', size: 28, lw: 3 },
+      cornerAccent: { color: '#0A5B66', size: 22, lw: 2 },
     },
     footer: {
       bg: 'transparent',
@@ -79,6 +79,6 @@ export const POSTER_THEMES = [
       hashtag: { text: 'Greenwich moment', color: '#F4F0E6' },
       script: { family: '"Cormorant Garamond", serif', color: '#E7B845', italic: true },
     },
-    frame: { outer: 'rgba(231,184,69,0.14)', outerW: 0, inner: '#E7B845', innerW: 2 },
+    frame: { outer: 'transparent', outerW: 0, inner: '#D6A72C', innerW: 2 },
   },
 ];

@@ -117,7 +117,7 @@ export async function buildPoster({
   }
 
   ctx.shadowColor = 'transparent';
-  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Space Grotesk', theme.title.color);
+  drawHeaderText(ctx, theme.text?.school || 'GREENWICH VIETNAM', 160, 64, 520, 800, 30, 24, 'Be Vietnam Pro', theme.title.color);
   drawHeaderText(ctx, theme.text?.subtitle || 'Change Starts Here', 160, 104, 420, 700, 22, 14, 'Be Vietnam Pro', theme.subtitle.color);
   drawHeaderText(ctx, eventName, width / 2, 198, 820, 900, 52, 34, 'Be Vietnam Pro', theme.event?.color || theme.title.color, 'center');
 
@@ -185,10 +185,12 @@ export async function buildPoster({
   });
 
   layout.forEach(({ x, y, w, h, hero }) => {
-    ctx.strokeStyle = theme.photos.borderColor;
-    ctx.lineWidth = hero ? theme.photos.borderWidth + (isDarkTheme ? 3 : 2) : theme.photos.borderWidth;
-    roundRect(ctx, x, y, w, h, theme.photos.radius);
-    ctx.stroke();
+    if (isDarkTheme) {
+      ctx.strokeStyle = theme.photos.borderColor;
+      ctx.lineWidth = hero ? theme.photos.borderWidth : theme.photos.borderWidth - 1;
+      roundRect(ctx, x, y, w, h, theme.photos.radius);
+      ctx.stroke();
+    }
     drawCornerAccents(
       ctx,
       x,
